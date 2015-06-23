@@ -1,0 +1,38 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+#Stuff
+*vc120.idb
+*vc120.pdb
+*.ilk
+*.pdb
+*.v12.suo
+*.sdf
+*.opensdf
+*.tlog
+*.log
