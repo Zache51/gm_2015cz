@@ -1,0 +1,46 @@
+Följande bibliotek är implementerade i projektet.
+Beskrivningarna är tagna från respektive officiella hemsida.
+
+---	GLFW ---
+GLFW is an Open Source, multi-platform library for creating windows with OpenGL contexts and receiving input and events. 
+It is easy to integrate into existing applications and does not lay claim to the main loop.
+
+GLFW is written in C and has native support for Windows, 
+OS X and many Unix-like systems using the X Window System, 
+such as Linux and FreeBSD.
+
+GLFW is licensed under the zlib/libpng license.
+http://www.glfw.org/
+
+Dokumentation - http://www.glfw.org/docs/latest/window.html
+
+--- glew ---
+The OpenGL Extension Wrangler Library (GLEW) is a cross-platform open-source C/C++ extension loading library. 
+GLEW provides efficient run-time mechanisms for determining which OpenGL extensions are supported on the target platform. 
+OpenGL core and extension functionality is exposed in a single header file. 
+
+GLEW has been tested on a variety of operating systems, including Windows, Linux, Mac OS X, FreeBSD, Irix, and Solaris. 
+http://glew.sourceforge.net/
+
+--- glm ---
+OpenGL Mathematics (GLM) is a header only C++ mathematics library for graphics software based on the OpenGL Shading Language (GLSL) specifications. 
+GLM provides classes and functions designed and implemented with the same naming conventions and functionalities than GLSL so that anyone who knows GLSL, can use GLM as well in C++. 
+
+This library works perfectly with OpenGL but it also ensures interoperability with other third party libraries and SDK. 
+It is a good candidate for software rendering (raytracing / rasterisation), image processing, physic simulations and 
+any development context that requires a simple and convenient mathematics library. 
+https://github.com/g-truc/glm
+http://glm.g-truc.net/0.9.6/index.html
+
+--- stb ---
+stb.h is a (theoretically) portable C utility library, which provides numerous features. 
+It does not depend on any other libraries, and requires only the single header file, 
+which contains both the declarations and the definitions of the functions.
+
+The functions and systems are designed to simplify common programming tasks, 
+to provide easy-to-use data structures for common tasks, and easy-to-use high performance structures for other cases.
+
+All code can be compiled as either C or C++. (If compiled as C++, everything is given C linkage so it can still be accessed from C as well.) 
+Some of the features are redundant to C++, so it is less interesting there unless you refuse to use the STL or something.
+https://github.com/nothings/stb
+http://nothings.org/stb/stb_h.html

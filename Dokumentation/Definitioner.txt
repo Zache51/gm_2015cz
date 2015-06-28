@@ -1,0 +1,11 @@
+Detta dokument beskriver för tillfället funktioner, definitioner eller variabler som har tillkommit med biblioteken.
+
+#define WIN32_LEAN_AND_MEAN
+	windows.h inkluderar en stor samling header-filer. Denna definition tar bort en del onödiga header-filer.
+	http://blogs.msdn.com/b/oldnewthing/archive/2009/11/30/9929944.aspx
+
+#undef APIENTRY
+	Relaterad till: #include <GLFW\glfw3.h>
+	APIENTRY används även för windows-funktioner och omdefinieras i GLFW.
+	..\program files (x86)\windows kits\8.1\include\shared\minwindef.h(130): warning C4005: 'APIENTRY' : macro redefinition
+	..\gm_2015cz\gmproject\glfw\include\glfw\glfw3.h(96) : see previous definition of 'APIENTRY'

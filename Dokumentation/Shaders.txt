@@ -1,0 +1,6 @@
+Kort beskrivning om vilken/vilka versioner i OpenGLs API vi har valt att stödja.
+Notera att Legacy - https://www.opengl.org/wiki/Legacy_OpenGL - kan komma till nytta om där finns tid över.
+
+--- Version 3.3 ---
+https://www.opengl.org/wiki/History_of_OpenGL#OpenGL_3.3_.282010.29
+https://www.opengl.org/sdk/docs/man3/ - Referens till dess funktioner
