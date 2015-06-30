@@ -9,6 +9,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#include <iostream>
 
 #pragma comment(lib, "glfw3.lib")
 #pragma comment(lib, "opengl32.lib")
@@ -17,9 +18,71 @@
 static void error_callback(int error, const char* description);
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
+
+
+#ifdef _DEBUG
+extern "C"
+{
+	void APIENTRY openglCallbackFunction(
+		GLenum source,
+		GLenum type,
+		GLuint id,
+		GLenum severity,
+		GLsizei length,
+		const GLchar* message,
+		void* userParam)
+	{
+
+		std::cout << "_____________________OpenGL_Callback____________________" << std::endl;
+		std::cout << "MESSAGE: " << message << std::endl;
+		std::cout << "TYPE: ";
+		switch (type) {
+		case GL_DEBUG_TYPE_ERROR:
+			std::cout << "ERROR";
+			break;
+		case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+			std::cout << "DEPRECATED_BEHAVIOR";
+			break;
+		case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+			std::cout << "UNDEFINED_BEHAVIOR";
+			break;
+		case GL_DEBUG_TYPE_PORTABILITY:
+			std::cout << "PORTABILITY";
+			break;
+		case GL_DEBUG_TYPE_PERFORMANCE:
+			std::cout << "PERFORMANCE";
+			break;
+		case GL_DEBUG_TYPE_OTHER:
+			std::cout << "OTHER";
+			break;
+		}
+		std::cout << std::endl;
+		std::cout << "ID: " << id << std::endl;
+		std::cout << "SEVERITY: ";
+		switch (severity){
+		case GL_DEBUG_SEVERITY_LOW:
+			std::cout << "LOW";
+			break;
+		case GL_DEBUG_SEVERITY_MEDIUM:
+			std::cout << "MEDIUM";
+			break;
+		case GL_DEBUG_SEVERITY_HIGH:
+			std::cout << "HIGH";
+			break;
+		case GL_DEBUG_SEVERITY_NOTIFICATION:
+			std::cout << "NOTIFICATION";
+			break;
+		}
+		std::cout << std::endl;
+		std::cout << "--------------------------------------------------------" << std::endl;
+	}
+}
+#endif
+
 int main()
 {
 	GLFWwindow* window = nullptr;
+	bool running = false;// For safe shutdown
 
 	glfwSetErrorCallback(error_callback);
 
@@ -44,6 +107,7 @@ int main()
 	}
 	else
 	{
+		running = true;
 		fprintf(stderr, "GLFW Window initialized\n");
 	}
 
@@ -65,9 +129,59 @@ int main()
 	{
 		fprintf(stderr, "GLEW initialized\n");
 	}
-	glfwMakeContextCurrent(NULL);// No idea why at the moment
 
-	system("pause");//Remove when main loop is working
+#ifdef _DEBUG
+	if (glDebugMessageCallback){
+		std::cout << "Register OpenGL debug callback " << std::endl;
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		glDebugMessageCallback((GLDEBUGPROC)openglCallbackFunction, nullptr);
+		GLuint unusedIds = 0;
+		glDebugMessageControl(GL_DONT_CARE,
+			GL_DONT_CARE,
+			GL_DONT_CARE,
+			0,
+			&unusedIds,
+			true);
+	}
+	else
+	{
+		std::cout << "glDebugMessageCallback not available" << std::endl;
+	}
+#endif
+
+	//int left, top, right, bottom;
+	//glfwGetWindowFrameSize(window, &left, &top, &right, &bottom);
+	//std::cout << "Left: " << left << ", Top: " << top << ", Right: " << right << ", Bottom: " << bottom << std::endl;
+	//int xpos, ypos;
+	//glfwGetWindowPos(window, &xpos, &ypos);
+	//std::cout << "X: " << xpos << ", Y: " << ypos << std::endl;
+
+	////////////////////////////////////////////////////////////
+	running = false;
+	// VSync
+	glfwSwapInterval(1);
+	while (running || !glfwWindowShouldClose(window))
+	{
+
+		float ratio;
+		int width, height;
+
+		glfwGetFramebufferSize(window, &width, &height);
+		ratio = width / (float)height;
+
+		glViewport(0, 0, width, height);
+		
+		/* TODO - Update and Render function */
+
+		glfwSwapBuffers(window);
+		glfwPollEvents();// Processes all pending events
+	}
+	////////////////////////////////////////////////////////////
+	
+	glfwDestroyWindow(window);
+	glfwTerminate();
+
+	system("pause");// Remove when main loop is working or save it to read the console's output before exit.
 	return 0;
 }
 
