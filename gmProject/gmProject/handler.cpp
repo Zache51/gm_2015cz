@@ -1,15 +1,12 @@
 #include <GL/glew.h>
-//#include <GL/GL.h>// Not entirely sure this is required here
-
 #include <GLFW\glfw3.h>
 #undef APIENTRY
-
 #include <stdio.h>
 #include <stdlib.h>
-
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <iostream>
+#include "Graphics.hpp"
 
 #pragma comment(lib, "glfw3.lib")
 #pragma comment(lib, "opengl32.lib")
@@ -82,7 +79,6 @@ extern "C"
 int main()
 {
 	GLFWwindow* window = nullptr;
-	bool running = false;// For safe shutdown
 
 	glfwSetErrorCallback(error_callback);
 
@@ -91,10 +87,12 @@ int main()
 		exit(EXIT_FAILURE);
 
 	// Sets hints for the next call to glfwCreateWindow - Keep these for future debugging
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
-	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+	glfwWindowHint(GLFW_REFRESH_RATE, GLFW_DONT_CARE);// This hint is ignored for windowed mode windows.
 
 	// Creating window
 	window = glfwCreateWindow(640, 480, "Title", NULL, NULL);
@@ -107,7 +105,6 @@ int main()
 	}
 	else
 	{
-		running = true;
 		fprintf(stderr, "GLFW Window initialized\n");
 	}
 
@@ -149,29 +146,34 @@ int main()
 	}
 #endif
 
-	//int left, top, right, bottom;
-	//glfwGetWindowFrameSize(window, &left, &top, &right, &bottom);
-	//std::cout << "Left: " << left << ", Top: " << top << ", Right: " << right << ", Bottom: " << bottom << std::endl;
-	//int xpos, ypos;
-	//glfwGetWindowPos(window, &xpos, &ypos);
-	//std::cout << "X: " << xpos << ", Y: " << ypos << std::endl;
-
-	////////////////////////////////////////////////////////////
-	running = false;
 	// VSync
 	glfwSwapInterval(1);
-	while (running || !glfwWindowShouldClose(window))
+
+	////////////////////////////////////////////////////////////
+	Graphics ge = Graphics();
+	Camera* cam = new Camera;
+
+	int width = 0,
+		height = 0;
+	////////////////////////////////////////////////////////////
+	while (!glfwWindowShouldClose(window))
 	{
+		int newWidth, newHeight;
+		glfwGetFramebufferSize(window, &newWidth, &newHeight);
 
-		float ratio;
-		int width, height;
+		if (width != newWidth || height != newHeight)
+		{
+			width = newWidth;
+			height = newHeight;
+			glViewport(0, 0, width, height);
 
-		glfwGetFramebufferSize(window, &width, &height);
-		ratio = width / (float)height;
+			/* TODO: Prompt update for cameras and such using projectionmatrices */
+			cam->width = (float)width;
+			cam->height = (float)height;
+			ge.setCamera( cam );
+		}
 
-		glViewport(0, 0, width, height);
-		
-		/* TODO - Update and Render function */
+		/* TODO: Calling ge.Update() and ge.Render() */
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();// Processes all pending events
