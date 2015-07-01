@@ -8,6 +8,9 @@
 #include <iostream>
 #include "Graphics.hpp"
 
+//#include "glm\glm\glm.hpp"
+//#include "glm\glm\gtc\matrix_transform.hpp"
+
 #pragma comment(lib, "glfw3.lib")
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "glew32.lib")
@@ -151,11 +154,13 @@ int main()
 
 	////////////////////////////////////////////////////////////
 	Graphics ge = Graphics();
-	Camera cam = Camera();
+	
+	Camera cam = Camera(); 
+	//cam.translation = lookAt(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+	
 	MeshHolder dummy = MeshHolder();
 
-	int width = 0,
-		height = 0;
+	int width = 0, height = 0;
 	////////////////////////////////////////////////////////////
 	while (!glfwWindowShouldClose(window))
 	{
