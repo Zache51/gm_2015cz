@@ -151,7 +151,8 @@ int main()
 
 	////////////////////////////////////////////////////////////
 	Graphics ge = Graphics();
-	Camera* cam = new Camera;
+	Camera cam = Camera();
+	MeshHolder dummy = MeshHolder();
 
 	int width = 0,
 		height = 0;
@@ -168,12 +169,14 @@ int main()
 			glViewport(0, 0, width, height);
 
 			/* TODO: Prompt update for cameras and such using projectionmatrices */
-			cam->width = (float)width;
-			cam->height = (float)height;
-			ge.setCamera( cam );
+			cam.width = (float)width;
+			cam.height = (float)height;
+			ge.setCamera( &cam );
 		}
 
 		/* TODO: Calling ge.Update() and ge.Render() */
+		ge.Update( &dummy );
+		ge.Render( &dummy );
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();// Processes all pending events
