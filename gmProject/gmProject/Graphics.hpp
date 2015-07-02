@@ -4,10 +4,15 @@
 #include <gl/glew.h>
 #include <gl/GL.h>
 
+//#include "glm\glm\glm.hpp"
+//#include "glm\glm\gtc\matrix_transform.hpp"
+
 #include "Camera.hpp"
 #include "MeshHolder.hpp"
 
 #define BUFFER_OFFSET(i) ((char *)nullptr + (i))
+
+using namespace glm;
 
 class Graphics
 {
@@ -15,7 +20,10 @@ private:
 	Camera* localCamera;
 
 	GLuint gVertexBuffer = 0;
-	GLuint gVertexAttribute = 0;
+
+	GLuint gVertexAttribute1 = 0;
+	GLuint gVertexAttribute2 = 0;
+	
 	GLuint gShaderProgram = 0;
 
 	void readShader( const char* path );
