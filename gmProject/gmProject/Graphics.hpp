@@ -4,8 +4,8 @@
 #include <gl/glew.h>
 #include <gl/GL.h>
 
-//#include "glm\glm\glm.hpp"
-//#include "glm\glm\gtc\matrix_transform.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Camera.hpp"
 #include "MeshHolder.hpp"
@@ -26,6 +26,12 @@ private:
 	
 	GLuint gShaderProgram = 0;
 
+	GLint worldMatrixUniformLocation;
+	GLint viewworldMatrixUniformLocation;
+
+	vec3 cameraPos = glm::vec3(0.0f, 0, 1.0f);
+	mat4 viewMatrix = lookAt(cameraPos, glm::vec3(0, 0, 0), glm::vec3(0, 2, 0));
+
 	void readShader( const char* path );
 	void createProgram();
 	void generateShaders();
@@ -35,6 +41,8 @@ public:
 
 	void GenerateBuffer( MeshHolder* mh );
 	void Update( MeshHolder* mh );
+	
+	void PrepareRender();
 	void Render( MeshHolder* mh );
 
 	void setCamera( Camera* c );

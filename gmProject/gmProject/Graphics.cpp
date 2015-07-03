@@ -65,6 +65,16 @@ Graphics::Graphics()
 	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);
 	glVertexAttribPointer(vertexPos, 3, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(sizeof(tV1)));
 	glVertexAttribPointer(vertexColor, 3, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(sizeof(tV1) + sizeof(float) * 3));
+	
+	
+	/*************************************************************/
+	/*******************Define uniform locations******************/
+	
+	
+	worldMatrixUniformLocation = glGetUniformLocation(gShaderProgram, "worldMatrix");
+	viewworldMatrixUniformLocation = glGetUniformLocation(gShaderProgram, "VWMatrix");
+	
+	
 	/*************************************************************/
 }
 Graphics::~Graphics()
@@ -79,13 +89,14 @@ void Graphics::generateShaders()
 		layout(location = 0) in vec3 vertex_position;
 		layout(location = 1) in vec3 vertex_color;
 		
-		uniform mat4 rotationMatrix;
+		uniform mat4 worldMatrix;
+		uniform mat4 VWMatrix;
 
 		out vec3 color;
 		
 		void main () {
 			color = vertex_color;
-			gl_Position = rotationMatrix * vec4 (vertex_position, 1.0);
+			gl_Position = VWMatrix * vec4 (vertex_position, 1.0);
 		}
 	)";
 
@@ -153,33 +164,24 @@ void Graphics::Update( MeshHolder* mh )
 {
 
 }
-void Graphics::Render( MeshHolder* mh )
+
+void Graphics::PrepareRender()
 {
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	//mat4 rotationMatrix = glm::rotate(mat4(1.f), 30.f, vec3(1.f, .0f, 0.f));
-
-	//float alpha = (3.14 / 180) * 45;
-
-	//mat4 rotationMatrix = mat4(
-	//	glm::cos(alpha), 0.0, -glm::sin(alpha), 0.0,
-	//	0.0, 1.0, 0.0, 0.0,
-	//	glm::sin(alpha), 0.0, glm::cos(alpha), 0.0,
-	//	0.0, 0.0, 0.0, 1.0
-	//	);
-	//	
-	//GLint rotationMatrixUniformLocation = glGetUniformLocation(gShaderProgram, "rotationMatrix");
-	//glUniformMatrix4fv(rotationMatrixUniformLocation, 1, GL_FALSE, &(GLfloat)rotationMatrix[0][0]);
-
-	//mat4 PMatrix = perspective(3.14 * 0.45f, 640.0f / 480.0f, 0.5f, 20.0f);
-
-	glUseProgram(gShaderProgram);
 	glBindVertexArray(gVertexAttribute1);
 
-	// draw points 0-3 from the currently bound VAO with current in-use shader
-	glDrawArrays(GL_TRIANGLE_STRIP, 3, 4);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
+	glUseProgram(gShaderProgram);
+}
+
+void Graphics::Render( MeshHolder* mh )
+{
+	mat4 vwMatrix = viewMatrix * mh->GetWorld();
+
+	glUniformMatrix4fv(worldMatrixUniformLocation, 1, GL_FALSE, &(GLfloat)mh->GetWorld()[0][0]);
+	glUniformMatrix4fv(viewworldMatrixUniformLocation, 1, GL_FALSE, &(GLfloat)vwMatrix[0][0]);
+	glDrawArrays(GL_TRIANGLE_STRIP, mh->offset, mh->numberOfIndices);
 	
 }
 

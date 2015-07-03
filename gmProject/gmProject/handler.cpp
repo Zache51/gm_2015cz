@@ -8,8 +8,8 @@
 #include <iostream>
 #include "Graphics.hpp"
 
-//#include "glm\glm\glm.hpp"
-//#include "glm\glm\gtc\matrix_transform.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #pragma comment(lib, "glfw3.lib")
 #pragma comment(lib, "opengl32.lib")
@@ -156,9 +156,48 @@ int main()
 	Graphics ge = Graphics();
 	
 	Camera cam = Camera(); 
-	//cam.translation = lookAt(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+	cam.translation = lookAt(glm::vec3(0, 0, -2), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+	ge.setCamera(&cam);
 	
 	MeshHolder dummy = MeshHolder();
+
+	// Square
+	MeshHolder square = MeshHolder();
+	square.SetRotation(glm::rotate(mat4(1.f), 45.f, vec3(0.f, 0.0f, 1.f)));
+	square.SetTranslation(glm::translate(mat4(1.0f), vec3(0.5f, 0.0f, 0.0f)));
+	square.offset = 3;
+	square.numberOfIndices = 4;
+
+	// Square 2
+	MeshHolder square2 = MeshHolder();
+	square2.SetRotation(glm::rotate(mat4(1.f), 00.f, vec3(0.f, 0.0f, 1.f)));
+	square2.SetTranslation(glm::translate(mat4(1.0f), vec3(-0.5f, 0.0f, 0.0f)));
+	square2.offset = 3;
+	square2.numberOfIndices = 4;
+
+
+	// Triangle
+	MeshHolder triangle1 = MeshHolder();
+	triangle1.SetRotation(glm::rotate(mat4(1.f), 90.f, vec3(0.f, 0.0f, 1.f)));
+	triangle1.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f)));
+	triangle1.offset = 0;
+	triangle1.numberOfIndices = 3;
+
+
+	// Triangle 2
+	MeshHolder triangle2 = MeshHolder();
+	triangle2.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	triangle2.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.5f, 0.0f)));
+	triangle2.offset = 0;
+	triangle2.numberOfIndices = 3;
+
+
+	// Triangle 3
+	MeshHolder triangle3 = MeshHolder();
+	triangle3.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	triangle3.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, -0.5f, 0.0f)));
+	triangle3.offset = 0;
+	triangle3.numberOfIndices = 3;
 
 	int width = 0, height = 0;
 	////////////////////////////////////////////////////////////
@@ -175,13 +214,18 @@ int main()
 
 			/* TODO: Prompt update for cameras and such using projectionmatrices */
 			cam.width = (float)width;
-			cam.height = (float)height;
-			ge.setCamera( &cam );
+			cam.height = (float)height;			
 		}
 
 		/* TODO: Calling ge.Update() and ge.Render() */
-		ge.Update( &dummy );
-		ge.Render( &dummy );
+		//ge.Update( &dummy );
+		
+		ge.PrepareRender();
+		ge.Render(&square);
+		ge.Render(&square2);
+		ge.Render(&triangle1);
+		ge.Render(&triangle2);
+		ge.Render(&triangle3);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();// Processes all pending events
@@ -191,7 +235,7 @@ int main()
 	glfwDestroyWindow(window);
 	glfwTerminate();
 
-	system("pause");// Remove when main loop is working or save it to read the console's output before exit.
+	//system("pause");// Remove when main loop is working or save it to read the console's output before exit.
 	return 0;
 }
 
