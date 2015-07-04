@@ -42,7 +42,7 @@ public:
 	Graphics();
 	virtual ~Graphics();
 
-	void GenerateBuffer( std::vector<MeshObject*> meshes );
+	void GenerateBuffer(std::vector<MeshObject*> meshes);
 	void PrepareRender();
 	void Render( MeshHolder* mh );
 

@@ -12,7 +12,7 @@ Graphics::Graphics()
 		float x, y, z;
 		float r, g, b;
 	};
-	TriangleVertex tV1[3] =
+	TriangleVertex triangle[3] =
 	{
 		0.0f, 0.1f, 0.0f,	//v0 pos
 		1.0f, 0.0f, 0.0f,	//v0 color
@@ -23,7 +23,7 @@ Graphics::Graphics()
 		-0.1f, -0.1f, 0.0f, //v2
 		1.0f, 0.0f, 0.0f	//v2 color
 	};
-	TriangleVertex tV2[4] =
+	TriangleVertex square[4] =
 	{
 		0.1f, 0.1f, 0.0f,	//v0 pos
 		0.0f, 1.0f, 0.0f,	//v0 color
@@ -41,9 +41,9 @@ Graphics::Graphics()
 	//create buffer and set data
 	glGenBuffers(1, &gVertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(tV1) + sizeof(tV2), 0, GL_STATIC_DRAW);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(tV1), tV1);
-	glBufferSubData(GL_ARRAY_BUFFER, sizeof(tV1), sizeof(tV2), tV2);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle) + sizeof(square), 0, GL_STATIC_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(triangle), triangle);
+	glBufferSubData(GL_ARRAY_BUFFER, sizeof(triangle), sizeof(square), square);
 
 	//define vertex data layout
 	glGenVertexArrays(1, &gVertexAttribute1);
@@ -63,8 +63,8 @@ Graphics::Graphics()
 	glEnableVertexAttribArray(0); //the vertex attribute object will remember its enabled attributes
 	glEnableVertexAttribArray(1);
 	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);
-	glVertexAttribPointer(vertexPos, 3, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(sizeof(tV1)));
-	glVertexAttribPointer(vertexColor, 3, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(sizeof(tV1) + sizeof(float) * 3));
+	glVertexAttribPointer(vertexPos, 3, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(sizeof(triangle)));
+	glVertexAttribPointer(vertexColor, 3, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(sizeof(triangle) + sizeof(float) * 3));
 	
 	
 	/*************************************************************/

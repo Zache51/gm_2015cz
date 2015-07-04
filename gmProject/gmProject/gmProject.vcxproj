@@ -14,11 +14,13 @@
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="handler.cpp" />
     <ClCompile Include="MeshHolder.cpp" />
+    <ClCompile Include="MeshObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.hpp" />
     <ClInclude Include="Graphics.hpp" />
     <ClInclude Include="MeshHolder.hpp" />
+    <ClInclude Include="MeshObject.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3A837370-3DAC-4885-858A-44D15A364E3F}</ProjectGuid>
