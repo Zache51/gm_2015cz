@@ -156,15 +156,10 @@ void Graphics::generateShaders()
 	}
 }
 
-void Graphics::GenerateBuffer( MeshHolder* mh )
+void Graphics::GenerateBuffer(std::vector<MeshObject*> meshes)
 {
 
 }
-void Graphics::Update( MeshHolder* mh )
-{
-
-}
-
 void Graphics::PrepareRender()
 {
 	glClearColor(0, 0, 0, 1);

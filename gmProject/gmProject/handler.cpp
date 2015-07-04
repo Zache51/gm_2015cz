@@ -158,8 +158,6 @@ int main()
 	Camera cam = Camera(); 
 	cam.translation = lookAt(glm::vec3(0, 0, -2), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 	ge.setCamera(&cam);
-	
-	MeshHolder dummy = MeshHolder();
 
 	// Square
 	MeshHolder square = MeshHolder();
@@ -218,7 +216,6 @@ int main()
 		}
 
 		/* TODO: Calling ge.Update() and ge.Render() */
-		//ge.Update( &dummy );
 		
 		ge.PrepareRender();
 		ge.Render(&square);

@@ -14,7 +14,6 @@ class MeshHolder
 private:
 	mat4 rotationMatrix = glm::rotate(mat4(1.f), 45.f, vec3(0.f, 0.0f, 1.f));
 	mat4 translationMatrix = glm::translate(mat4(1.0f), vec3(0.5f, 0.0f, 0.0f));
-	mat4 worldMatrix = translationMatrix * rotationMatrix;
 
 public:
 	MeshHolder();

@@ -7,8 +7,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <vector>
+
 #include "Camera.hpp"
 #include "MeshHolder.hpp"
+#include "MeshObject.hpp"
 
 #define BUFFER_OFFSET(i) ((char *)nullptr + (i))
 
@@ -39,9 +42,7 @@ public:
 	Graphics();
 	virtual ~Graphics();
 
-	void GenerateBuffer( MeshHolder* mh );
-	void Update( MeshHolder* mh );
-	
+	void GenerateBuffer( std::vector<MeshObject*> meshes );
 	void PrepareRender();
 	void Render( MeshHolder* mh );
 
