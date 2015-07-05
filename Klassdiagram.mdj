@@ -201,7 +201,7 @@
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "+MtlContainer mtl",
+											"text": "-MtlContainer mtl",
 											"horizontalAlignment": 0,
 											"verticalAlignment": 5
 										}
@@ -233,34 +233,6 @@
 									"subViews": [
 										{
 											"_type": "UMLOperationView",
-											"_id": "AAAAAAFOC9FjQp0/rMk=",
-											"_parent": {
-												"$ref": "AAAAAAFOC82GbJTTDNw="
-											},
-											"model": {
-												"$ref": "AAAAAAFOC9FjD508JNs="
-											},
-											"visible": true,
-											"enabled": true,
-											"lineColor": "#000000",
-											"fillColor": "#ffffff",
-											"fontColor": "#000000",
-											"font": "Arial;13;0",
-											"showShadow": true,
-											"containerChangeable": false,
-											"containerExtending": false,
-											"left": 169,
-											"top": 305,
-											"width": 173,
-											"height": 13,
-											"autoResize": false,
-											"underline": false,
-											"text": "+MeshObject(string filename)",
-											"horizontalAlignment": 0,
-											"verticalAlignment": 5
-										},
-										{
-											"_type": "UMLOperationView",
 											"_id": "AAAAAAFOC9CTUZsK4Js=",
 											"_parent": {
 												"$ref": "AAAAAAFOC82GbJTTDNw="
@@ -278,7 +250,7 @@
 											"containerChangeable": false,
 											"containerExtending": false,
 											"left": 169,
-											"top": 320,
+											"top": 305,
 											"width": 173,
 											"height": 13,
 											"autoResize": false,
@@ -306,12 +278,12 @@
 											"containerChangeable": false,
 											"containerExtending": false,
 											"left": 169,
-											"top": 335,
+											"top": 320,
 											"width": 173,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "+void loadMtl(string filename)",
+											"text": "-void loadMtl(string filename)",
 											"horizontalAlignment": 0,
 											"verticalAlignment": 5
 										},
@@ -334,12 +306,124 @@
 											"containerChangeable": false,
 											"containerExtending": false,
 											"left": 169,
+											"top": 335,
+											"width": 173,
+											"height": 13,
+											"autoResize": false,
+											"underline": false,
+											"text": "-void loadTexture(...)",
+											"horizontalAlignment": 0,
+											"verticalAlignment": 5
+										},
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAFOC9FjQp0/rMk=",
+											"_parent": {
+												"$ref": "AAAAAAFOC82GbJTTDNw="
+											},
+											"model": {
+												"$ref": "AAAAAAFOC9FjD508JNs="
+											},
+											"visible": true,
+											"enabled": true,
+											"lineColor": "#000000",
+											"fillColor": "#ffffff",
+											"fontColor": "#000000",
+											"font": "Arial;13;0",
+											"showShadow": true,
+											"containerChangeable": false,
+											"containerExtending": false,
+											"left": 169,
 											"top": 350,
 											"width": 173,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "+void loadTexture(...)",
+											"text": "+MeshObject(string filename)",
+											"horizontalAlignment": 0,
+											"verticalAlignment": 5
+										},
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAFOX17V7G4r3fU=",
+											"_parent": {
+												"$ref": "AAAAAAFOC82GbJTTDNw="
+											},
+											"model": {
+												"$ref": "AAAAAAFOX17Vum4omhM="
+											},
+											"visible": true,
+											"enabled": true,
+											"lineColor": "#000000",
+											"fillColor": "#ffffff",
+											"fontColor": "#000000",
+											"font": "Arial;13;0",
+											"showShadow": true,
+											"containerChangeable": false,
+											"containerExtending": false,
+											"left": 169,
+											"top": 365,
+											"width": 173,
+											"height": 13,
+											"autoResize": false,
+											"underline": false,
+											"text": "+vectorPoint GetPoints()",
+											"horizontalAlignment": 0,
+											"verticalAlignment": 5
+										},
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAFOX1+bxXABRUQ=",
+											"_parent": {
+												"$ref": "AAAAAAFOC82GbJTTDNw="
+											},
+											"model": {
+												"$ref": "AAAAAAFOX1+bmW/+eC8="
+											},
+											"visible": true,
+											"enabled": true,
+											"lineColor": "#000000",
+											"fillColor": "#ffffff",
+											"fontColor": "#000000",
+											"font": "Arial;13;0",
+											"showShadow": true,
+											"containerChangeable": false,
+											"containerExtending": false,
+											"left": 169,
+											"top": 380,
+											"width": 173,
+											"height": 13,
+											"autoResize": false,
+											"underline": false,
+											"text": "+vectorGLuint GetIndicies()",
+											"horizontalAlignment": 0,
+											"verticalAlignment": 5
+										},
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAFOX1CbPWmI4pU=",
+											"_parent": {
+												"$ref": "AAAAAAFOC82GbJTTDNw="
+											},
+											"model": {
+												"$ref": "AAAAAAFOX1Ca/mmFfAA="
+											},
+											"visible": true,
+											"enabled": true,
+											"lineColor": "#000000",
+											"fillColor": "#ffffff",
+											"fontColor": "#000000",
+											"font": "Arial;13;0",
+											"showShadow": true,
+											"containerChangeable": false,
+											"containerExtending": false,
+											"left": 169,
+											"top": 395,
+											"width": 173,
+											"height": 13,
+											"autoResize": false,
+											"underline": false,
+											"text": "+MtlContainer GetMtl()",
 											"horizontalAlignment": 0,
 											"verticalAlignment": 5
 										}
@@ -356,7 +440,7 @@
 									"left": 164,
 									"top": 300,
 									"width": 183,
-									"height": 68,
+									"height": 113,
 									"autoResize": false
 								},
 								{
@@ -396,7 +480,7 @@
 							"left": 164,
 							"top": 252,
 							"width": 183,
-							"height": 116,
+							"height": 161,
 							"autoResize": false,
 							"stereotypeDisplay": "label",
 							"showVisibility": true,
@@ -994,7 +1078,7 @@
 											"containerExtending": false,
 											"left": 605,
 											"top": 259,
-											"width": 111.642578125,
+											"width": 112,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
@@ -1063,7 +1147,7 @@
 									"containerExtending": false,
 									"left": 600,
 									"top": 252,
-									"width": 121.642578125,
+									"width": 122,
 									"height": 25,
 									"autoResize": false,
 									"stereotypeLabel": {
@@ -1109,7 +1193,7 @@
 											"containerExtending": false,
 											"left": 605,
 											"top": 282,
-											"width": 111.642578125,
+											"width": 112,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
@@ -1137,7 +1221,7 @@
 											"containerExtending": false,
 											"left": 605,
 											"top": 297,
-											"width": 111.642578125,
+											"width": 112,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
@@ -1165,7 +1249,7 @@
 											"containerExtending": false,
 											"left": 605,
 											"top": 312,
-											"width": 111.642578125,
+											"width": 112,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
@@ -1193,7 +1277,7 @@
 											"containerExtending": false,
 											"left": 605,
 											"top": 327,
-											"width": 111.642578125,
+											"width": 112,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
@@ -1213,7 +1297,7 @@
 									"containerExtending": false,
 									"left": 600,
 									"top": 277,
-									"width": 121.642578125,
+									"width": 122,
 									"height": 68,
 									"autoResize": false
 								},
@@ -1247,7 +1331,7 @@
 											"containerExtending": false,
 											"left": 605,
 											"top": 350,
-											"width": 111.642578125,
+											"width": 112,
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
@@ -1267,7 +1351,7 @@
 									"containerExtending": false,
 									"left": 600,
 									"top": 345,
-									"width": 121.642578125,
+									"width": 122,
 									"height": 23,
 									"autoResize": false
 								},
@@ -1307,7 +1391,7 @@
 							"containerExtending": false,
 							"left": 600,
 							"top": 252,
-							"width": 121.642578125,
+							"width": 122,
 							"height": 116,
 							"autoResize": false,
 							"stereotypeDisplay": "label",
@@ -6595,7 +6679,7 @@
 								"$ref": "AAAAAAFOC82GaZTKA3I="
 							},
 							"name": "MtlContainer mtl",
-							"visibility": "public",
+							"visibility": "private",
 							"isStatic": false,
 							"isLeaf": false,
 							"type": "",
@@ -6608,37 +6692,6 @@
 						}
 					],
 					"operations": [
-						{
-							"_type": "UMLOperation",
-							"_id": "AAAAAAFOC9FjD508JNs=",
-							"_parent": {
-								"$ref": "AAAAAAFOC82GaZTKA3I="
-							},
-							"name": "MeshObject",
-							"visibility": "public",
-							"isStatic": false,
-							"isLeaf": false,
-							"parameters": [
-								{
-									"_type": "UMLParameter",
-									"_id": "AAAAAAFOC9GReZ15+xs=",
-									"_parent": {
-										"$ref": "AAAAAAFOC9FjD508JNs="
-									},
-									"name": "string filename",
-									"visibility": "public",
-									"isStatic": false,
-									"isLeaf": false,
-									"isReadOnly": false,
-									"isOrdered": false,
-									"isUnique": false,
-									"direction": "in"
-								}
-							],
-							"concurrency": "sequential",
-							"isQuery": false,
-							"isAbstract": false
-						},
 						{
 							"_type": "UMLOperation",
 							"_id": "AAAAAAFOC9CTHZsHvek=",
@@ -6678,7 +6731,7 @@
 								"$ref": "AAAAAAFOC82GaZTKA3I="
 							},
 							"name": "void loadMtl",
-							"visibility": "public",
+							"visibility": "private",
 							"isStatic": false,
 							"isLeaf": false,
 							"parameters": [
@@ -6710,7 +6763,7 @@
 								"$ref": "AAAAAAFOC82GaZTKA3I="
 							},
 							"name": "void loadTexture",
-							"visibility": "public",
+							"visibility": "private",
 							"isStatic": false,
 							"isLeaf": false,
 							"parameters": [
@@ -6731,6 +6784,80 @@
 									"direction": "in"
 								}
 							],
+							"concurrency": "sequential",
+							"isQuery": false,
+							"isAbstract": false
+						},
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAFOC9FjD508JNs=",
+							"_parent": {
+								"$ref": "AAAAAAFOC82GaZTKA3I="
+							},
+							"name": "MeshObject",
+							"visibility": "public",
+							"isStatic": false,
+							"isLeaf": false,
+							"parameters": [
+								{
+									"_type": "UMLParameter",
+									"_id": "AAAAAAFOC9GReZ15+xs=",
+									"_parent": {
+										"$ref": "AAAAAAFOC9FjD508JNs="
+									},
+									"name": "string filename",
+									"visibility": "public",
+									"isStatic": false,
+									"isLeaf": false,
+									"type": "",
+									"isReadOnly": false,
+									"isOrdered": false,
+									"isUnique": false,
+									"direction": "in"
+								}
+							],
+							"concurrency": "sequential",
+							"isQuery": false,
+							"isAbstract": false
+						},
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAFOX17Vum4omhM=",
+							"_parent": {
+								"$ref": "AAAAAAFOC82GaZTKA3I="
+							},
+							"name": "vectorPoint GetPoints",
+							"visibility": "public",
+							"isStatic": false,
+							"isLeaf": false,
+							"concurrency": "sequential",
+							"isQuery": false,
+							"isAbstract": false
+						},
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAFOX1+bmW/+eC8=",
+							"_parent": {
+								"$ref": "AAAAAAFOC82GaZTKA3I="
+							},
+							"name": "vectorGLuint GetIndicies",
+							"visibility": "public",
+							"isStatic": false,
+							"isLeaf": false,
+							"concurrency": "sequential",
+							"isQuery": false,
+							"isAbstract": false
+						},
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAFOX1Ca/mmFfAA=",
+							"_parent": {
+								"$ref": "AAAAAAFOC82GaZTKA3I="
+							},
+							"name": "MtlContainer GetMtl",
+							"visibility": "public",
+							"isStatic": false,
+							"isLeaf": false,
 							"concurrency": "sequential",
 							"isQuery": false,
 							"isAbstract": false
@@ -7535,6 +7662,7 @@
 									"visibility": "public",
 									"isStatic": false,
 									"isLeaf": false,
+									"type": "",
 									"isReadOnly": false,
 									"isOrdered": false,
 									"isUnique": false,
@@ -8340,6 +8468,7 @@
 							"visibility": "private",
 							"isStatic": false,
 							"isLeaf": false,
+							"type": "",
 							"isReadOnly": false,
 							"isOrdered": false,
 							"isUnique": false,
@@ -8357,6 +8486,7 @@
 							"visibility": "private",
 							"isStatic": false,
 							"isLeaf": false,
+							"type": "",
 							"isReadOnly": false,
 							"isOrdered": false,
 							"isUnique": false,
@@ -8374,6 +8504,7 @@
 							"visibility": "private",
 							"isStatic": false,
 							"isLeaf": false,
+							"type": "",
 							"isReadOnly": false,
 							"isOrdered": false,
 							"isUnique": false,
@@ -8391,6 +8522,7 @@
 							"visibility": "private",
 							"isStatic": false,
 							"isLeaf": false,
+							"type": "",
 							"isReadOnly": false,
 							"isOrdered": false,
 							"isUnique": false,
@@ -8421,6 +8553,7 @@
 									"visibility": "public",
 									"isStatic": false,
 									"isLeaf": false,
+									"type": "",
 									"isReadOnly": false,
 									"isOrdered": false,
 									"isUnique": false,
@@ -8762,6 +8895,7 @@
 							"visibility": "private",
 							"isStatic": false,
 							"isLeaf": false,
+							"type": "",
 							"multiplicity": "*",
 							"isReadOnly": false,
 							"isOrdered": false,
@@ -8798,6 +8932,7 @@
 							"visibility": "private",
 							"isStatic": false,
 							"isLeaf": false,
+							"type": "",
 							"multiplicity": "*",
 							"isReadOnly": false,
 							"isOrdered": false,
