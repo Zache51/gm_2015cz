@@ -16,30 +16,37 @@ struct MtlContainer
 	char* filename;
 };
 
+struct Point
+{
+	glm::vec3 ver;
+	glm::vec2 uvs;
+	glm::vec3 vns;
+};
+
 class MeshObject
 {
 private:
 
-	struct Point
-	{
-		glm::vec3 ver;
-		glm::vec3 vns;
-	};
+	std::vector<Point> points;
+	std::vector<GLuint> indicies;
 
 	MtlContainer mtl;
 
-	bool loadObj(const char* filename, char* mtlFileName, 
+	bool loadObj(std::string filename, std::string mtlFileName, 
 	std::vector<Point>& points, std::vector<GLuint>& indices);
 	
 	
-	bool loadMtl(const char* filename, MtlContainer& mtl);
-	bool loadTexture(const char* filename);
+	bool loadMtl(std::string filename, MtlContainer& mtl);
+	bool loadTexture(std::string filename);
 
 public:
 
-	MeshObject(const char* filename);
+	MeshObject(std::string filename);
+	MeshObject(std::vector<Point> points);
 	~MeshObject(){}
 
+	std::vector<Point> GetPoints() const;
+	std::vector<GLuint> GetIndicies() const;
 	MtlContainer GetMtl() const;
 };
 
