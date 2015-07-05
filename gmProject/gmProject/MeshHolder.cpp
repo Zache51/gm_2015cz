@@ -1,8 +1,9 @@
 #include "MeshHolder.hpp"
 
 
-MeshHolder::MeshHolder()
+MeshHolder::MeshHolder(MeshObject* mesh)
 {
+	this->mesh = mesh;
 }
 
 

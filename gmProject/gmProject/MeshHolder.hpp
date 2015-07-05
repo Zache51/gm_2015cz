@@ -7,6 +7,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "MeshObject.hpp"
+
 using namespace glm;
 
 class MeshHolder
@@ -16,7 +18,7 @@ private:
 	mat4 translationMatrix = glm::translate(mat4(1.0f), vec3(0.5f, 0.0f, 0.0f));
 
 public:
-	MeshHolder();
+	MeshHolder(MeshObject* mesh);
 	virtual ~MeshHolder();
 
 	void SetRotation(mat4 rotation);
@@ -27,6 +29,8 @@ public:
 	// Temporary values that should be moved to mesh and set by Graphics
 	int offset;
 	int numberOfIndices;
+
+	MeshObject* mesh;
 };
 
 #endif
