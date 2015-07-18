@@ -46,6 +46,7 @@ public:
 	~MeshObject(){}
 
 	std::vector<Point> GetPoints() const;
+	GLuint GetFloatAmount() const;
 	std::vector<GLuint> GetIndicies() const;
 	MtlContainer GetMtl() const;
 };

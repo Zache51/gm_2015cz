@@ -147,6 +147,12 @@ std::vector<Point> MeshObject::GetPoints() const
 	return points;
 }
 
+GLuint MeshObject::GetFloatAmount() const
+{
+	GLuint floatAmount = points.size() * sizeof(Point);
+	return floatAmount;
+}
+
 std::vector<GLuint> MeshObject::GetIndicies() const
 {
 	return indicies;

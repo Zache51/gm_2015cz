@@ -94,63 +94,19 @@ void Graphics::generateShaders()
 
 void Graphics::GenerateBuffer(std::vector<MeshObject*> meshes)
 {
-	//struct TriangleVertex
-	//{
-	//	float x, y, z;
-	//	float r, g, b;
-	//};
-	//TriangleVertex triangle[3] =
-	//{
-	//	0.0f, 0.1f, 0.0f,	//v0 pos
-	//	1.0f, 0.0f, 0.0f,	//v0 color
-
-	//	0.1f, -0.1f, 0.0f,	//v1
-	//	1.0f, 0.0f, 0.0f,	//v1 color
-
-	//	-0.1f, -0.1f, 0.0f, //v2
-	//	1.0f, 0.0f, 0.0f	//v2 color
-	//};
-	//TriangleVertex square[4] =
-	//{
-	//	0.1f, 0.1f, 0.0f,	//v0 pos
-	//	0.0f, 1.0f, 0.0f,	//v0 color
-
-	//	0.1f, -0.1f, 0.0f,	//v1
-	//	0.0f, 1.0f, 0.0f,	//v1 color
-
-	//	-0.1f, 0.1f, 0.0f,	//v2
-	//	0.0f, 1.0f, 0.0f,	//v2 color
-
-	//	-0.1f, -0.1f, 0.0f, //v3
-	//	0.0f, 1.0f, 0.0f	//v3 color
-	//};
-
 	//create buffer and set data
 	glGenBuffers(1, &gVertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, 
-		sizeof(Point) * (meshes[0]->GetPoints().size() + meshes[1]->GetPoints().size()), 
+	glBufferData(GL_ARRAY_BUFFER, meshes[0]->GetFloatAmount() + meshes[1]->GetFloatAmount(),
 		0, GL_STATIC_DRAW);
-
-	//int asdf = sizeof(triangle);
-	//asdf = 72;
-
-	//asdf = sizeof(Point);
-	//asdf = 32;
-
-	//asdf = meshes[0]->GetPoints().size();
-	//asdf = 3;
-
-	//asdf = meshes[1]->GetPoints().size();
-	//asdf = 4
 
 	glBufferSubData(GL_ARRAY_BUFFER,
 		0,
-		meshes[0]->GetPoints().size() * sizeof(Point),
+		meshes[0]->GetFloatAmount(),
 		meshes[0]->GetPoints().data());
 	glBufferSubData(GL_ARRAY_BUFFER,
-		meshes[0]->GetPoints().size() * sizeof(Point),
-		meshes[1]->GetPoints().size() * sizeof(Point),
+		meshes[0]->GetFloatAmount(),
+		meshes[1]->GetFloatAmount(),
 		meshes[1]->GetPoints().data());
 
 	//define vertex data layout
