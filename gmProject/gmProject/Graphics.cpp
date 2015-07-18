@@ -6,66 +6,6 @@ Graphics::Graphics()
 
 	generateShaders();
 
-	/*********************Create triangle data********************/
-	struct TriangleVertex
-	{
-		float x, y, z;
-		float r, g, b;
-	};
-	TriangleVertex triangle[3] =
-	{
-		0.0f, 0.1f, 0.0f,	//v0 pos
-		1.0f, 0.0f, 0.0f,	//v0 color
-
-		0.1f, -0.1f, 0.0f,	//v1
-		1.0f, 0.0f, 0.0f,	//v1 color
-
-		-0.1f, -0.1f, 0.0f, //v2
-		1.0f, 0.0f, 0.0f	//v2 color
-	};
-	TriangleVertex square[4] =
-	{
-		0.1f, 0.1f, 0.0f,	//v0 pos
-		0.0f, 1.0f, 0.0f,	//v0 color
-
-		0.1f, -0.1f, 0.0f,	//v1
-		0.0f, 1.0f, 0.0f,	//v1 color
-
-		-0.1f, 0.1f, 0.0f,	//v2
-		0.0f, 1.0f, 0.0f,	//v2 color
-
-		-0.1f, -0.1f, 0.0f, //v3
-		0.0f, 1.0f, 0.0f	//v3 color
-	};
-
-	//create buffer and set data
-	glGenBuffers(1, &gVertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle) + sizeof(square), 0, GL_STATIC_DRAW);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(triangle), triangle);
-	glBufferSubData(GL_ARRAY_BUFFER, sizeof(triangle), sizeof(square), square);
-
-	//define vertex data layout
-	glGenVertexArrays(1, &gVertexAttribute1);
-	glGenVertexArrays(1, &gVertexAttribute2);
-
-	GLuint vertexPos = glGetAttribLocation(gShaderProgram, "vertex_position");
-	GLuint vertexColor = glGetAttribLocation(gShaderProgram, "vertex_color");
-
-	glBindVertexArray(gVertexAttribute1);
-	glEnableVertexAttribArray(0); //the vertex attribute object will remember its enabled attributes
-	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);
-	glVertexAttribPointer(vertexPos, 3, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(0));
-	glVertexAttribPointer(vertexColor, 3, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(sizeof(float) * 3));
-
-	glBindVertexArray(gVertexAttribute2);
-	glEnableVertexAttribArray(0); //the vertex attribute object will remember its enabled attributes
-	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);
-	glVertexAttribPointer(vertexPos, 3, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(sizeof(triangle)));
-	glVertexAttribPointer(vertexColor, 3, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(sizeof(triangle) + sizeof(float) * 3));
-	
 	
 	/*************************************************************/
 	/*******************Define uniform locations******************/
@@ -87,15 +27,11 @@ void Graphics::generateShaders()
 	const char* vertex_shader = R"(
 		#version 400
 		layout(location = 0) in vec3 vertex_position;
-		layout(location = 1) in vec3 vertex_color;
 		
 		uniform mat4 worldMatrix;
 		uniform mat4 VWMatrix;
-
-		out vec3 color;
 		
 		void main () {
-			color = vertex_color;
 			gl_Position = VWMatrix * vec4 (vertex_position, 1.0);
 		}
 	)";
@@ -105,7 +41,7 @@ void Graphics::generateShaders()
 		in vec3 color;
 		out vec4 fragment_color;
 		void main () {
-			fragment_color = vec4 (color, 1.0);
+			fragment_color = vec4 (1.0, 0.0, 0.0, 1.0);
 		}
 	)";
 
@@ -158,7 +94,85 @@ void Graphics::generateShaders()
 
 void Graphics::GenerateBuffer(std::vector<MeshObject*> meshes)
 {
+	//struct TriangleVertex
+	//{
+	//	float x, y, z;
+	//	float r, g, b;
+	//};
+	//TriangleVertex triangle[3] =
+	//{
+	//	0.0f, 0.1f, 0.0f,	//v0 pos
+	//	1.0f, 0.0f, 0.0f,	//v0 color
 
+	//	0.1f, -0.1f, 0.0f,	//v1
+	//	1.0f, 0.0f, 0.0f,	//v1 color
+
+	//	-0.1f, -0.1f, 0.0f, //v2
+	//	1.0f, 0.0f, 0.0f	//v2 color
+	//};
+	//TriangleVertex square[4] =
+	//{
+	//	0.1f, 0.1f, 0.0f,	//v0 pos
+	//	0.0f, 1.0f, 0.0f,	//v0 color
+
+	//	0.1f, -0.1f, 0.0f,	//v1
+	//	0.0f, 1.0f, 0.0f,	//v1 color
+
+	//	-0.1f, 0.1f, 0.0f,	//v2
+	//	0.0f, 1.0f, 0.0f,	//v2 color
+
+	//	-0.1f, -0.1f, 0.0f, //v3
+	//	0.0f, 1.0f, 0.0f	//v3 color
+	//};
+
+	//create buffer and set data
+	glGenBuffers(1, &gVertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, 
+		sizeof(Point) * (meshes[0]->GetPoints().size() + meshes[1]->GetPoints().size()), 
+		0, GL_STATIC_DRAW);
+
+	//int asdf = sizeof(triangle);
+	//asdf = 72;
+
+	//asdf = sizeof(Point);
+	//asdf = 32;
+
+	//asdf = meshes[0]->GetPoints().size();
+	//asdf = 3;
+
+	//asdf = meshes[1]->GetPoints().size();
+	//asdf = 4
+
+	glBufferSubData(GL_ARRAY_BUFFER,
+		0,
+		meshes[0]->GetPoints().size() * sizeof(Point),
+		meshes[0]->GetPoints().data());
+	glBufferSubData(GL_ARRAY_BUFFER,
+		meshes[0]->GetPoints().size() * sizeof(Point),
+		meshes[1]->GetPoints().size() * sizeof(Point),
+		meshes[1]->GetPoints().data());
+
+	//define vertex data layout
+	glGenVertexArrays(1, &gVertexAttribute1);
+	glGenVertexArrays(1, &gVertexAttribute2);
+
+	GLuint vertexPos = glGetAttribLocation(gShaderProgram, "vertex_position");
+	//GLuint vertexColor = glGetAttribLocation(gShaderProgram, "vertex_color");
+
+	glBindVertexArray(gVertexAttribute1);
+	glEnableVertexAttribArray(0); //the vertex attribute object will remember its enabled attributes
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);
+	glVertexAttribPointer(vertexPos, 3, GL_FLOAT, GL_FALSE, sizeof(Point), BUFFER_OFFSET(0));
+	//glVertexAttribPointer(vertexColor, 3, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(sizeof(float) * 3));
+
+	glBindVertexArray(gVertexAttribute2);
+	glEnableVertexAttribArray(0); //the vertex attribute object will remember its enabled attributes
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);
+	glVertexAttribPointer(vertexPos, 3, GL_FLOAT, GL_FALSE, sizeof(Point), BUFFER_OFFSET(sizeof(meshes[0]->GetPoints())));
+	//glVertexAttribPointer(vertexColor, 3, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(sizeof(triangle) + sizeof(float) * 3));
 }
 void Graphics::PrepareRender()
 {
