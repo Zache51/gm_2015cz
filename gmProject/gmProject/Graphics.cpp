@@ -27,21 +27,26 @@ void Graphics::generateShaders()
 	const char* vertex_shader = R"(
 		#version 400
 		layout(location = 0) in vec3 vertex_position;
+		layout(location = 1) in vec2 texture_normal;
+		layout(location = 2) in vec3 vertex_normal;
 		
+		out vec2 color;
+
 		uniform mat4 worldMatrix;
 		uniform mat4 VWMatrix;
 		
 		void main () {
+			color = texture_normal;
 			gl_Position = VWMatrix * vec4 (vertex_position, 1.0);
 		}
 	)";
 
 	const char* fragment_shader = R"(
 		#version 400
-		in vec3 color;
+		in vec2 color;
 		out vec4 fragment_color;
 		void main () {
-			fragment_color = vec4 (1.0, 0.0, 0.0, 1.0);
+			fragment_color = vec4 (color, 0.0, 1.0);
 		}
 	)";
 
@@ -114,28 +119,23 @@ void Graphics::GenerateBuffer(std::vector<MeshObject*> meshes)
 	glGenVertexArrays(1, &gVertexAttribute2);
 
 	GLuint vertexPos = glGetAttribLocation(gShaderProgram, "vertex_position");
-	//GLuint vertexColor = glGetAttribLocation(gShaderProgram, "vertex_color");
+	GLuint textureNormal = glGetAttribLocation(gShaderProgram, "texture_normal");
+	GLuint vertexNormal = glGetAttribLocation(gShaderProgram, "vertex_normal");
 
 	glBindVertexArray(gVertexAttribute1);
 	glEnableVertexAttribArray(0); //the vertex attribute object will remember its enabled attributes
 	glEnableVertexAttribArray(1);
 	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);
 	glVertexAttribPointer(vertexPos, 3, GL_FLOAT, GL_FALSE, sizeof(Point), BUFFER_OFFSET(0));
-	//glVertexAttribPointer(vertexColor, 3, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(sizeof(float) * 3));
-
-	glBindVertexArray(gVertexAttribute2);
-	glEnableVertexAttribArray(0); //the vertex attribute object will remember its enabled attributes
-	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);
-	glVertexAttribPointer(vertexPos, 3, GL_FLOAT, GL_FALSE, sizeof(Point), BUFFER_OFFSET(sizeof(meshes[0]->GetPoints())));
-	//glVertexAttribPointer(vertexColor, 3, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(sizeof(triangle) + sizeof(float) * 3));
+	glVertexAttribPointer(textureNormal, 2, GL_FLOAT, GL_FALSE, sizeof(Point), BUFFER_OFFSET(sizeof(float) * 3));
+	glVertexAttribPointer(vertexNormal, 3, GL_FLOAT, GL_FALSE, sizeof(Point), BUFFER_OFFSET(sizeof(float) * 5));
 }
 void Graphics::PrepareRender()
 {
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glBindVertexArray(gVertexAttribute1);
+	//glBindVertexArray(gVertexAttribute1);
 
 	glUseProgram(gShaderProgram);
 }
@@ -146,8 +146,9 @@ void Graphics::Render( MeshHolder* mh )
 
 	glUniformMatrix4fv(worldMatrixUniformLocation, 1, GL_FALSE, &(GLfloat)mh->GetWorld()[0][0]);
 	glUniformMatrix4fv(viewworldMatrixUniformLocation, 1, GL_FALSE, &(GLfloat)vwMatrix[0][0]);
-	glDrawArrays(GL_TRIANGLE_STRIP, mh->offset, mh->numberOfIndices);
-	
+
+
+	glDrawArrays(GL_TRIANGLE_STRIP, mh->offset, mh->mesh->GetPoints().size());
 }
 
 void Graphics::setCamera( Camera* c )

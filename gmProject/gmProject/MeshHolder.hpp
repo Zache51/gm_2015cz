@@ -28,7 +28,6 @@ public:
 
 	// Temporary values that should be moved to mesh and set by Graphics
 	int offset;
-	int numberOfIndices;
 
 	MeshObject* mesh;
 };
