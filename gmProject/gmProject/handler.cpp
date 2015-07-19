@@ -173,6 +173,21 @@ int main()
 		glm::vec2(1.0f, 1.0f),
 		glm::vec3(1.0f, 0.0f, 0.0f)
 	};
+
+	Point triangleData2[3] =
+	{
+		glm::vec3(0.0f, 0.1f, 0.0f),
+		glm::vec2(0.0f, 1.0f),
+		glm::vec3(1.0f, 0.0f, 0.0f),
+
+		glm::vec3(0.1f, -0.1f, 0.0f),
+		glm::vec2(0.0f, 1.0f),
+		glm::vec3(1.0f, 0.0f, 0.0f),
+
+		glm::vec3(-0.1f, -0.1f, 0.0f),
+		glm::vec2(0.0f, 1.0f),
+		glm::vec3(1.0f, 0.0f, 0.0f)
+	};
 	
 	Point squareData[4] =
 	{
@@ -201,6 +216,12 @@ int main()
 	MeshObject tm = MeshObject(vertexData);
 
 	vertexData.clear();
+	vertexData.push_back(triangleData2[0]);
+	vertexData.push_back(triangleData2[1]);
+	vertexData.push_back(triangleData2[2]);
+	MeshObject tm2 = MeshObject(vertexData);
+
+	vertexData.clear();
 	vertexData.push_back(squareData[0]);
 	vertexData.push_back(squareData[1]);
 	vertexData.push_back(squareData[2]);
@@ -211,38 +232,34 @@ int main()
 	MeshHolder square = MeshHolder(&sm);
 	square.SetRotation(glm::rotate(mat4(1.f), 45.f, vec3(0.f, 0.0f, 1.f)));
 	square.SetTranslation(glm::translate(mat4(1.0f), vec3(0.5f, 0.0f, 0.0f)));
-	square.offset = 0;
 
 	// Square 2
 	MeshHolder square2 = MeshHolder(&sm);
 	square2.SetRotation(glm::rotate(mat4(1.f), 00.f, vec3(0.f, 0.0f, 1.f)));
 	square2.SetTranslation(glm::translate(mat4(1.0f), vec3(-0.5f, 0.0f, 0.0f)));
-	square2.offset = 0;
 
 
 	// Triangle
-	MeshHolder triangle1 = MeshHolder(&tm);
+	MeshHolder triangle1 = MeshHolder(&tm2);
 	triangle1.SetRotation(glm::rotate(mat4(1.f), 90.f, vec3(0.f, 0.0f, 1.f)));
 	triangle1.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f)));
-	triangle1.offset = 4;
 
 
 	// Triangle 2
-	MeshHolder triangle2 = MeshHolder(&tm);
+	MeshHolder triangle2 = MeshHolder(&tm2);
 	triangle2.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
 	triangle2.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.5f, 0.0f)));
-	triangle2.offset = 4;
 
 
 	// Triangle 3
 	MeshHolder triangle3 = MeshHolder(&tm);
 	triangle3.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
 	triangle3.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, -0.5f, 0.0f)));
-	triangle3.offset = 4;
 
 	std::vector<MeshObject*> meshes;
 	meshes.push_back(&sm);
 	meshes.push_back(&tm);
+	meshes.push_back(&tm2);
 	ge.GenerateBuffer(meshes);
 
 	int width = 0, height = 0;

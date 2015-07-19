@@ -99,29 +99,41 @@ void Graphics::generateShaders()
 
 void Graphics::GenerateBuffer(std::vector<MeshObject*> meshes)
 {
-	//create buffer and set data
+	//create buffer and set data	
 	glGenBuffers(1, &gVertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, meshes[0]->GetFloatAmount() + meshes[1]->GetFloatAmount(),
-		0, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);	
 
-	glBufferSubData(GL_ARRAY_BUFFER,
-		0,
-		meshes[0]->GetFloatAmount(),
-		meshes[0]->GetPoints().data());
-	glBufferSubData(GL_ARRAY_BUFFER,
-		meshes[0]->GetFloatAmount(),
-		meshes[1]->GetFloatAmount(),
-		meshes[1]->GetPoints().data());
 
-	//define vertex data layout
+	// Define the size of the buffer	
+	GLuint floatAmount = 0;
+	for each (MeshObject* mesh in meshes)
+	{
+		floatAmount += mesh->GetFloatAmount();
+	}
+	glBufferData(GL_ARRAY_BUFFER, floatAmount, 0, GL_STATIC_DRAW);
+
+
+	// Define size and offset of the different subdata in the buffer	
+	GLuint offset = 0;
+	for each (MeshObject* mesh in meshes)
+	{
+		// Set offset for mesh
+		mesh->SetOffset(offset / sizeof(Point));
+		
+		glBufferSubData(GL_ARRAY_BUFFER,
+			offset,
+			mesh->GetFloatAmount(),
+			mesh->GetPoints().data());
+		offset += mesh->GetFloatAmount();
+	}
+
+
+	//define vertex data layout	
 	glGenVertexArrays(1, &gVertexAttribute1);
 	glGenVertexArrays(1, &gVertexAttribute2);
-
 	GLuint vertexPos = glGetAttribLocation(gShaderProgram, "vertex_position");
 	GLuint textureNormal = glGetAttribLocation(gShaderProgram, "texture_normal");
 	GLuint vertexNormal = glGetAttribLocation(gShaderProgram, "vertex_normal");
-
 	glBindVertexArray(gVertexAttribute1);
 	glEnableVertexAttribArray(0); //the vertex attribute object will remember its enabled attributes
 	glEnableVertexAttribArray(1);
@@ -147,8 +159,7 @@ void Graphics::Render( MeshHolder* mh )
 	glUniformMatrix4fv(worldMatrixUniformLocation, 1, GL_FALSE, &(GLfloat)mh->GetWorld()[0][0]);
 	glUniformMatrix4fv(viewworldMatrixUniformLocation, 1, GL_FALSE, &(GLfloat)vwMatrix[0][0]);
 
-
-	glDrawArrays(GL_TRIANGLE_STRIP, mh->offset, mh->mesh->GetPoints().size());
+	glDrawArrays(GL_TRIANGLE_STRIP, mh->mesh->GetOffset(), mh->mesh->GetPoints().size());
 }
 
 void Graphics::setCamera( Camera* c )

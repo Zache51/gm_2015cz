@@ -32,6 +32,8 @@ private:
 
 	MtlContainer mtl;
 
+	GLuint offset;
+
 	bool loadObj(std::string filename, std::string mtlFileName, 
 	std::vector<Point>& points, std::vector<GLuint>& indices);
 	
@@ -44,6 +46,9 @@ public:
 	MeshObject(std::string filename);
 	MeshObject(std::vector<Point> points);
 	~MeshObject(){}
+
+	GLuint GetOffset() const;
+	void SetOffset(GLuint offset);
 
 	std::vector<Point> GetPoints() const;
 	GLuint GetFloatAmount() const;

@@ -26,9 +26,6 @@ public:
 
 	mat4 GetWorld() const;
 
-	// Temporary values that should be moved to mesh and set by Graphics
-	int offset;
-
 	MeshObject* mesh;
 };
 

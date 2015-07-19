@@ -142,6 +142,16 @@ MeshObject::MeshObject(std::vector<Point> points)
 	MtlContainer mtl;
 }
 
+GLuint MeshObject::GetOffset() const
+{
+	return offset;
+}
+
+void MeshObject::SetOffset(GLuint offset)
+{
+	this->offset = offset;
+}
+
 std::vector<Point> MeshObject::GetPoints() const
 {
 	return points;
