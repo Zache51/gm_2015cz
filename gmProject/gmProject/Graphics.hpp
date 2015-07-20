@@ -29,11 +29,7 @@ private:
 	
 	GLuint gShaderProgram = 0;
 
-	GLint worldMatrixUniformLocation;
-	GLint viewworldMatrixUniformLocation;
-
-	vec3 cameraPos = glm::vec3(0.0f, 0, 1.0f);
-	mat4 viewMatrix = lookAt(cameraPos, glm::vec3(0, 0, 0), glm::vec3(0, 2, 0));
+	GLint projectionviewworldMatrixUniformLocation;
 
 	void readShader( const char* path );
 	void createProgram();

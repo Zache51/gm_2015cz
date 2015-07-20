@@ -156,7 +156,7 @@ int main()
 	Graphics ge = Graphics();
 	
 	Camera cam = Camera(); 
-	cam.translation = lookAt(glm::vec3(0, 0, -2), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+	cam.position = glm::vec3(0.0f, 0, 60.0f);
 	ge.setCamera(&cam);
 	
 	Point triangleData[3] =

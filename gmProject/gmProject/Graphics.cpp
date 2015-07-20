@@ -10,9 +10,7 @@ Graphics::Graphics()
 	/*************************************************************/
 	/*******************Define uniform locations******************/
 	
-	
-	worldMatrixUniformLocation = glGetUniformLocation(gShaderProgram, "worldMatrix");
-	viewworldMatrixUniformLocation = glGetUniformLocation(gShaderProgram, "VWMatrix");
+	projectionviewworldMatrixUniformLocation = glGetUniformLocation(gShaderProgram, "PVWMatrix");
 	
 	
 	/*************************************************************/
@@ -32,12 +30,11 @@ void Graphics::generateShaders()
 		
 		out vec2 color;
 
-		uniform mat4 worldMatrix;
-		uniform mat4 VWMatrix;
+		uniform mat4 PVWMatrix;
 		
 		void main () {
 			color = texture_normal;
-			gl_Position = VWMatrix * vec4 (vertex_position, 1.0);
+			gl_Position = PVWMatrix * vec4 (vertex_position, 1.0);
 		}
 	)";
 
@@ -154,10 +151,11 @@ void Graphics::PrepareRender()
 
 void Graphics::Render( MeshHolder* mh )
 {
-	mat4 vwMatrix = viewMatrix * mh->GetWorld();
+	mat4 PMatrix = perspective(3.14f * 0.45f, localCamera->width / localCamera->height, 0.5f, 500.0f);
 
-	glUniformMatrix4fv(worldMatrixUniformLocation, 1, GL_FALSE, &(GLfloat)mh->GetWorld()[0][0]);
-	glUniformMatrix4fv(viewworldMatrixUniformLocation, 1, GL_FALSE, &(GLfloat)vwMatrix[0][0]);
+	mat4 vwMatrix = PMatrix * localCamera->GetViewMatrix() * mh->GetWorld();
+
+	glUniformMatrix4fv(projectionviewworldMatrixUniformLocation, 1, GL_FALSE, &(GLfloat)vwMatrix[0][0]);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, mh->mesh->GetOffset(), mh->mesh->GetPoints().size());
 }
