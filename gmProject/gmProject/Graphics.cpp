@@ -151,9 +151,7 @@ void Graphics::PrepareRender()
 
 void Graphics::Render( MeshHolder* mh )
 {
-	mat4 PMatrix = perspective(3.14f * 0.45f, localCamera->width / localCamera->height, 0.5f, 500.0f);
-
-	mat4 vwMatrix = PMatrix * localCamera->GetViewMatrix() * mh->GetWorld();
+	mat4 vwMatrix = localCamera->GetPVMatrix() * mh->GetWorld();
 
 	glUniformMatrix4fv(projectionviewworldMatrixUniformLocation, 1, GL_FALSE, &(GLfloat)vwMatrix[0][0]);
 

@@ -7,22 +7,27 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-struct Camera
+class Camera
 {
+private:
 	//float rx, ry, rz;
-	glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 position;
+	glm::mat4 projectionMatrix;
+	//glm::mat3 rot;
 	float width, height;
 
-	glm::mat4 GetViewMatrix()
-	{
-		return glm::lookAt(position, 
-			glm::vec3(0, 0, 0), 
-			glm::vec3(0, 2, 0));
-	}
+public:
+	Camera();
 
-	//glm::mat4 translation;
-	//glm::mat4 projection;
-	//glm::mat3 rot;
+	glm::mat4 GetViewMatrix() const;
+	glm::mat4 GetProjectionMatrix() const;
+	glm::mat4 GetPVMatrix() const;
+
+	void SetPosition(glm::vec3 position);
+	void SetHeight(float height);
+	void SetWidth(float width);
+
+	void UpdateProjectionMatrix();
 
 	//void SetRotation()
 	//{
