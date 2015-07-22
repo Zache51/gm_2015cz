@@ -124,8 +124,8 @@ MeshObject::MeshObject(std::string filename)
 {
 	std::string mtlFilename = "";
 
-	std::vector<Point> points = std::vector<Point>();
-	std::vector<GLuint> indicies = std::vector<GLuint>();
+	points = std::vector<Point>();
+	indicies = std::vector<GLuint>();
 
 	MtlContainer mtl;
 

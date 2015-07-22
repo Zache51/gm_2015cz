@@ -156,7 +156,7 @@ int main()
 	Graphics ge = Graphics();
 	
 	Camera cam = Camera(); 
-	cam.SetPosition(glm::vec3(0.0f, 0, 2.0f));
+	cam.SetPosition(glm::vec3(0.0f, 0, 3.0f));
 	cam.UpdateProjectionMatrix();
 	ge.setCamera(&cam);
 	
@@ -229,6 +229,9 @@ int main()
 	vertexData.push_back(squareData[3]);
 	MeshObject sm = MeshObject(vertexData);
 
+
+	MeshObject m = MeshObject("mustang.obj");
+	
 	// Square
 	MeshHolder square = MeshHolder(&sm);
 	square.SetRotation(glm::rotate(mat4(1.f), 45.f, vec3(0.f, 0.0f, 1.f)));
@@ -257,10 +260,16 @@ int main()
 	triangle3.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
 	triangle3.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, -0.5f, 0.0f)));
 
+	// P-51 Mustang
+	MeshHolder mustang = MeshHolder(&m);
+	mustang.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(1.f, 0.0f, 1.f)));
+	mustang.SetTranslation(glm::translate(mat4(1.0f), vec3(15.0f, 0.0f, -15.0f)));
+
 	std::vector<MeshObject*> meshes;
 	meshes.push_back(&sm);
 	meshes.push_back(&tm);
 	meshes.push_back(&tm2);
+	meshes.push_back(&m);
 	ge.GenerateBuffer(meshes);
 
 	int width = 0, height = 0;
@@ -290,6 +299,7 @@ int main()
 		ge.Render(&triangle1);
 		ge.Render(&triangle2);
 		ge.Render(&triangle3);
+		ge.Render(&mustang);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();// Processes all pending events

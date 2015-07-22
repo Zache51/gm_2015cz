@@ -43,7 +43,7 @@ void Graphics::generateShaders()
 		in vec2 color;
 		out vec4 fragment_color;
 		void main () {
-			fragment_color = vec4 (color, 0.0, 1.0);
+			fragment_color = vec4 (color, 1.0, 1.0);
 		}
 	)";
 
