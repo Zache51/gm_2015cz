@@ -18,8 +18,6 @@
 static void error_callback(int error, const char* description);
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-
-
 #ifdef _DEBUG
 extern "C"
 {
@@ -90,8 +88,8 @@ int main()
 		exit(EXIT_FAILURE);
 
 	// Sets hints for the next call to glfwCreateWindow - Keep these for future debugging
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
@@ -156,7 +154,7 @@ int main()
 	Graphics ge = Graphics();
 	
 	Camera cam = Camera(); 
-	cam.SetPosition(glm::vec3(0.0f, 0, 2.0f));
+	cam.SetPosition(glm::vec3(0.0f, 0.0f, 2.0f));
 	cam.UpdateProjectionMatrix();
 	ge.setCamera(&cam);
 	
@@ -278,7 +276,7 @@ int main()
 
 			/* TODO: Prompt update for cameras and such using projectionmatrices */
 			cam.SetWidth((float)width);
-			cam.SetHeight((float)height);	
+			cam.SetHeight((float)height);
 			cam.UpdateProjectionMatrix();
 		}
 
