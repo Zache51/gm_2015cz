@@ -42,7 +42,7 @@ public:
 	void PrepareRender();
 	void Render( MeshHolder* mh );
 
-	void setCamera( Camera* c );
+	void SetCamera( Camera* c );
 };
 
 #endif
