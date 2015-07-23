@@ -154,7 +154,7 @@ int main()
 	Graphics ge = Graphics();
 	
 	Camera cam = Camera();
-	cam.SetPosition(glm::vec3(0.0f, 0, 3.0f));
+	//cam.SetPosition(glm::vec3(0.0f, 0, 3.0f));
 	ge.SetCamera(&cam);
 	
 	Point triangleData[3] =
@@ -282,12 +282,12 @@ int main()
 			height = newHeight;
 			glViewport(0, 0, width, height);
 
-			/* TODO: Prompt update for cameras and such using projectionmatrices */
 			cam.SetScreenSize((float)width, (float)height);
 		}
 
-		/* TODO: Calling ge.Update() and ge.Render() */
-		
+		// Moves the camera ( for fun )
+		cam.UpdatePosition(vec3(0.0f, 0.0f, 0.01f));
+
 		ge.PrepareRender();
 		ge.Render(&square);
 		ge.Render(&square2);
