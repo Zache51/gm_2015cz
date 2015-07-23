@@ -24,10 +24,7 @@ public:
 	glm::mat4 GetPVMatrix() const;
 
 	void SetPosition(glm::vec3 position);
-	void SetHeight(float height);
-	void SetWidth(float width);
-
-	void UpdateProjectionMatrix();
+	void SetScreenSize(float height, float width);
 
 	//void SetRotation()
 	//{

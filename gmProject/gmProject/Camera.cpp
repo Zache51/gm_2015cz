@@ -29,17 +29,9 @@ void Camera::SetPosition(glm::vec3 position)
 	this->position = position;
 }
 
-void Camera::SetHeight(float height)
+void Camera::SetScreenSize(float height, float width)
 {
 	this->height = height;
-}
-
-void Camera::SetWidth(float width)
-{
 	this->width = width;
-}
-
-void Camera::UpdateProjectionMatrix()
-{
 	projectionMatrix = glm::perspective(3.14f * 0.45f, width / height, 0.5f, 500.0f);
 }
