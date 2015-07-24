@@ -231,7 +231,7 @@ int main()
 	
 	// Square
 	MeshHolder square = MeshHolder(&sm);
-	square.SetRotation(glm::rotate(mat4(1.f), 45.f, vec3(0.f, 0.0f, 1.f)));
+	square.SetRotation(glm::rotate(mat4(1.f), 3.14f/4, vec3(0.f, 0.0f, 1.f)));
 	square.SetTranslation(glm::translate(mat4(1.0f), vec3(0.5f, 0.0f, 0.0f)));
 
 	// Square 2
@@ -242,7 +242,7 @@ int main()
 
 	// Triangle
 	MeshHolder triangle1 = MeshHolder(&tm2);
-	triangle1.SetRotation(glm::rotate(mat4(1.f), 90.f, vec3(0.f, 0.0f, 1.f)));
+	triangle1.SetRotation(glm::rotate(mat4(1.f), 3.14f, vec3(0.f, 0.0f, 1.f)));
 	triangle1.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f)));
 
 
