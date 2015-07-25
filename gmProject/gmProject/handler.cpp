@@ -10,6 +10,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm\gtc\quaternion.hpp>
 
 #pragma comment(lib, "glfw3.lib")
 #pragma comment(lib, "opengl32.lib")
@@ -154,42 +155,42 @@ int main()
 	Graphics ge = Graphics();
 	
 	Camera cam = Camera();
-	//cam.SetPosition(glm::vec3(0.0f, 0, 3.0f));
+	cam.SetPosition(glm::vec3(4.0f, 2.0f, 10.0f));
 	ge.SetCamera(&cam);
 
 	MeshObject tm = MeshObject("Triangle.obj");
 	MeshObject sm = MeshObject("Square.obj");
 	MeshObject m = MeshObject("mustang.obj");
 	
-	// Square
-	MeshHolder square = MeshHolder(&sm);
-	square.SetRotation(glm::rotate(mat4(1.f), 3.14f/4, vec3(0.f, 0.0f, 1.f)));
-	square.SetTranslation(glm::translate(mat4(1.0f), vec3(0.5f, 0.0f, 0.0f)));
+	//// Square
+	//MeshHolder square = MeshHolder(&sm);
+	//square.SetRotation(glm::rotate(mat4(1.f), 3.14f/4, vec3(0.f, 0.0f, 1.f)));
+	//square.SetTranslation(glm::translate(mat4(1.0f), vec3(0.5f, 0.0f, 0.0f)));
 
-	// Square 2
-	MeshHolder square2 = MeshHolder(&sm);
-	square2.SetRotation(glm::rotate(mat4(1.f), 00.f, vec3(0.f, 0.0f, 1.f)));
-	square2.SetTranslation(glm::translate(mat4(1.0f), vec3(-0.5f, 0.0f, 0.0f)));
+	//// Square 2
+	//MeshHolder square2 = MeshHolder(&sm);
+	//square2.SetRotation(glm::rotate(mat4(1.f), 00.f, vec3(0.f, 0.0f, 1.f)));
+	//square2.SetTranslation(glm::translate(mat4(1.0f), vec3(-0.5f, 0.0f, 0.0f)));
 
-	// Triangle
-	MeshHolder triangle1 = MeshHolder(&tm);
-	triangle1.SetRotation(glm::rotate(mat4(1.f), 3.14f, vec3(0.f, 0.0f, 1.f)));
-	triangle1.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f)));
+	//// Triangle
+	//MeshHolder triangle1 = MeshHolder(&tm);
+	//triangle1.SetRotation(glm::rotate(mat4(1.f), 3.14f, vec3(0.f, 0.0f, 1.f)));
+	//triangle1.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f)));
 
-	// Triangle 2
-	MeshHolder triangle2 = MeshHolder(&tm);
-	triangle2.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	triangle2.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.5f, 0.0f)));
+	//// Triangle 2
+	//MeshHolder triangle2 = MeshHolder(&tm);
+	//triangle2.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	//triangle2.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.5f, 0.0f)));
 
-	// Triangle 3
-	MeshHolder triangle3 = MeshHolder(&tm);
-	triangle3.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	triangle3.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, -0.5f, 0.0f)));
+	//// Triangle 3
+	//MeshHolder triangle3 = MeshHolder(&tm);
+	//triangle3.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	//triangle3.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, -0.5f, 0.0f)));
 
 	// P-51 Mustang
 	MeshHolder mustang = MeshHolder(&m);
 	mustang.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(1.f, 0.0f, 1.f)));
-	mustang.SetTranslation(glm::translate(mat4(1.0f), vec3(15.0f, 0.0f, -15.0f)));
+	mustang.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, -15.0f)));
 
 	std::vector<MeshObject*> meshes;
 	meshes.push_back(&sm);
@@ -213,15 +214,35 @@ int main()
 			cam.SetScreenSize((float)width, (float)height);
 		}
 
+
+		// Rotates the camera with the mouse (WIP)
+		double xpos, ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
+
+		if (xpos != cam.rx && ypos != cam.ry)
+		{
+			cam.ry += (float)(xpos - cam.ry) ;
+			cam.rx += (float)(ypos - cam.rx) ;
+
+			glm::quat quatx = glm::angleAxis(cam.rx / 150.0f, glm::vec3(1, 0, 0));
+			glm::quat quaty = glm::angleAxis(cam.ry / 150.0f, glm::vec3(0, 1, 0));
+
+			mat4 rotation = mat4(glm::mat3_cast(glm::cross(quatx, quaty)));
+
+			cam.SetRotationMatrix(rotation);
+		}
+
+		
+
 		// Moves the camera ( for fun )
-		cam.UpdatePosition(vec3(0.0f, 0.0f, 0.01f));
+		//cam.UpdatePosition(vec3(0.0f, 0.0f, 0.01f));
 
 		ge.PrepareRender();
-		ge.Render(&square);
-		ge.Render(&square2);
-		ge.Render(&triangle1);
-		ge.Render(&triangle2);
-		ge.Render(&triangle3);
+		//ge.Render(&square);
+		//ge.Render(&square2);
+		//ge.Render(&triangle1);
+		//ge.Render(&triangle2);
+		//ge.Render(&triangle3);
 		ge.Render(&mustang);
 
 		glfwSwapBuffers(window);

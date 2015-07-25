@@ -11,7 +11,6 @@ using namespace glm;
 class Camera
 {
 private:
-	//float rx, ry, rz;
 	glm::vec3 position;
 	
 	float width, height;
@@ -23,6 +22,9 @@ private:
 	glm::mat4 getViewMatrix() const;
 
 public:
+	// temporary public
+	float rx, ry, rz;
+
 	Camera();
 
 	glm::mat4 GetPVMatrix() const;

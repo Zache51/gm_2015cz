@@ -26,6 +26,7 @@ void Camera::UpdatePosition(glm::vec3 change)
 void Camera::SetPosition(glm::vec3 position)
 {
 	this->position = position;
+	translationMatrix = glm::lookAt(position, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 }
 
 void Camera::SetScreenSize(float height, float width)
