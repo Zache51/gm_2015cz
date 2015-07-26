@@ -2,8 +2,6 @@
 
 Graphics::Graphics()
 {
-	// Code is temporary
-
 	generateShaders();
 
 	
@@ -141,8 +139,9 @@ void Graphics::GenerateBuffer(std::vector<MeshObject*> meshes)
 }
 void Graphics::PrepareRender()
 {
-	glClearColor(0, 0, 0, 1);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClearColor(0, 0, 0.08f, 1);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
 
 	//glBindVertexArray(gVertexAttribute1);
 
