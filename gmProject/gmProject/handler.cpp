@@ -232,10 +232,27 @@ int main()
 			cam.SetRotationMatrix(rotation);
 		}
 
-		
+		// Moved the camera with keyboard (WIP)
+		glm::vec3 up = mat3(cam.GetRotationMatrix()) * glm::vec3(0.0, 1.0, 0.0);
+		glm::vec3 forward = mat3(cam.GetRotationMatrix()) * glm::vec3(0.0, 0.0, -1.0);
+		glm::vec3 strafe = glm::cross(up, forward);
 
-		// Moves the camera ( for fun )
-		//cam.UpdatePosition(vec3(0.0f, 0.0f, 0.01f));
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		{
+			cam.UpdateTranslation(forward*glm::vec3(0.1f, 0, -0.1));
+		}
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		{
+			cam.UpdateTranslation(forward*glm::vec3(-0.1f, 0, 0.1));
+		}
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		{
+			cam.UpdateTranslation(strafe*glm::vec3(0.1f, 0, -0.1f));
+		}
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		{
+			cam.UpdateTranslation(strafe*glm::vec3(-0.1f, 0, 0.1));
+		}
 
 		ge.PrepareRender();
 		//ge.Render(&square);

@@ -12,6 +12,11 @@ Camera::Camera()
 	translationMatrix = glm::lookAt(position, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 }
 
+glm::mat4 Camera::GetRotationMatrix() const
+{
+	return rotationMatrix;
+}
+
 glm::mat4 Camera::GetPVMatrix() const
 {
 	return projectionMatrix * getViewMatrix();
@@ -21,6 +26,11 @@ void Camera::UpdatePosition(glm::vec3 change)
 {
 	position += change;
 	translationMatrix = glm::lookAt(position, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+}
+
+void Camera::UpdateTranslation(glm::vec3 change)
+{
+	translationMatrix = glm::translate(translationMatrix, change);
 }
 
 void Camera::SetPosition(glm::vec3 position)

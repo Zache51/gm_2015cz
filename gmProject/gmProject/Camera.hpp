@@ -27,9 +27,12 @@ public:
 
 	Camera();
 
+	glm::mat4 GetRotationMatrix() const;
 	glm::mat4 GetPVMatrix() const;
 	
+	// One of these is probably redundant
 	void UpdatePosition(glm::vec3 change);
+	void UpdateTranslation(glm::vec3 change);
 
 	void SetPosition(glm::vec3 position);
 	void SetScreenSize(float height, float width);
