@@ -193,8 +193,8 @@ int main()
 	mustang.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, -15.0f)));
 
 	std::vector<MeshObject*> meshes;
-	meshes.push_back(&sm);
-	meshes.push_back(&tm);
+	//meshes.push_back(&sm);
+	//meshes.push_back(&tm);
 	meshes.push_back(&m);
 	ge.GenerateBuffer(meshes);
 

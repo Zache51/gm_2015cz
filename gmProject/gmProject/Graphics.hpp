@@ -23,6 +23,7 @@ private:
 	Camera* localCamera;
 
 	GLuint gVertexBuffer = 0;
+	GLuint gIndexBuffer = 0;
 
 	GLuint gVertexAttribute1 = 0;
 	GLuint gVertexAttribute2 = 0;

@@ -122,6 +122,10 @@ void Graphics::GenerateBuffer(std::vector<MeshObject*> meshes)
 		offset += mesh->GetFloatAmount();
 	}
 
+	// Temporary index buffer
+	glGenBuffers(1, &gIndexBuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gIndexBuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, meshes[0]->GetIndicies().size() * sizeof(GLuint), meshes[0]->GetIndicies().data(), GL_DYNAMIC_DRAW);
 
 	//define vertex data layout	
 	glGenVertexArrays(1, &gVertexAttribute1);
@@ -150,11 +154,14 @@ void Graphics::PrepareRender()
 
 void Graphics::Render( MeshHolder* mh )
 {
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gIndexBuffer);
+
 	mat4 vwMatrix = localCamera->GetPVMatrix() * mh->GetWorld();
 
 	glUniformMatrix4fv(projectionviewworldMatrixUniformLocation, 1, GL_FALSE, &(GLfloat)vwMatrix[0][0]);
 
-	glDrawArrays(GL_TRIANGLE_STRIP, mh->mesh->GetOffset(), mh->mesh->GetPoints().size());
+	//glDrawArrays(GL_TRIANGLE_STRIP, mh->mesh->GetOffset(), mh->mesh->GetPoints().size());
+	glDrawElements(GL_TRIANGLES, mh->mesh->GetIndicies().size() * sizeof(GLuint), GL_UNSIGNED_INT, (void*)0);
 }
 
 void Graphics::SetCamera( Camera* c )
