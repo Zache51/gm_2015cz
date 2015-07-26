@@ -16,7 +16,9 @@ bool MeshObject::loadObj(std::string filename, std::string mtlFileName,
 	FILE * file;
 	fopen_s(&file, filename.data(), "r");
 
-	fprintf(stdout, "Reading file\n");
+	fprintf(stdout, "Reading data from ");
+	fprintf(stdout, filename.data());
+	fprintf(stdout, "\n");
 
 	GLuint index = 0;
 	while (1){
@@ -106,7 +108,7 @@ bool MeshObject::loadObj(std::string filename, std::string mtlFileName,
 		}
 	}
 
-	fprintf(stdout, "Generating vertices\n");
+	fprintf(stdout, "Vertices generated\n");
 
 	//Succes!
 	fclose(file);
