@@ -189,8 +189,20 @@ int main()
 
 	// P-51 Mustang
 	MeshHolder mustang = MeshHolder(&m);
-	mustang.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(1.f, 0.0f, 1.f)));
-	mustang.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, -15.0f)));
+	mustang.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	mustang.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f)));
+
+	MeshHolder mustang2 = MeshHolder(&m);
+	mustang2.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	mustang2.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, 20.0f)));
+
+	MeshHolder mustang3 = MeshHolder(&m);
+	mustang3.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	mustang3.SetTranslation(glm::translate(mat4(1.0f), vec3(20.0f, 0.0f, 20.0f)));
+
+	MeshHolder mustang4 = MeshHolder(&m);
+	mustang4.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	mustang4.SetTranslation(glm::translate(mat4(1.0f), vec3(20.0f, 0.0f, 0.0f)));
 
 	std::vector<MeshObject*> meshes;
 	//meshes.push_back(&sm);
@@ -261,6 +273,9 @@ int main()
 		//ge.Render(&triangle2);
 		//ge.Render(&triangle3);
 		ge.Render(&mustang);
+		ge.Render(&mustang2);
+		ge.Render(&mustang3);
+		ge.Render(&mustang4);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();// Processes all pending events
