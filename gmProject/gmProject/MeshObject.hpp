@@ -3,6 +3,8 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <vector>
+
+//#define STB_IMAGE_IMPLEMENTATION
 //#include <stb_image.h>
 
 #define MESH_FOLDER "Meshes/"
@@ -13,7 +15,7 @@ struct MtlContainer
 	glm::vec3 Ka;
 	glm::vec3 Kd;
 	glm::vec3 Ks;
-	char* filename;
+	std::string filename;
 };
 
 struct Point
@@ -38,7 +40,7 @@ private:
 	GLuint offset;
 	GLuint offsetInd;
 
-	bool loadObj(std::string filename, std::string mtlFileName, 
+	bool loadObj(std::string filename, std::string& mtlFileName, 
 	std::vector<Point>& points, std::vector<GLuint>& indices);
 	
 	

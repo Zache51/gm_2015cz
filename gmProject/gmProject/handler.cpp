@@ -160,9 +160,12 @@ int main()
 	cam.SetPosition(glm::vec3(4.0f, 2.0f, 10.0f));
 	ge.SetCamera(&cam);
 
+	fprintf(stdout, "\n");
+	fprintf(stdout, "------------- Loading Meshes -------------\n");
 	MeshObject tm = MeshObject("Triangle.obj");
 	MeshObject sm = MeshObject("Square.obj");
 	MeshObject m = MeshObject("mustang.obj");
+	fprintf(stdout, "------------------------------------------\n");
 	
 	// Square
 	MeshHolder square = MeshHolder(&sm);

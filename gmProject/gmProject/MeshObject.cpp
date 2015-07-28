@@ -4,9 +4,7 @@
 
 /******************************* Private *******************************/
 
-
-
-bool MeshObject::loadObj(std::string filename, std::string mtlFileName,
+bool MeshObject::loadObj(std::string filename, std::string& mtlFileName,
 	std::vector<Point>& points, std::vector<GLuint>& indices)
 {
 	std::vector < glm::vec3 > vertices;
@@ -36,7 +34,7 @@ bool MeshObject::loadObj(std::string filename, std::string mtlFileName,
 			char mtlName[100];
 			fscanf_s(file, "%s", mtlName, sizeof(mtlName));
 
-			//mtlFileName = std::string(mtlName);
+			mtlFileName = std::string(mtlName);
 		}
 		else if (strcmp(lineHeader, "v") == 0)
 		{
@@ -115,7 +113,100 @@ bool MeshObject::loadObj(std::string filename, std::string mtlFileName,
 	return true;
 }
 
+bool MeshObject::loadMtl(std::string filename, MtlContainer& mtl)
+{
+	FILE * file;
+	fopen_s(&file, filename.data(), "r");
 
+	fprintf(stdout, "Reading data from ");
+	fprintf(stdout, filename.data());
+	fprintf(stdout, "\n");
+
+	while (1){
+		char lineHeader[128];
+
+		// load a row into char array
+		char res = fscanf_s(file, "%s", lineHeader, sizeof(lineHeader));
+
+		// Check for End Of File
+		if (res == EOF) break;
+
+		if (strcmp(lineHeader, "Ns") == 0)
+		{
+			fscanf_s(file, "%f\n", &mtl.Ns);
+		}
+		else if (strcmp(lineHeader, "Ka") == 0)
+		{
+			fscanf_s(file, "%f %f %f\n", &mtl.Ka[0], &mtl.Ka[1], &mtl.Ka[2]);
+		}
+		else if (strcmp(lineHeader, "Kd") == 0)
+		{
+			fscanf_s(file, "%f %f %f\n", &mtl.Kd[0], &mtl.Kd[1], &mtl.Kd[2]);
+		}
+		else if (strcmp(lineHeader, "Ks") == 0)
+		{
+			fscanf_s(file, "%f %f %f\n", &mtl.Ks[0], &mtl.Ks[1], &mtl.Ks[2]);
+		}
+		else if (strcmp(lineHeader, "map_Kd") == 0)
+		{
+			char fileName[100];
+			fscanf_s(file, "%s", fileName, sizeof(fileName));
+			mtl.filename = std::string(fileName);
+		}
+		/*******************************************************************************/
+		// d (ignore)
+		/*******************************************************************************/
+		/*******************************************************************************/
+		// illum (ignore)
+		/*******************************************************************************/
+	}
+
+	fclose(file);
+
+	fprintf(stdout, "Mtl read\n");
+
+	// Succes!
+	return true;
+}
+
+bool MeshObject::loadTexture(std::string filename)
+{
+	//GLint wi;
+	//GLint he;
+	//GLint nrOfBytes;
+	//unsigned char* image = stbi_load(path.data(), &wi, &he, &nrOfBytes, RGB);
+
+	//if (image == nullptr)
+	//{
+	//	std::string toPrint = "Failed to load image " + path;
+	//	fprintf(stdout, toPrint.data());
+	//	return false;
+	//}
+
+	//glGenTextures(1, &ID);
+	//glBindTexture(GL_TEXTURE_2D, ID);
+
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	//if (nrOfBytes == 3)
+	//{
+	//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wi, he, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	//}
+	//else if (nrOfBytes == 4)
+	//{
+	//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, wi, he, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+	//}
+	//else
+	//{
+	//	fprintf(stdout, "Unexpected number of bytes in texture");
+	//	return false;
+	//}
+
+	//stbi_image_free(image);
+
+	return true;
+}
 
 /***********************************************************************/
 /******************************* Public ********************************/
@@ -129,9 +220,14 @@ MeshObject::MeshObject(std::string filename)
 	points = std::vector<Point>();
 	indicies = std::vector<GLuint>();
 
-	MtlContainer mtl;
-
 	loadObj(MESH_FOLDER + filename, mtlFilename, points, indicies);
+	if (mtlFilename != "")
+	{
+		fprintf(stdout, "Mtl data found\n");
+		loadMtl(MESH_FOLDER + mtlFilename, mtl);
+	}
+
+	fprintf(stdout, "\n");
 
 	numberOfPoints = points.size();
 	numberOfIndicies = indicies.size();
@@ -139,12 +235,8 @@ MeshObject::MeshObject(std::string filename)
 
 MeshObject::MeshObject(std::vector<Point> points)
 {
-	std::string mtlFilename = "";
-
 	this->points = points;
 	std::vector<GLuint> indicies = std::vector<GLuint>();
-
-	MtlContainer mtl;
 
 	numberOfPoints = points.size();
 	numberOfIndicies = indicies.size();
