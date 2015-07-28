@@ -30,9 +30,13 @@ private:
 	std::vector<Point> points;
 	std::vector<GLuint> indicies;
 
+	GLuint numberOfPoints;
+	GLuint numberOfIndicies;
+
 	MtlContainer mtl;
 
 	GLuint offset;
+	GLuint offsetInd;
 
 	bool loadObj(std::string filename, std::string mtlFileName, 
 	std::vector<Point>& points, std::vector<GLuint>& indices);
@@ -47,12 +51,21 @@ public:
 	MeshObject(std::vector<Point> points);
 	~MeshObject(){}
 
-	GLuint GetOffset() const;
-	void SetOffset(GLuint offset);
+	void FreeMemory();
 
+	void SetOffset(GLuint offset);
+	void SetOffsetInd(GLuint offset);
+
+	void AddIndicies(GLuint add);
+
+	GLuint GetNumberOfPoint() const;
+	GLuint GetNumberOfIndicies() const;
+	GLuint GetOffset() const;
+	GLuint GetOffsetInd() const;
 	std::vector<Point> GetPoints() const;
 	GLuint GetFloatAmount() const;
 	std::vector<GLuint> GetIndicies() const;
+	GLuint GetGLuintAmount() const;
 	MtlContainer GetMtl() const;
 };
 

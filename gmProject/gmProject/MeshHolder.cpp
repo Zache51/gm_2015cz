@@ -6,11 +6,6 @@ MeshHolder::MeshHolder(MeshObject* mesh)
 	this->mesh = mesh;
 }
 
-
-MeshHolder::~MeshHolder()
-{
-}
-
 void MeshHolder::SetRotation(mat4 rotation)
 {
 	rotationMatrix = rotation;
@@ -24,4 +19,9 @@ void MeshHolder::SetTranslation(mat4 translation)
 mat4 MeshHolder::GetWorld() const
 {
 	return translationMatrix * rotationMatrix;
+}
+
+MeshObject* MeshHolder::GetMesh() const
+{
+	return mesh;
 }

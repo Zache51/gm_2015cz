@@ -132,6 +132,9 @@ MeshObject::MeshObject(std::string filename)
 	MtlContainer mtl;
 
 	loadObj(MESH_FOLDER + filename, mtlFilename, points, indicies);
+
+	numberOfPoints = points.size();
+	numberOfIndicies = indicies.size();
 }
 
 MeshObject::MeshObject(std::vector<Point> points)
@@ -142,6 +145,43 @@ MeshObject::MeshObject(std::vector<Point> points)
 	std::vector<GLuint> indicies = std::vector<GLuint>();
 
 	MtlContainer mtl;
+
+	numberOfPoints = points.size();
+	numberOfIndicies = indicies.size();
+}
+
+void MeshObject::FreeMemory()
+{
+	points.clear();
+	indicies.clear();
+}
+
+void MeshObject::SetOffset(GLuint offset)
+{
+	this->offset = offset;
+}
+
+void MeshObject::SetOffsetInd(GLuint offset)
+{
+	this->offsetInd = offset;
+}
+
+void MeshObject::AddIndicies(GLuint add)
+{
+	for (GLuint i = 0; i < numberOfIndicies; i++)
+	{
+		indicies[i] += add;
+	}
+}
+
+GLuint MeshObject::GetNumberOfPoint() const
+{
+	return numberOfPoints;
+}
+
+GLuint MeshObject::GetNumberOfIndicies() const
+{
+	return numberOfIndicies;
 }
 
 GLuint MeshObject::GetOffset() const
@@ -149,9 +189,9 @@ GLuint MeshObject::GetOffset() const
 	return offset;
 }
 
-void MeshObject::SetOffset(GLuint offset)
+GLuint MeshObject::GetOffsetInd() const
 {
-	this->offset = offset;
+	return offsetInd;
 }
 
 std::vector<Point> MeshObject::GetPoints() const
@@ -161,13 +201,17 @@ std::vector<Point> MeshObject::GetPoints() const
 
 GLuint MeshObject::GetFloatAmount() const
 {
-	GLuint floatAmount = points.size() * sizeof(Point);
-	return floatAmount;
+	return numberOfPoints * sizeof(Point);
 }
 
 std::vector<GLuint> MeshObject::GetIndicies() const
 {
 	return indicies;
+}
+
+GLuint MeshObject::GetGLuintAmount() const
+{
+	return numberOfIndicies * sizeof(GLuint);
 }
 
 MtlContainer MeshObject::GetMtl() const

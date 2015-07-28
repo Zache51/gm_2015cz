@@ -15,7 +15,9 @@ Graphics::Graphics()
 }
 Graphics::~Graphics()
 {
-
+	glDeleteBuffers(1, &gVertexBuffer);
+	glDeleteBuffers(1, &gIndexBuffer);
+	glDeleteProgram(gShaderProgram);
 }
 
 void Graphics::generateShaders()
@@ -94,52 +96,67 @@ void Graphics::generateShaders()
 
 void Graphics::GenerateBuffer(std::vector<MeshObject*> meshes)
 {
-	//create buffer and set data	
+	//create vertex and index buffer 
 	glGenBuffers(1, &gVertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);	
+	glGenBuffers(1, &gIndexBuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gIndexBuffer);
 
-
-	// Define the size of the buffer	
+	// Define the size of the buffers	
 	GLuint floatAmount = 0;
+	GLuint GLuintAmount = 0;
 	for each (MeshObject* mesh in meshes)
 	{
 		floatAmount += mesh->GetFloatAmount();
+		GLuintAmount += mesh->GetGLuintAmount();
 	}
 	glBufferData(GL_ARRAY_BUFFER, floatAmount, 0, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, GLuintAmount, 0, GL_STATIC_DRAW);
 
 
-	// Define size and offset of the different subdata in the buffer	
-	GLuint offset = 0;
+	// Define size and offset of the different subdata in the buffers
+	GLuint offsetVer = 0;
+	GLuint offsetInd = 0;
 	for each (MeshObject* mesh in meshes)
 	{
 		// Set offset for mesh
-		mesh->SetOffset(offset / sizeof(Point));
+		GLuint add = offsetVer / sizeof(Point);
+		mesh->SetOffset(add);
+		mesh->SetOffsetInd(offsetInd);
 		
 		glBufferSubData(GL_ARRAY_BUFFER,
-			offset,
+			offsetVer,
 			mesh->GetFloatAmount(),
 			mesh->GetPoints().data());
-		offset += mesh->GetFloatAmount();
+		
+		mesh->AddIndicies(add);
+		
+		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER,
+			offsetInd,
+			mesh->GetGLuintAmount(),
+			mesh->GetIndicies().data());
+
+		offsetVer += mesh->GetFloatAmount();
+		offsetInd += mesh->GetGLuintAmount();
 	}
 
-	// Temporary index buffer
-	glGenBuffers(1, &gIndexBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gIndexBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, meshes[0]->GetIndicies().size() * sizeof(GLuint), meshes[0]->GetIndicies().data(), GL_DYNAMIC_DRAW);
-
-	//define vertex data layout	
+	
+	// Define vertex data layout	
+	
 	glGenVertexArrays(1, &gVertexAttribute1);
-	glGenVertexArrays(1, &gVertexAttribute2);
+	glBindVertexArray(gVertexAttribute1);
+
 	GLuint vertexPos = glGetAttribLocation(gShaderProgram, "vertex_position");
 	GLuint textureNormal = glGetAttribLocation(gShaderProgram, "texture_normal");
 	GLuint vertexNormal = glGetAttribLocation(gShaderProgram, "vertex_normal");
-	glBindVertexArray(gVertexAttribute1);
-	glEnableVertexAttribArray(0); //the vertex attribute object will remember its enabled attributes
+	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);
+	glEnableVertexAttribArray(2);
+
 	glVertexAttribPointer(vertexPos, 3, GL_FLOAT, GL_FALSE, sizeof(Point), BUFFER_OFFSET(0));
 	glVertexAttribPointer(textureNormal, 2, GL_FLOAT, GL_FALSE, sizeof(Point), BUFFER_OFFSET(sizeof(float) * 3));
 	glVertexAttribPointer(vertexNormal, 3, GL_FLOAT, GL_FALSE, sizeof(Point), BUFFER_OFFSET(sizeof(float) * 5));
+
 }
 void Graphics::PrepareRender()
 {
@@ -147,21 +164,20 @@ void Graphics::PrepareRender()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 
-	//glBindVertexArray(gVertexAttribute1);
-
 	glUseProgram(gShaderProgram);
 }
 
 void Graphics::Render( MeshHolder* mh )
 {
+	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gIndexBuffer);
 
 	mat4 vwMatrix = localCamera->GetPVMatrix() * mh->GetWorld();
 
 	glUniformMatrix4fv(projectionviewworldMatrixUniformLocation, 1, GL_FALSE, &(GLfloat)vwMatrix[0][0]);
 
-	//glDrawArrays(GL_TRIANGLE_STRIP, mh->mesh->GetOffset(), mh->mesh->GetPoints().size());
-	glDrawElements(GL_TRIANGLES, mh->mesh->GetIndicies().size() * sizeof(GLuint), GL_UNSIGNED_INT, (void*)0);
+	//glDrawArrays(GL_TRIANGLES, mh->mesh->GetOffset(), mh->mesh->GetPoints().size());
+	glDrawElements(GL_TRIANGLES, mh->GetMesh()->GetNumberOfIndicies(), GL_UNSIGNED_INT, (void*)mh->GetMesh()->GetOffsetInd());
 }
 
 void Graphics::SetCamera( Camera* c )

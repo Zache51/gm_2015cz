@@ -26,7 +26,6 @@ private:
 	GLuint gIndexBuffer = 0;
 
 	GLuint gVertexAttribute1 = 0;
-	GLuint gVertexAttribute2 = 0;
 	
 	GLuint gShaderProgram = 0;
 

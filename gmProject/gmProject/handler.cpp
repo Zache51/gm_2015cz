@@ -16,6 +16,8 @@
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "glew32.lib")
 
+#define PI 3.14f
+
 static void error_callback(int error, const char* description);
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
@@ -162,30 +164,30 @@ int main()
 	MeshObject sm = MeshObject("Square.obj");
 	MeshObject m = MeshObject("mustang.obj");
 	
-	//// Square
-	//MeshHolder square = MeshHolder(&sm);
-	//square.SetRotation(glm::rotate(mat4(1.f), 3.14f/4, vec3(0.f, 0.0f, 1.f)));
-	//square.SetTranslation(glm::translate(mat4(1.0f), vec3(0.5f, 0.0f, 0.0f)));
+	// Square
+	MeshHolder square = MeshHolder(&sm);
+	square.SetRotation(glm::rotate(mat4(1.f), PI/4, vec3(0.f, 0.0f, 1.f)));
+	square.SetTranslation(glm::translate(mat4(1.0f), vec3(5.f, 5.0f, 0.0f)));
 
-	//// Square 2
-	//MeshHolder square2 = MeshHolder(&sm);
-	//square2.SetRotation(glm::rotate(mat4(1.f), 00.f, vec3(0.f, 0.0f, 1.f)));
-	//square2.SetTranslation(glm::translate(mat4(1.0f), vec3(-0.5f, 0.0f, 0.0f)));
+	// Square 2
+	MeshHolder square2 = MeshHolder(&sm);
+	square2.SetRotation(glm::rotate(mat4(1.f), 00.f, vec3(0.f, 0.0f, 1.f)));
+	square2.SetTranslation(glm::translate(mat4(1.0f), vec3(5.f, 6.0f, 0.0f)));
 
-	//// Triangle
-	//MeshHolder triangle1 = MeshHolder(&tm);
-	//triangle1.SetRotation(glm::rotate(mat4(1.f), 3.14f, vec3(0.f, 0.0f, 1.f)));
-	//triangle1.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f)));
+	// Triangle
+	MeshHolder triangle1 = MeshHolder(&tm);
+	triangle1.SetRotation(glm::rotate(mat4(1.f), PI, vec3(0.f, 0.0f, 1.f)));
+	triangle1.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 5.0f, 0.0f)));
 
-	//// Triangle 2
-	//MeshHolder triangle2 = MeshHolder(&tm);
-	//triangle2.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	//triangle2.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.5f, 0.0f)));
+	// Triangle 2
+	MeshHolder triangle2 = MeshHolder(&tm);
+	triangle2.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	triangle2.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 5.5f, 0.0f)));
 
-	//// Triangle 3
-	//MeshHolder triangle3 = MeshHolder(&tm);
-	//triangle3.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	//triangle3.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, -0.5f, 0.0f)));
+	// Triangle 3
+	MeshHolder triangle3 = MeshHolder(&tm);
+	triangle3.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	triangle3.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 6.0f, 0.0f)));
 
 	// P-51 Mustang
 	MeshHolder mustang = MeshHolder(&m);
@@ -205,9 +207,12 @@ int main()
 	mustang4.SetTranslation(glm::translate(mat4(1.0f), vec3(20.0f, 0.0f, 0.0f)));
 
 	std::vector<MeshObject*> meshes;
-	//meshes.push_back(&sm);
-	//meshes.push_back(&tm);
 	meshes.push_back(&m);
+	meshes.push_back(&tm);
+	meshes.push_back(&sm);
+	
+	
+	//meshes.push_back(&m2);
 	ge.GenerateBuffer(meshes);
 
 	int width = 0, height = 0;
@@ -267,11 +272,11 @@ int main()
 		}
 
 		ge.PrepareRender();
-		//ge.Render(&square);
-		//ge.Render(&square2);
-		//ge.Render(&triangle1);
-		//ge.Render(&triangle2);
-		//ge.Render(&triangle3);
+		ge.Render(&square);
+		ge.Render(&square2);
+		ge.Render(&triangle1);
+		ge.Render(&triangle2);
+		ge.Render(&triangle3);
 		ge.Render(&mustang);
 		ge.Render(&mustang2);
 		ge.Render(&mustang3);
