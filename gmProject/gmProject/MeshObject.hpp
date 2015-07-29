@@ -43,8 +43,9 @@ private:
 	bool loadObj(std::string filename, std::string& mtlFileName, 
 	std::vector<Point>& points, std::vector<GLuint>& indices);
 	
+	bool loadMtl(std::string filename, std::string& textureFileName, 
+	MtlContainer& mtl);
 	
-	bool loadMtl(std::string filename, MtlContainer& mtl);
 	bool loadTexture(std::string filename);
 
 public:

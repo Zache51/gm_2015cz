@@ -113,7 +113,7 @@ bool MeshObject::loadObj(std::string filename, std::string& mtlFileName,
 	return true;
 }
 
-bool MeshObject::loadMtl(std::string filename, MtlContainer& mtl)
+bool MeshObject::loadMtl(std::string filename, std::string& textureFileName, MtlContainer& mtl)
 {
 	FILE * file;
 	fopen_s(&file, filename.data(), "r");
@@ -174,14 +174,16 @@ bool MeshObject::loadTexture(std::string filename)
 	//GLint wi;
 	//GLint he;
 	//GLint nrOfBytes;
-	//unsigned char* image = stbi_load(path.data(), &wi, &he, &nrOfBytes, RGB);
+	//unsigned char* image = stbi_load(filename.data(), &wi, &he, &nrOfBytes, 3);
 
 	//if (image == nullptr)
 	//{
-	//	std::string toPrint = "Failed to load image " + path;
+	//	std::string toPrint = "Failed to load image " + filename;
 	//	fprintf(stdout, toPrint.data());
 	//	return false;
 	//}
+
+	fprintf(stdout, "TEXTURE LOADING NOT IMPLEMENTED\n");
 
 	//glGenTextures(1, &ID);
 	//glBindTexture(GL_TEXTURE_2D, ID);
@@ -192,10 +194,6 @@ bool MeshObject::loadTexture(std::string filename)
 	//if (nrOfBytes == 3)
 	//{
 	//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wi, he, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-	//}
-	//else if (nrOfBytes == 4)
-	//{
-	//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, wi, he, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 	//}
 	//else
 	//{
@@ -216,6 +214,7 @@ bool MeshObject::loadTexture(std::string filename)
 MeshObject::MeshObject(std::string filename)
 {
 	std::string mtlFilename = "";
+	std::string textureFilename = "";
 
 	points = std::vector<Point>();
 	indicies = std::vector<GLuint>();
@@ -224,7 +223,12 @@ MeshObject::MeshObject(std::string filename)
 	if (mtlFilename != "")
 	{
 		fprintf(stdout, "Mtl data found\n");
-		loadMtl(MESH_FOLDER + mtlFilename, mtl);
+		loadMtl(MESH_FOLDER + mtlFilename, textureFilename, mtl);
+		if (textureFilename != "")
+		{
+			fprintf(stdout, "Texture found\n");
+			loadTexture(textureFilename);
+		}
 	}
 
 	fprintf(stdout, "\n");
