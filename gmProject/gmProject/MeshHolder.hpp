@@ -1,9 +1,6 @@
 #ifndef MESHHOLDER_HPP
 #define MESHHOLDER_HPP
 
-//#include <gl/glew.h>
-//#include <gl/GL.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 

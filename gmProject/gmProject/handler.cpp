@@ -1,16 +1,9 @@
-#include <GL/glew.h>
-#include <GLFW\glfw3.h>
+#include "Graphics.hpp"
+
 #undef APIENTRY
-#include <stdio.h>
-#include <stdlib.h>
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <iostream>
-#include "Graphics.hpp"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm\gtc\quaternion.hpp>
 
 #pragma comment(lib, "glfw3.lib")
 #pragma comment(lib, "opengl32.lib")

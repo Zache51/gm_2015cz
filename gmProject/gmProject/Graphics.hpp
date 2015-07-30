@@ -2,12 +2,7 @@
 #define GRAPHICS_HPP
 
 #include <gl/glew.h>
-#include <gl/GL.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
-#include <vector>
+#include <GLFW\glfw3.h>
 
 #include "Camera.hpp"
 #include "MeshHolder.hpp"

@@ -1,11 +1,9 @@
-#pragma once
+#ifndef MESHOBJECT_HPP
+#define MESHOBJECT_HPP
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <vector>
-
-//#define STB_IMAGE_IMPLEMENTATION
-//#include <stb_image.h>
 
 #define MESH_FOLDER "Meshes/"
 
@@ -72,3 +70,4 @@ public:
 	MtlContainer GetMtl() const;
 };
 
+#endif
