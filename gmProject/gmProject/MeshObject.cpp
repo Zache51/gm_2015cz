@@ -114,7 +114,7 @@ bool MeshObject::loadObj(std::string filename, std::string& mtlFileName,
 	return true;
 }
 
-bool MeshObject::loadMtl(std::string filename, std::string& textureFileName, MtlContainer& mtl)
+bool MeshObject::loadMtl(std::string filename, MtlContainer& mtl)
 {
 	FILE * file;
 	fopen_s(&file, filename.data(), "r");
@@ -215,7 +215,6 @@ bool MeshObject::loadTexture(std::string filename)
 MeshObject::MeshObject(std::string filename)
 {
 	std::string mtlFilename = "";
-	std::string textureFilename = "";
 
 	points = std::vector<Point>();
 	indicies = std::vector<GLuint>();
@@ -224,11 +223,11 @@ MeshObject::MeshObject(std::string filename)
 	if (mtlFilename != "")
 	{
 		fprintf(stdout, "Mtl data found\n");
-		loadMtl(MESH_FOLDER + mtlFilename, textureFilename, mtl);
-		if (textureFilename != "")
+		loadMtl(MESH_FOLDER + mtlFilename, mtl);
+		if (mtl.filename != "")
 		{
 			fprintf(stdout, "Texture found\n");
-			loadTexture(textureFilename);
+			loadTexture(mtl.filename);
 		}
 	}
 
