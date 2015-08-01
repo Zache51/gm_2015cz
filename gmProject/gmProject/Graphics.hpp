@@ -7,6 +7,8 @@
 #include "Camera.hpp"
 #include "MeshHolder.hpp"
 #include "MeshObject.hpp"
+#include <glm/gtc/quaternion.hpp>
+
 
 #define BUFFER_OFFSET(i) ((char *)nullptr + (i))
 
