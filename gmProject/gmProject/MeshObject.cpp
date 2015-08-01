@@ -12,12 +12,11 @@ bool MeshObject::loadObj(std::string filename, std::string& mtlFileName,
 	std::vector < glm::vec2 > uvs;
 	std::vector < glm::vec3 > normals;
 
+	std::string out = "Reading data from " + filename + "\n";
+	fprintf(stdout, out.data());
+
 	FILE * file;
 	fopen_s(&file, filename.data(), "r");
-
-	fprintf(stdout, "Reading data from ");
-	fprintf(stdout, filename.data());
-	fprintf(stdout, "\n");
 
 	GLuint index = 0;
 	while (1){
@@ -119,9 +118,8 @@ bool MeshObject::loadMtl(std::string filename, MtlContainer& mtl)
 	FILE * file;
 	fopen_s(&file, filename.data(), "r");
 
-	fprintf(stdout, "Reading data from ");
-	fprintf(stdout, filename.data());
-	fprintf(stdout, "\n");
+	std::string out = "Reading data from " + filename + "\n";
+	fprintf(stdout, out.data());
 
 	while (1){
 		char lineHeader[128];
@@ -172,37 +170,40 @@ bool MeshObject::loadMtl(std::string filename, MtlContainer& mtl)
 
 bool MeshObject::loadTexture(std::string filename)
 {
-	//GLint wi;
-	//GLint he;
-	//GLint nrOfBytes;
-	//unsigned char* image = stbi_load(filename.data(), &wi, &he, &nrOfBytes, 3);
+	GLint wi;
+	GLint he;
+	GLint nrOfBytes;
+	
+	std::string out = "Reading data from " + filename + "\n";
+	fprintf(stdout, out.data());
+	
+	unsigned char* image = stbi_load(filename.data(), &wi, &he, &nrOfBytes, 3);
 
-	//if (image == nullptr)
-	//{
-	//	std::string toPrint = "Failed to load image " + filename;
-	//	fprintf(stdout, toPrint.data());
-	//	return false;
-	//}
+	if (image == nullptr)
+	{
+		std::string toPrint = "Failed to load image " + filename;
+		fprintf(stdout, toPrint.data());
+		return false;
+	}
 
-	fprintf(stdout, "TEXTURE LOADING NOT IMPLEMENTED\n");
+	glGenTextures(1, &mtl.TextureID);
+	glBindTexture(GL_TEXTURE_2D, mtl.TextureID);
 
-	//glGenTextures(1, &ID);
-	//glBindTexture(GL_TEXTURE_2D, ID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	if (nrOfBytes == 3)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wi, he, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+		fprintf(stdout, "Texture read\n");
+	}
+	else
+	{
+		fprintf(stdout, "Unexpected number of bytes in texture");
+		return false;
+	}
 
-	//if (nrOfBytes == 3)
-	//{
-	//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wi, he, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-	//}
-	//else
-	//{
-	//	fprintf(stdout, "Unexpected number of bytes in texture");
-	//	return false;
-	//}
-
-	//stbi_image_free(image);
+	stbi_image_free(image);
 
 	return true;
 }
@@ -227,7 +228,7 @@ MeshObject::MeshObject(std::string filename)
 		if (mtl.filename != "")
 		{
 			fprintf(stdout, "Texture found\n");
-			loadTexture(mtl.filename);
+			loadTexture(MESH_FOLDER + mtl.filename);
 		}
 	}
 

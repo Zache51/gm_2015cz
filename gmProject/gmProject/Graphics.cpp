@@ -2,16 +2,11 @@
 
 Graphics::Graphics()
 {
+
 	generateShaders();
 
-	
-	/*************************************************************/
-	/*******************Define uniform locations******************/
-	
 	projectionviewworldMatrixUniformLocation = glGetUniformLocation(gShaderProgram, "PVWMatrix");
-	
-	
-	/*************************************************************/
+
 }
 Graphics::~Graphics()
 {
@@ -28,22 +23,24 @@ void Graphics::generateShaders()
 		layout(location = 1) in vec2 texture_normal;
 		layout(location = 2) in vec3 vertex_normal;
 		
-		out vec2 color;
+		out vec2 texture_normal_VS;
 
 		uniform mat4 PVWMatrix;
 		
 		void main () {
-			color = texture_normal;
+			texture_normal_VS = texture_normal;
 			gl_Position = PVWMatrix * vec4 (vertex_position, 1.0);
 		}
 	)";
 
 	const char* fragment_shader = R"(
 		#version 400
-		in vec2 color;
+		in vec2 texture_normal_VS;
+		uniform sampler2D texSampler;
 		out vec4 fragment_color;
 		void main () {
-			fragment_color = vec4 (color, 1.0, 1.0);
+			vec4 mySample = texture(texSampler, vec2(texture_normal_VS.s, 1-texture_normal_VS.t));
+			fragment_color = vec4( mySample.rgb, 1.0 );
 		}
 	)";
 
@@ -77,7 +74,7 @@ void Graphics::generateShaders()
 		glGetShaderInfoLog(fs, 1024, &log_length, message);
 	}
 
-	//link shader program (connect vs and ps)
+	//link shader program (connect vs and fs)
 	gShaderProgram = glCreateProgram();
 	glAttachShader(gShaderProgram, fs);
 	glAttachShader(gShaderProgram, vs);
@@ -172,10 +169,12 @@ void Graphics::Render( MeshHolder* mh )
 	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gIndexBuffer);
 
+	// Uniforms
 	mat4 vwMatrix = localCamera->GetPVMatrix() * mh->GetWorld();
-
 	glUniformMatrix4fv(projectionviewworldMatrixUniformLocation, 1, GL_FALSE, &(GLfloat)vwMatrix[0][0]);
+	glBindTexture(GL_TEXTURE_2D, mh->GetMesh()->GetMtl().TextureID);
 
+	// Render the mesh
 	//glDrawArrays(GL_TRIANGLES, mh->mesh->GetOffset(), mh->mesh->GetPoints().size());
 	glDrawElements(GL_TRIANGLES, mh->GetMesh()->GetNumberOfIndicies(), GL_UNSIGNED_INT, (void*)mh->GetMesh()->GetOffsetInd());
 }

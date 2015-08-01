@@ -14,6 +14,7 @@ struct MtlContainer
 	glm::vec3 Kd;
 	glm::vec3 Ks;
 	std::string filename;
+	GLuint TextureID;
 };
 
 struct Point

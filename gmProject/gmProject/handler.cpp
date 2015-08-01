@@ -204,8 +204,8 @@ int main()
 
 	std::vector<MeshObject*> meshes;
 	meshes.push_back(&m);
-	meshes.push_back(&tm);
-	meshes.push_back(&sm);
+	//meshes.push_back(&tm);
+	//meshes.push_back(&sm);
 	
 	
 	//meshes.push_back(&m2);
@@ -268,11 +268,11 @@ int main()
 		}
 
 		ge.PrepareRender();
-		ge.Render(&square);
-		ge.Render(&square2);
-		ge.Render(&triangle1);
-		ge.Render(&triangle2);
-		ge.Render(&triangle3);
+		//ge.Render(&square);
+		//ge.Render(&square2);
+		//ge.Render(&triangle1);
+		//ge.Render(&triangle2);
+		//ge.Render(&triangle3);
 		ge.Render(&mustang);
 		ge.Render(&mustang2);
 		ge.Render(&mustang3);
