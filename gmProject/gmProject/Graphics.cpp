@@ -1,5 +1,85 @@
 #include "Graphics.hpp"
 
+#include <fstream>
+
+std::string Graphics::readShader(const char *filePath)
+{
+	std::string content;
+	std::ifstream fileStream(SHADER_FOLDER + (std::string)filePath, std::ios::in);
+
+	if (!fileStream.is_open()) {
+		fprintf(stderr, "Could not open file %s", filePath);
+		return "";
+	}
+
+	std::string line = "";
+	while (!fileStream.eof()) {
+		std::getline(fileStream, line);
+		content.append(line + "\n");
+	}
+
+	fileStream.close();
+	return content;
+}
+void Graphics::createShaderStep(const char* filename, GLuint& shader)
+{
+	std::string content;
+	content = readShader(filename);
+	const char* vertex_shader = content.c_str();
+	glShaderSource(shader, 1, &vertex_shader, nullptr);
+	glCompileShader(shader);
+
+	//debug info regarding vertex shader compilation
+	GLint vertex_compiled;
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &vertex_compiled);
+	if (vertex_compiled != GL_TRUE)
+	{
+		GLsizei log_length = 0;
+		GLchar message[1024];
+		glGetShaderInfoLog(shader, 1024, &log_length, message);
+	}
+}
+void Graphics::linkProgram(std::vector<GLuint> shaders, GLuint& program)
+{
+	//link shader program (connect vs and fs)
+	program = glCreateProgram();
+	for (size_t i = 0; i < shaders.size(); i++)
+	{
+		glAttachShader(program, shaders[i]);
+	}
+	glLinkProgram(program);
+
+	//debug info regarding linking
+	GLint linked;
+	glGetProgramiv(program, GL_LINK_STATUS, &linked);
+	if (linked != GL_TRUE)
+	{
+		GLsizei log_length = 0;
+		GLchar message[1024];
+		glGetProgramInfoLog(program, 1024, &log_length, message);
+	}
+}
+
+void Graphics::generateShaders()
+{
+	std::vector<GLuint> shaders;
+	// Create shader steps for obj
+	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
+	createShaderStep("vertex.glsl", vs);
+	GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
+	createShaderStep("fragment.glsl", fs);
+
+	// Link program for obj
+	shaders.push_back(vs);
+	shaders.push_back(fs);
+	linkProgram(shaders, gShaderProgram);
+	shaders.clear();
+}
+
+/***********************************************************************/
+/******************************* Public ********************************/
+
+
 Graphics::Graphics()
 {
 
@@ -13,82 +93,6 @@ Graphics::~Graphics()
 	glDeleteBuffers(1, &gVertexBuffer);
 	glDeleteBuffers(1, &gIndexBuffer);
 	glDeleteProgram(gShaderProgram);
-}
-
-void Graphics::generateShaders()
-{
-	const char* vertex_shader = R"(
-		#version 400
-		layout(location = 0) in vec3 vertex_position;
-		layout(location = 1) in vec2 texture_normal;
-		layout(location = 2) in vec3 vertex_normal;
-		
-		out vec2 texture_normal_VS;
-
-		uniform mat4 PVWMatrix;
-		
-		void main () {
-			texture_normal_VS = texture_normal;
-			gl_Position = PVWMatrix * vec4 (vertex_position, 1.0);
-		}
-	)";
-
-	const char* fragment_shader = R"(
-		#version 400
-		in vec2 texture_normal_VS;
-		uniform sampler2D texSampler;
-		out vec4 fragment_color;
-		void main () {
-			vec4 mySample = texture(texSampler, vec2(texture_normal_VS.s, 1-texture_normal_VS.t));
-			fragment_color = vec4( mySample.rgb, 1.0 );
-		}
-	)";
-
-	//create vertex shader
-	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vs, 1, &vertex_shader, nullptr);
-	glCompileShader(vs);
-
-	//debug info regarding vertex shader compilation
-	GLint vertex_compiled;
-	glGetShaderiv(vs, GL_COMPILE_STATUS, &vertex_compiled);
-	if (vertex_compiled != GL_TRUE)
-	{
-		GLsizei log_length = 0;
-		GLchar message[1024];
-		glGetShaderInfoLog(vs, 1024, &log_length, message);
-	}
-
-	//create fragment shader
-	GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fs, 1, &fragment_shader, nullptr);
-	glCompileShader(fs);
-
-	//debuf info regarding fragment shader compilation
-	GLint fragment_compiled;
-	glGetShaderiv(fs, GL_COMPILE_STATUS, &fragment_compiled);
-	if (fragment_compiled != GL_TRUE)
-	{
-		GLsizei log_length = 0;
-		GLchar message[1024];
-		glGetShaderInfoLog(fs, 1024, &log_length, message);
-	}
-
-	//link shader program (connect vs and fs)
-	gShaderProgram = glCreateProgram();
-	glAttachShader(gShaderProgram, fs);
-	glAttachShader(gShaderProgram, vs);
-	glLinkProgram(gShaderProgram);
-
-	//debug info regarding linking
-	GLint linked;
-	glGetProgramiv(gShaderProgram, GL_LINK_STATUS, &linked);
-	if (linked != GL_TRUE)
-	{
-		GLsizei log_length = 0;
-		GLchar message[1024];
-		glGetProgramInfoLog(gShaderProgram, 1024, &log_length, message);
-	}
 }
 
 void Graphics::GenerateBuffer(std::vector<MeshObject*> meshes)

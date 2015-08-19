@@ -9,6 +9,10 @@
 #include "MeshObject.hpp"
 #include <glm/gtc/quaternion.hpp>
 
+// temp
+#include <string>
+#define SHADER_FOLDER "Shaders/"
+//
 
 #define BUFFER_OFFSET(i) ((char *)nullptr + (i))
 
@@ -28,7 +32,10 @@ private:
 
 	GLint projectionviewworldMatrixUniformLocation;
 
-	void readShader( const char* path );
+	void createShaderStep(const char* filename, GLuint& shader);
+	void linkProgram(std::vector<GLuint> shaders, GLuint& program);
+	std::string readShader(const char *filePath);
+
 	void createProgram();
 	void generateShaders();
 public:
