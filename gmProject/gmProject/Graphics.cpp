@@ -28,20 +28,10 @@ void Graphics::createShaderStep(const char* filename, GLuint& shader)
 	const char* vertex_shader = content.c_str();
 	glShaderSource(shader, 1, &vertex_shader, nullptr);
 	glCompileShader(shader);
-
-	//debug info regarding vertex shader compilation
-	GLint vertex_compiled;
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &vertex_compiled);
-	if (vertex_compiled != GL_TRUE)
-	{
-		GLsizei log_length = 0;
-		GLchar message[1024];
-		glGetShaderInfoLog(shader, 1024, &log_length, message);
-	}
 }
 void Graphics::linkProgram(std::vector<GLuint> shaders, GLuint& program)
 {
-	//link shader program (connect vs and fs)
+	//link shader program 
 	program = glCreateProgram();
 	for (size_t i = 0; i < shaders.size(); i++)
 	{
@@ -57,6 +47,7 @@ void Graphics::linkProgram(std::vector<GLuint> shaders, GLuint& program)
 		GLsizei log_length = 0;
 		GLchar message[1024];
 		glGetProgramInfoLog(program, 1024, &log_length, message);
+		fprintf(stdout, message);
 	}
 }
 
