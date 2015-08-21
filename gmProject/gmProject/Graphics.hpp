@@ -32,8 +32,8 @@ private:
 
 	GLint projectionviewworldMatrixUniformLocation;
 
-	void createShaderStep(const char* filename, GLuint& shader);
-	void linkProgram(std::vector<GLuint> shaders, GLuint& program);
+	void createShaderStep(const char* filename, GLuint& shader, std::vector<GLuint>& shaders);
+	void linkProgram(std::vector<GLuint>& shaders, GLuint& program);
 	std::string readShader(const char *filePath);
 
 	void createProgram();

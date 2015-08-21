@@ -21,15 +21,18 @@ std::string Graphics::readShader(const char *filePath)
 	fileStream.close();
 	return content;
 }
-void Graphics::createShaderStep(const char* filename, GLuint& shader)
+void Graphics::createShaderStep(const char* filename, GLuint& shader, std::vector<GLuint>& shaders)
 {
 	std::string content;
 	content = readShader(filename);
 	const char* vertex_shader = content.c_str();
 	glShaderSource(shader, 1, &vertex_shader, nullptr);
 	glCompileShader(shader);
+
+	// Save shader step together with the other shader steps
+	shaders.push_back(shader);
 }
-void Graphics::linkProgram(std::vector<GLuint> shaders, GLuint& program)
+void Graphics::linkProgram(std::vector<GLuint>& shaders, GLuint& program)
 {
 	//link shader program 
 	program = glCreateProgram();
@@ -49,22 +52,24 @@ void Graphics::linkProgram(std::vector<GLuint> shaders, GLuint& program)
 		glGetProgramInfoLog(program, 1024, &log_length, message);
 		fprintf(stdout, message);
 	}
+
+	// Clear the vector so it can be reused
+	shaders.clear();
 }
 
 void Graphics::generateShaders()
 {
+	// Used to temporary store shader steps for a program, cleared in linkProgram(...)
 	std::vector<GLuint> shaders;
+	
 	// Create shader steps for obj
 	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-	createShaderStep("vertex.glsl", vs);
+	createShaderStep("vertex.glsl", vs, shaders);
 	GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-	createShaderStep("fragment.glsl", fs);
+	createShaderStep("fragment.glsl", fs, shaders);
 
 	// Link program for obj
-	shaders.push_back(vs);
-	shaders.push_back(fs);
 	linkProgram(shaders, gShaderProgram);
-	shaders.clear();
 }
 
 /***********************************************************************/
