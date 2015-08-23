@@ -28,7 +28,8 @@ private:
 
 	GLuint gVertexAttribute1 = 0;
 	
-	GLuint gShaderProgram = 0;
+	GLuint objProgram = 0;
+	GLuint heightmapProgram = 0;
 
 	GLint projectionviewworldMatrixUniformLocation;
 

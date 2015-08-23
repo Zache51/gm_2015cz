@@ -69,7 +69,18 @@ void Graphics::generateShaders()
 	createShaderStep("obj_fs.glsl", fs, shaders);
 
 	// Link program for obj
-	linkProgram(shaders, gShaderProgram);
+	linkProgram(shaders, objProgram);
+
+	// Create shader steps for height map
+	vs = glCreateShader(GL_VERTEX_SHADER);
+	createShaderStep("heightmap_vs", vs, shaders);
+	GLuint gs = glCreateShader(GL_GEOMETRY_SHADER);
+	createShaderStep("heightmap_gs", vs, shaders);
+	vs = glCreateShader(GL_FRAGMENT_SHADER);
+	createShaderStep("heightmap_fs", vs, shaders);
+
+	// Link program for height map
+	linkProgram(shaders, heightmapProgram);
 }
 
 /***********************************************************************/
@@ -81,14 +92,14 @@ Graphics::Graphics()
 
 	generateShaders();
 
-	projectionviewworldMatrixUniformLocation = glGetUniformLocation(gShaderProgram, "PVWMatrix");
+	projectionviewworldMatrixUniformLocation = glGetUniformLocation(objProgram, "PVWMatrix");
 
 }
 Graphics::~Graphics()
 {
 	glDeleteBuffers(1, &gVertexBuffer);
 	glDeleteBuffers(1, &gIndexBuffer);
-	glDeleteProgram(gShaderProgram);
+	glDeleteProgram(objProgram);
 }
 
 void Graphics::GenerateBuffer(std::vector<MeshObject*> meshes)
@@ -143,9 +154,9 @@ void Graphics::GenerateBuffer(std::vector<MeshObject*> meshes)
 	glGenVertexArrays(1, &gVertexAttribute1);
 	glBindVertexArray(gVertexAttribute1);
 
-	GLuint vertexPos = glGetAttribLocation(gShaderProgram, "vertex_position");
-	GLuint textureNormal = glGetAttribLocation(gShaderProgram, "texture_normal");
-	GLuint vertexNormal = glGetAttribLocation(gShaderProgram, "vertex_normal");
+	GLuint vertexPos = glGetAttribLocation(objProgram, "vertex_position");
+	GLuint textureNormal = glGetAttribLocation(objProgram, "texture_normal");
+	GLuint vertexNormal = glGetAttribLocation(objProgram, "vertex_normal");
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
@@ -161,7 +172,7 @@ void Graphics::PrepareRender()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 
-	glUseProgram(gShaderProgram);
+	glUseProgram(objProgram);
 }
 
 void Graphics::Render( MeshHolder* mh )
