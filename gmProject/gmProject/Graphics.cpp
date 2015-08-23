@@ -64,9 +64,9 @@ void Graphics::generateShaders()
 	
 	// Create shader steps for obj
 	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-	createShaderStep("vertex.glsl", vs, shaders);
+	createShaderStep("obj_vs.glsl", vs, shaders);
 	GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-	createShaderStep("fragment.glsl", fs, shaders);
+	createShaderStep("obj_fs.glsl", fs, shaders);
 
 	// Link program for obj
 	linkProgram(shaders, gShaderProgram);
