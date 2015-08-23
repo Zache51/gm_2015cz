@@ -14,12 +14,14 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="handler.cpp" />
+    <ClCompile Include="HeightMap.cpp" />
     <ClCompile Include="MeshHolder.cpp" />
     <ClCompile Include="MeshObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.hpp" />
     <ClInclude Include="Graphics.hpp" />
+    <ClInclude Include="HeightMap.h" />
     <ClInclude Include="MeshHolder.hpp" />
     <ClInclude Include="MeshObject.hpp" />
   </ItemGroup>
