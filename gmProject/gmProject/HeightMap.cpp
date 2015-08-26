@@ -11,7 +11,7 @@ GLfloat HeightMap::setVertexColor(int x, int y)
 /***********************************************************************/
 /******************************* Public ********************************/
 
-HeightMap::HeightMap()
+HeightMap::HeightMap(std::string filename)
 {
 	modelMatrix = glm::mat4(1.0);
 
@@ -24,29 +24,35 @@ HeightMap::HeightMap()
 	gridWidth = mapWidth / quadSize;
 	gridHeight = mapHeight / quadSize;
 
-	vertices = new VertexPosition[gridHeight * gridWidth];	// Allocate memory for the individual vertices of the terrain
 	rgbColor = 1.0f;
 
 	//qLevels = 4;
+
+	points = std::vector<Point2>();
+	//indicies = std::vector<GLuint>();
+
+	loadRawFile(MESH_FOLDER + filename);
+
+	numberOfPoints = points.size();
+	//numberOfIndicies = indicies.size();
 }
 
 
 HeightMap::~HeightMap()
 {
-	delete g_HeightMap;
-	delete vertices;
+	//delete g_HeightMap;
 
 	//releaseQuadTree(quadTree);
 }
 
 /////////// --- HEIGHT MAP FUNCTIONS --- ///////////
-bool HeightMap::loadRawFile(const char* fileName)
+bool HeightMap::loadRawFile(std::string fileName)
 {
 	bool loadFromFile = false;
 	FILE* file = nullptr;
 
 	// Opens the file in Read/Binary mode.
-	file = fopen(fileName, "rb");
+	file = fopen(fileName.data(), "rb");
 
 	// Check if file was found and could open it
 	if (file != nullptr)
@@ -67,6 +73,21 @@ bool HeightMap::loadRawFile(const char* fileName)
 		loadFromFile = false;
 	}
 	fclose(file);
+
+	for (int _w = 0; _w < mapWidth; _w += quadSize)
+	{
+		for (int _h = 0; _h < mapHeight; _h += quadSize)
+		{
+			rgbColor = setVertexColor(_w, _h);
+			
+			Point2 temp;
+			temp.ver = glm::vec3(_w, getHeight(_w, _h), _h);
+			temp.col = glm::vec3(rgbColor, rgbColor, rgbColor);
+
+			points.push_back(temp);
+		}
+	}
+
 	return loadFromFile;
 }
 int HeightMap::getHeight(int _x, int _y)
@@ -85,19 +106,3 @@ int HeightMap::getHeight(int _x, int _y)
 	// Treat the array like a 2D array (.raw format is a single array)
 	return g_HeightMap[x + (y * mapHeight)];	// Index into our height array and return the height
 }
-
-
-// OMARBETA DETTA
-
-//for (int _w = 0; _w < mapWidth; _w += quadSize)
-//{
-//	for (int _h = 0; _h < mapHeight; _h += quadSize)
-//	{
-//		rgbColor = setVertexColor(_w, _h);
-//		vertices[vIndex++] =
-//			VertexPosition{
-//			static_cast<GLfloat>(_w), static_cast<GLfloat>(getHeight(_w, _h)), static_cast<GLfloat>(_h),
-//			rgbColor, rgbColor, rgbColor
-//		};
-//	}
-//}

@@ -25,10 +25,20 @@ struct QuadTree
 
 };
 
+struct Point2
+{
+	glm::vec3 ver;
+	glm::vec3 col;
+};
+
 class HeightMap
 {
 private:
+	std::vector<Point2> points;
+	std::vector<GLuint> indicies;
 
+	GLuint numberOfPoints;
+	GLuint numberOfIndicies;
 
 	int mapWidth;				// Width of .raw height map
 	int mapHeight;				// Height of .raw height map
@@ -39,18 +49,12 @@ private:
 	int gridWidth;				// Defined width for actual map
 	int gridHeight;				// Defined height for actual map
 
-	struct VertexPosition
-	{
-		GLfloat x, y, z;
-		GLfloat r, g, b;
-	};
-	VertexPosition* vertices;
 	GLfloat rgbColor;
 	GLfloat setVertexColor(int, int);	// Set color of the map
 
 	float ry = 0;
 	glm::mat4 modelMatrix;
-
+	
 	
 	// Quad tree and frustum stuff
 
@@ -67,10 +71,10 @@ private:
 	
 
 public:
-	HeightMap();
+	HeightMap(std::string filename);
 	~HeightMap();
 
-	bool loadRawFile(const char* filename);
+	bool loadRawFile(std::string filename);
 	int getHeight(int x, int y);
 	//void CreateViewFrustum(glm::mat4 proj, glm::mat4 view, glm::vec2 screenSize);
 	int renderCount;

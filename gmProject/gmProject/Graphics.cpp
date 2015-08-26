@@ -100,6 +100,7 @@ Graphics::~Graphics()
 	glDeleteBuffers(1, &gVertexBuffer);
 	glDeleteBuffers(1, &gIndexBuffer);
 	glDeleteProgram(objProgram);
+	glDeleteProgram(heightmapProgram);
 }
 
 void Graphics::GenerateBuffer(std::vector<MeshObject*> meshes)

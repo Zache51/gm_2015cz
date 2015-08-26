@@ -153,6 +153,8 @@ int main()
 	cam.SetPosition(glm::vec3(4.0f, 2.0f, 10.0f));
 	ge.SetCamera(&cam);
 
+	HeightMap test = HeightMap("terrain.raw");
+
 	fprintf(stdout, "\n");
 	fprintf(stdout, "------------- Loading Meshes -------------\n");
 	MeshObject tm = MeshObject("Triangle.obj");

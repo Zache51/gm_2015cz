@@ -5,6 +5,7 @@
 #include <GLFW\glfw3.h>
 
 #include "Camera.hpp"
+#include "HeightMap.h"
 #include "MeshHolder.hpp"
 #include "MeshObject.hpp"
 #include <glm/gtc/quaternion.hpp>
