@@ -4,6 +4,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <iostream>
+#include "FPSCounter.hpp"
 
 #pragma comment(lib, "glfw3.lib")
 #pragma comment(lib, "opengl32.lib")
@@ -149,11 +150,13 @@ int main()
 	////////////////////////////////////////////////////////////
 	Graphics ge = Graphics();
 	
+	HeightMap test = HeightMap("terrain.raw");
+
 	Camera cam = Camera();
 	cam.SetPosition(glm::vec3(4.0f, 2.0f, 10.0f));
 	ge.SetCamera(&cam);
 
-	HeightMap test = HeightMap("terrain.raw");
+	
 
 	fprintf(stdout, "\n");
 	fprintf(stdout, "------------- Loading Meshes -------------\n");
@@ -216,9 +219,12 @@ int main()
 	ge.GenerateHeightMapBuffer(&test);
 
 	int width = 0, height = 0;
+	fpsCounter fpsC;
 	////////////////////////////////////////////////////////////
 	while (!glfwWindowShouldClose(window))
 	{
+		glfwSetWindowTitle(window, fpsC.get().c_str());
+
 		int newWidth, newHeight;
 		glfwGetFramebufferSize(window, &newWidth, &newHeight);
 
@@ -271,6 +277,8 @@ int main()
 			cam.UpdateTranslation(strafe*glm::vec3(-0.1f, 0, 0.1));
 		}
 
+		
+
 		ge.PrepareRender();
 		//ge.Render(&square);
 		//ge.Render(&square2);
@@ -283,6 +291,9 @@ int main()
 		ge.Render(&mustang4);
 
 		ge.Render(&test);
+
+		fpsC.tick();
+		Sleep(1000 / 120);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();// Processes all pending events
