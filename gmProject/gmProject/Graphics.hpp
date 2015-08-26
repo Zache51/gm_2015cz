@@ -24,29 +24,35 @@ class Graphics
 private:
 	Camera* localCamera;
 
-	GLuint gVertexBuffer = 0;
-	GLuint gIndexBuffer = 0;
+	GLuint vbObj = 0;
+	GLuint ibObj = 0;
+	GLuint gVertexAttributeObj = 0;
 
-	GLuint gVertexAttribute1 = 0;
+	GLuint vbHeightMap = 0;
+	GLuint ibHeightMap = 0;
+	GLuint gVertexAttributeheightMap = 0;
 	
 	GLuint objProgram = 0;
 	GLuint heightmapProgram = 0;
 
-	GLint projectionviewworldMatrixUniformLocation;
+	GLint pvwMatrixUniformLocation;
+	GLint pvwMatrixUniformLocation2;
 
 	void createShaderStep(const char* filename, GLuint& shader, std::vector<GLuint>& shaders);
 	void linkProgram(std::vector<GLuint>& shaders, GLuint& program);
 	std::string readShader(const char *filePath);
 
-	void createProgram();
 	void generateShaders();
 public:
 	Graphics();
 	virtual ~Graphics();
 
 	void GenerateBuffer(std::vector<MeshObject*> meshes);
+	void GenerateHeightMapBuffer(HeightMap* heightmap);
+
 	void PrepareRender();
-	void Render( MeshHolder* mh );
+	void Render(MeshHolder* mh);
+	void Render(HeightMap* hm);
 
 	void SetCamera( Camera* c );
 };

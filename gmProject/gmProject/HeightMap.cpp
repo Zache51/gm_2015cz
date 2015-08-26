@@ -106,3 +106,14 @@ int HeightMap::getHeight(int _x, int _y)
 	// Treat the array like a 2D array (.raw format is a single array)
 	return g_HeightMap[x + (y * mapHeight)];	// Index into our height array and return the height
 }
+
+//////////////////////////////////////////////////////////////
+
+void* HeightMap::GetPointsData()
+{
+	return points.data();
+}
+GLuint HeightMap::GetFloatAmount() const
+{
+	return numberOfPoints;
+}

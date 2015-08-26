@@ -213,6 +213,8 @@ int main()
 	//meshes.push_back(&m2);
 	ge.GenerateBuffer(meshes);
 
+	ge.GenerateHeightMapBuffer(&test);
+
 	int width = 0, height = 0;
 	////////////////////////////////////////////////////////////
 	while (!glfwWindowShouldClose(window))
@@ -279,6 +281,8 @@ int main()
 		ge.Render(&mustang2);
 		ge.Render(&mustang3);
 		ge.Render(&mustang4);
+
+		ge.Render(&test);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();// Processes all pending events

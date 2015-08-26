@@ -61,11 +61,15 @@ void Graphics::generateShaders()
 {
 	// Used to temporary store shader steps for a program, cleared in linkProgram(...)
 	std::vector<GLuint> shaders;
+
+	GLuint vs;
+	GLuint gs;
+	GLuint fs;
 	
 	// Create shader steps for obj
-	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
+	vs = glCreateShader(GL_VERTEX_SHADER);
 	createShaderStep("obj_vs.glsl", vs, shaders);
-	GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
+	fs = glCreateShader(GL_FRAGMENT_SHADER);
 	createShaderStep("obj_fs.glsl", fs, shaders);
 
 	// Link program for obj
@@ -73,11 +77,11 @@ void Graphics::generateShaders()
 
 	// Create shader steps for height map
 	vs = glCreateShader(GL_VERTEX_SHADER);
-	createShaderStep("heightmap_vs", vs, shaders);
-	GLuint gs = glCreateShader(GL_GEOMETRY_SHADER);
-	createShaderStep("heightmap_gs", vs, shaders);
-	vs = glCreateShader(GL_FRAGMENT_SHADER);
-	createShaderStep("heightmap_fs", vs, shaders);
+	createShaderStep("heightmap_vs.glsl", vs, shaders);
+	gs = glCreateShader(GL_GEOMETRY_SHADER);
+	createShaderStep("heightmap_gs.glsl", gs, shaders);
+	fs = glCreateShader(GL_FRAGMENT_SHADER);
+	createShaderStep("heightmap_fs.glsl", fs, shaders);
 
 	// Link program for height map
 	linkProgram(shaders, heightmapProgram);
@@ -92,13 +96,14 @@ Graphics::Graphics()
 
 	generateShaders();
 
-	projectionviewworldMatrixUniformLocation = glGetUniformLocation(objProgram, "PVWMatrix");
+	pvwMatrixUniformLocation = glGetUniformLocation(objProgram, "PVWMatrix");
+	pvwMatrixUniformLocation2 = glGetUniformLocation(heightmapProgram, "PVWMatrix");
 
 }
 Graphics::~Graphics()
 {
-	glDeleteBuffers(1, &gVertexBuffer);
-	glDeleteBuffers(1, &gIndexBuffer);
+	glDeleteBuffers(1, &vbObj);
+	glDeleteBuffers(1, &ibObj);
 	glDeleteProgram(objProgram);
 	glDeleteProgram(heightmapProgram);
 }
@@ -106,10 +111,10 @@ Graphics::~Graphics()
 void Graphics::GenerateBuffer(std::vector<MeshObject*> meshes)
 {
 	//create vertex and index buffer 
-	glGenBuffers(1, &gVertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);	
-	glGenBuffers(1, &gIndexBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gIndexBuffer);
+	glGenBuffers(1, &vbObj);
+	glBindBuffer(GL_ARRAY_BUFFER, vbObj);
+	glGenBuffers(1, &ibObj);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibObj);
 
 	// Define the size of the buffers	
 	GLuint floatAmount = 0;
@@ -119,8 +124,8 @@ void Graphics::GenerateBuffer(std::vector<MeshObject*> meshes)
 		floatAmount += mesh->GetFloatAmount();
 		GLuintAmount += mesh->GetGLuintAmount();
 	}
-	glBufferData(GL_ARRAY_BUFFER, floatAmount, 0, GL_STATIC_DRAW);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, GLuintAmount, 0, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, floatAmount, 0, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, GLuintAmount, 0, GL_DYNAMIC_DRAW);
 
 
 	// Define size and offset of the different subdata in the buffers
@@ -152,21 +157,37 @@ void Graphics::GenerateBuffer(std::vector<MeshObject*> meshes)
 	
 	// Define vertex data layout	
 	
-	glGenVertexArrays(1, &gVertexAttribute1);
-	glBindVertexArray(gVertexAttribute1);
+	glGenVertexArrays(1, &gVertexAttributeObj);
+	glBindVertexArray(gVertexAttributeObj);
 
-	GLuint vertexPos = glGetAttribLocation(objProgram, "vertex_position");
-	GLuint textureNormal = glGetAttribLocation(objProgram, "texture_normal");
-	GLuint vertexNormal = glGetAttribLocation(objProgram, "vertex_normal");
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
-
-	glVertexAttribPointer(vertexPos, 3, GL_FLOAT, GL_FALSE, meshes[0]->GetSizeOfPoint(), BUFFER_OFFSET(0));
-	glVertexAttribPointer(textureNormal, 2, GL_FLOAT, GL_FALSE, meshes[0]->GetSizeOfPoint(), BUFFER_OFFSET(sizeof(float) * 3));
-	glVertexAttribPointer(vertexNormal, 3, GL_FLOAT, GL_FALSE, meshes[0]->GetSizeOfPoint(), BUFFER_OFFSET(sizeof(float) * 5));
-
 }
+
+void Graphics::GenerateHeightMapBuffer(HeightMap* heightmap)
+{
+	//create vertex and index buffer 
+	glGenBuffers(1, &vbHeightMap);
+	glBindBuffer(GL_ARRAY_BUFFER, vbHeightMap);
+	//glGenBuffers(1, &ibHeightMap);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibHeightMap);
+
+	// Define the size of the buffers	
+	glBufferData(GL_ARRAY_BUFFER, heightmap->GetFloatAmount(), heightmap->GetPointsData(), GL_STATIC_DRAW);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, GLuintAmount, 0, GL_STATIC_DRAW);
+
+
+
+	// Define vertex data layout	
+
+	glGenVertexArrays(1, &gVertexAttributeheightMap);
+	glBindVertexArray(gVertexAttributeheightMap);
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+}
+
 void Graphics::PrepareRender()
 {
 	glClearColor(0, 0, 0.08f, 1);
@@ -178,17 +199,39 @@ void Graphics::PrepareRender()
 
 void Graphics::Render( MeshHolder* mh )
 {
-	glBindBuffer(GL_ARRAY_BUFFER, gVertexBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gIndexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vbObj);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibObj);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, mh->GetMesh()->GetSizeOfPoint(), BUFFER_OFFSET(0));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, mh->GetMesh()->GetSizeOfPoint(), BUFFER_OFFSET(sizeof(float) * 3));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, mh->GetMesh()->GetSizeOfPoint(), BUFFER_OFFSET(sizeof(float) * 5));
 
 	// Uniforms
-	mat4 vwMatrix = localCamera->GetPVMatrix() * mh->GetWorld();
-	glUniformMatrix4fv(projectionviewworldMatrixUniformLocation, 1, GL_FALSE, &(GLfloat)vwMatrix[0][0]);
+	mat4 pvwMatrix = localCamera->GetPVMatrix() * mh->GetWorld();
+	glUniformMatrix4fv(pvwMatrixUniformLocation, 1, GL_FALSE, &(GLfloat)pvwMatrix[0][0]);
 	glBindTexture(GL_TEXTURE_2D, mh->GetMesh()->GetMtl().TextureID);
 
 	// Render the mesh
 	//glDrawArrays(GL_TRIANGLES, mh->mesh->GetOffset(), mh->mesh->GetPoints().size());
 	glDrawElements(GL_TRIANGLES, mh->GetMesh()->GetNumberOfIndicies(), GL_UNSIGNED_INT, (void*)mh->GetMesh()->GetOffsetInd());
+}
+
+void Graphics::Render(HeightMap* hm)
+{
+	glUseProgram(heightmapProgram);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbHeightMap);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibHeightMap);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6, BUFFER_OFFSET(0));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6, BUFFER_OFFSET(sizeof(float) * 3));
+
+	// Uniforms
+	mat4 pvwMatrix = localCamera->GetPVMatrix();
+	glUniformMatrix4fv(pvwMatrixUniformLocation2, 1, GL_FALSE, &(GLfloat)pvwMatrix[0][0]);
+
+	// Render the mesh
+	glDrawArrays(GL_TRIANGLES, 0, hm->GetFloatAmount());
 }
 
 void Graphics::SetCamera( Camera* c )

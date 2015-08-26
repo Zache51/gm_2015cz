@@ -78,5 +78,8 @@ public:
 	int getHeight(int x, int y);
 	//void CreateViewFrustum(glm::mat4 proj, glm::mat4 view, glm::vec2 screenSize);
 	int renderCount;
+
+	void* GetPointsData();
+	GLuint GetFloatAmount() const;
 };
 
