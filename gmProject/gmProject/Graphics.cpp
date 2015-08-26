@@ -129,21 +129,21 @@ void Graphics::GenerateBuffer(std::vector<MeshObject*> meshes)
 	for each (MeshObject* mesh in meshes)
 	{
 		// Set offset for mesh
-		GLuint add = offsetVer / sizeof(Point);
+		GLuint add = offsetVer / mesh->GetSizeOfPoint();
 		mesh->SetOffset(add);
 		mesh->SetOffsetInd(offsetInd);
 		
 		glBufferSubData(GL_ARRAY_BUFFER,
 			offsetVer,
 			mesh->GetFloatAmount(),
-			mesh->GetPoints().data());
+			mesh->GetPointsData());
 		
 		mesh->AddIndicies(add);
 		
 		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER,
 			offsetInd,
 			mesh->GetGLuintAmount(),
-			mesh->GetIndicies().data());
+			mesh->GetIndiciesData());
 
 		offsetVer += mesh->GetFloatAmount();
 		offsetInd += mesh->GetGLuintAmount();
@@ -162,9 +162,9 @@ void Graphics::GenerateBuffer(std::vector<MeshObject*> meshes)
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
 
-	glVertexAttribPointer(vertexPos, 3, GL_FLOAT, GL_FALSE, sizeof(Point), BUFFER_OFFSET(0));
-	glVertexAttribPointer(textureNormal, 2, GL_FLOAT, GL_FALSE, sizeof(Point), BUFFER_OFFSET(sizeof(float) * 3));
-	glVertexAttribPointer(vertexNormal, 3, GL_FLOAT, GL_FALSE, sizeof(Point), BUFFER_OFFSET(sizeof(float) * 5));
+	glVertexAttribPointer(vertexPos, 3, GL_FLOAT, GL_FALSE, meshes[0]->GetSizeOfPoint(), BUFFER_OFFSET(0));
+	glVertexAttribPointer(textureNormal, 2, GL_FLOAT, GL_FALSE, meshes[0]->GetSizeOfPoint(), BUFFER_OFFSET(sizeof(float) * 3));
+	glVertexAttribPointer(vertexNormal, 3, GL_FLOAT, GL_FALSE, meshes[0]->GetSizeOfPoint(), BUFFER_OFFSET(sizeof(float) * 5));
 
 }
 void Graphics::PrepareRender()

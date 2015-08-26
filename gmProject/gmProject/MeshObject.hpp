@@ -17,16 +17,18 @@ struct MtlContainer
 	GLuint TextureID;
 };
 
-struct Point
-{
-	glm::vec3 ver;
-	glm::vec2 uvs;
-	glm::vec3 vns;
-};
-
 class MeshObject
 {
 private:
+
+	struct Point
+	{
+		glm::vec3 ver;
+		glm::vec2 uvs;
+		glm::vec3 vns;
+	};
+
+	GLuint sizeOfPoint;
 
 	std::vector<Point> points;
 	std::vector<GLuint> indicies;
@@ -63,11 +65,13 @@ public:
 	GLuint GetNumberOfIndicies() const;
 	GLuint GetOffset() const;
 	GLuint GetOffsetInd() const;
-	std::vector<Point> GetPoints() const;
+	void* GetPointsData();
 	GLuint GetFloatAmount() const;
-	std::vector<GLuint> GetIndicies() const;
+	char32_t* GetIndiciesData();
 	GLuint GetGLuintAmount() const;
 	MtlContainer GetMtl() const;
+
+	GLuint GetSizeOfPoint() const;
 };
 
 #endif
