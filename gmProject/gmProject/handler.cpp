@@ -223,7 +223,10 @@ int main()
 	////////////////////////////////////////////////////////////
 	while (!glfwWindowShouldClose(window))
 	{
-		glfwSetWindowTitle(window, fpsC.get().c_str());
+		std::stringstream ss;
+		ss << fpsC.get() << "   Height map draw count: " << test.GetRenderCount();
+
+		glfwSetWindowTitle(window, ss.str().c_str());
 
 		int newWidth, newHeight;
 		glfwGetFramebufferSize(window, &newWidth, &newHeight);

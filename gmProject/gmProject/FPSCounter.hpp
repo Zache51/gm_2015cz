@@ -2,6 +2,7 @@
 #define FPSCOUNTER_HPP
 
 #include <time.h>
+#include <sstream>
 #include <string>
 
 class fpsCounter

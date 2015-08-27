@@ -1,5 +1,4 @@
 #include "FPSCounter.hpp"
-#include <sstream>
 #include <iostream>
 using std::stringstream;
 
