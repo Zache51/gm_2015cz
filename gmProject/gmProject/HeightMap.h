@@ -42,8 +42,8 @@ private:
 	GLuint numberOfPoints;
 	GLuint numberOfIndicies;
 
-	int mapWidth;				// Width of .raw height map
-	int mapHeight;				// Height of .raw height map
+	GLfloat mapWidth;				// Width of .raw height map
+	GLfloat mapHeight;				// Height of .raw height map
 	int mapSize;				// Total size of height map
 	
 	unsigned char* g_HeightMap;	// Holds the height maps raw data
@@ -59,7 +59,7 @@ private:
 	
 	
 	// Quad tree and frustum stuff
-
+	int renderCount;
 	glm::vec4 frustumPlanes[6];
 
 	int qLevels;
@@ -70,18 +70,19 @@ private:
 	void releaseQuadTree(QuadTree* qt);
 	QuadTree* createQuadTree(int levels, GLfloat startX, GLfloat startY, GLfloat endX, GLfloat endY);
 	void checkQuadTree(QuadTree* qt, glm::mat4 viewmatrix);
-	
+	void createViewFrustum(const Camera* cam);
 
 public:
-	HeightMap(std::string filename);
+	HeightMap(std::string filename, const Camera* cam);
 	~HeightMap();
 
 	bool loadRawFile(std::string filename);
 	int getHeight(int x, int y);
-	void CreateViewFrustum(Camera* cam);
-	int renderCount;
 
 	void* GetPointsData();
 	GLuint GetFloatAmount() const;
+
+	void RenderHeightMap(Camera* cam);
+	int GetRenderCount() const;
 };
 

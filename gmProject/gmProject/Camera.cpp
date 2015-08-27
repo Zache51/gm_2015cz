@@ -1,6 +1,6 @@
 #include "Camera.hpp"
 
-glm::mat4 Camera::getViewMatrix() const
+glm::mat4 Camera::GetViewMatrix() const
 {
 	return rotationMatrix * translationMatrix;
 }
@@ -24,7 +24,7 @@ glm::mat4 Camera::GetProjectionMatrix() const
 
 glm::mat4 Camera::GetPVMatrix() const
 {
-	return projectionMatrix * getViewMatrix();
+	return projectionMatrix * GetViewMatrix();
 }
 
 glm::vec2 Camera::GetScreenSize() const

@@ -11,7 +11,7 @@ GLfloat HeightMap::setVertexColor(int x, int y)
 /***********************************************************************/
 /******************************* Public ********************************/
 
-HeightMap::HeightMap(std::string filename)
+HeightMap::HeightMap(std::string filename, const Camera* cam)
 {
 	modelMatrix = glm::mat4(1.0);
 
@@ -26,7 +26,7 @@ HeightMap::HeightMap(std::string filename)
 
 	rgbColor = 1.0f;
 
-	//qLevels = 4;
+	qLevels = 4;
 
 	points = std::vector<Point2>();
 	//indicies = std::vector<GLuint>();
@@ -35,14 +35,17 @@ HeightMap::HeightMap(std::string filename)
 
 	numberOfPoints = points.size();
 	//numberOfIndicies = indicies.size();
+
+	createViewFrustum(cam);
+	quadTree = createQuadTree(qLevels, 0.0f, 0.0f, mapWidth, mapHeight);
 }
 
 
 HeightMap::~HeightMap()
 {
-	//delete g_HeightMap;
+	delete g_HeightMap;
 
-	//releaseQuadTree(quadTree);
+	releaseQuadTree(quadTree);
 }
 
 /////////// --- HEIGHT MAP FUNCTIONS --- ///////////
@@ -93,8 +96,8 @@ bool HeightMap::loadRawFile(std::string fileName)
 int HeightMap::getHeight(int _x, int _y)
 {
 	// Force x and y to cap at (mapSize - 1)
-	int x = _x % mapWidth;
-	int y = _y % mapHeight;
+	int x = _x % (int)mapWidth;
+	int y = _y % (int)mapHeight;
 
 	// Check if empty
 	if (!g_HeightMap)
@@ -104,7 +107,7 @@ int HeightMap::getHeight(int _x, int _y)
 	}
 
 	// Treat the array like a 2D array (.raw format is a single array)
-	return g_HeightMap[x + (y * mapHeight)];	// Index into our height array and return the height
+	return g_HeightMap[(int)(x + (y * mapHeight))];	// Index into our height array and return the height
 }
 
 //////////////////////////////////////////////////////////////
@@ -118,9 +121,14 @@ GLuint HeightMap::GetFloatAmount() const
 	return numberOfPoints;
 }
 
-///////////////////////////View frustum done//////////////////////////
+///////////////////////////View frustum/////////////////////////
 
-void HeightMap::CreateViewFrustum(Camera* cam)
+int HeightMap::GetRenderCount() const
+{
+	return renderCount;
+}
+
+void HeightMap::createViewFrustum(const Camera* cam)
 {
 	glm::vec2 tileScale = cam->GetScreenSize() * (1.0f / cam->GetScreenSize());
 	glm::vec2 tileBias = tileScale - glm::vec2(1.0f, 1.0f);
@@ -139,50 +147,14 @@ void HeightMap::CreateViewFrustum(Camera* cam)
 	frustumPlanes[2] = c4 - c2;								// Bottom
 	frustumPlanes[3] = c4 + c2;								// Top
 
-	frustumPlanes[4] = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f) - c3;// glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);	// Near
-	frustumPlanes[5] = glm::vec4(0.0f, 0.0f, 0.0f, 1000.0f) + c3;// glm::vec4(0.0f, 0.0f, -1.0f, 1000.0f);	// Far
+	frustumPlanes[4] = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f) - c3;// Near
+	frustumPlanes[5] = glm::vec4(0.0f, 0.0f, 0.0f, 1000.0f) + c3;// Far
 
 	for (int i = 0; i < 6; i++)
 	{
 		frustumPlanes[i] *= (1.0f / frustumPlanes[i].length());
 	}
 
-}
-
-void HeightMap::releaseQuadTree(QuadTree* qt)
-{
-	if (qt->botLeft)
-	{
-		releaseQuadTree(qt->botLeft);
-		releaseQuadTree(qt->botRight);
-		releaseQuadTree(qt->topLeft);
-		releaseQuadTree(qt->topRight);
-	}
-	delete qt;
-}
-
-///////////////////////////View frustum maybe done//////////////////////////
-
-void HeightMap::renderQuadTree(QuadTree* qt)
-{
-
-	if (qt->botLeft)
-	{
-		renderQuadTree(qt->botLeft);
-		renderQuadTree(qt->botRight);
-		renderQuadTree(qt->topLeft);
-		renderQuadTree(qt->topRight);
-	}
-	else
-	{
-		if (qt->visible)
-		{
-			renderCount++;
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, qt->q_IndexBuffer);
-			// draw points 0-3 from the currently bound VAO with current in-use shader
-			glDrawElements(GL_TRIANGLES, 12 * qt->nrIndex, GL_UNSIGNED_INT, (void*)0);
-		}
-	}
 }
 
 QuadTree* HeightMap::createQuadTree(int levels, GLfloat startX, GLfloat startY, GLfloat endX, GLfloat endY)
@@ -275,7 +247,39 @@ QuadTree* HeightMap::createQuadTree(int levels, GLfloat startX, GLfloat startY, 
 	return root;
 }
 
-///////////////////////////View frustum not done//////////////////////////
+void HeightMap::releaseQuadTree(QuadTree* qt)
+{
+	if (qt->botLeft)
+	{
+		releaseQuadTree(qt->botLeft);
+		releaseQuadTree(qt->botRight);
+		releaseQuadTree(qt->topLeft);
+		releaseQuadTree(qt->topRight);
+	}
+	delete qt;
+}
+
+void HeightMap::renderQuadTree(QuadTree* qt)
+{
+
+	if (qt->botLeft)
+	{
+		renderQuadTree(qt->botLeft);
+		renderQuadTree(qt->botRight);
+		renderQuadTree(qt->topLeft);
+		renderQuadTree(qt->topRight);
+	}
+	else
+	{
+		if (qt->visible)
+		{
+			renderCount++;
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, qt->q_IndexBuffer);
+			// draw points 0-3 from the currently bound VAO with current in-use shader
+			glDrawElements(GL_TRIANGLES, 12 * qt->nrIndex, GL_UNSIGNED_INT, (void*)0);
+		}
+	}
+}
 
 void HeightMap::checkQuadTree(QuadTree* qt, glm::mat4 viewmatrix)
 {
@@ -339,4 +343,11 @@ void HeightMap::checkQuadTree(QuadTree* qt, glm::mat4 viewmatrix)
 		checkQuadTree(qt->topRight, viewmatrix);
 	}
 	qt->visible = inside;
+}
+
+void HeightMap::RenderHeightMap(Camera* cam)
+{
+	renderCount = 0;
+	checkQuadTree(quadTree, cam->GetViewMatrix());
+	renderQuadTree(quadTree);
 }

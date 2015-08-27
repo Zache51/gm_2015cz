@@ -17,8 +17,6 @@ private:
 	glm::mat4 projectionMatrix;
 	glm::mat4 rotationMatrix;
 	glm::mat4 translationMatrix;
-	
-	glm::mat4 getViewMatrix() const;
 
 public:
 	// temporary public
@@ -28,6 +26,7 @@ public:
 
 	glm::mat4 GetRotationMatrix() const;
 	glm::mat4 GetProjectionMatrix() const;
+	glm::mat4 GetViewMatrix() const;
 	glm::mat4 GetPVMatrix() const;
 
 	glm::vec2 GetScreenSize() const;

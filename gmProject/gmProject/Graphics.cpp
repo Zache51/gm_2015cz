@@ -231,7 +231,9 @@ void Graphics::Render(HeightMap* hm)
 	glUniformMatrix4fv(pvwMatrixUniformLocation2, 1, GL_FALSE, &(GLfloat)pvwMatrix[0][0]);
 
 	// Render the mesh
-	glDrawArrays(GL_TRIANGLES, 0, hm->GetFloatAmount());
+	//glDrawArrays(GL_TRIANGLES, 0, hm->GetFloatAmount());
+
+	hm->RenderHeightMap(localCamera);
 }
 
 void Graphics::SetCamera( Camera* c )

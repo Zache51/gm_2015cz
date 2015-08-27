@@ -150,13 +150,13 @@ int main()
 	////////////////////////////////////////////////////////////
 	Graphics ge = Graphics();
 	
-	HeightMap test = HeightMap("terrain.raw");
+	
 
 	Camera cam = Camera();
 	cam.SetPosition(glm::vec3(4.0f, 2.0f, 10.0f));
 	ge.SetCamera(&cam);
 
-	
+	HeightMap test("terrain.raw", &cam);
 
 	fprintf(stdout, "\n");
 	fprintf(stdout, "------------- Loading Meshes -------------\n");
