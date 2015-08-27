@@ -76,6 +76,8 @@ public:
 	HeightMap(std::string filename, const Camera* cam);
 	~HeightMap();
 
+	void FreeMemory();
+
 	bool loadRawFile(std::string filename);
 	int getHeight(int x, int y);
 

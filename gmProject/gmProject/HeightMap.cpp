@@ -40,12 +40,17 @@ HeightMap::HeightMap(std::string filename, const Camera* cam)
 	quadTree = createQuadTree(qLevels, 0.0f, 0.0f, mapWidth, mapHeight);
 }
 
-
 HeightMap::~HeightMap()
 {
 	delete g_HeightMap;
 
 	releaseQuadTree(quadTree);
+}
+
+void HeightMap::FreeMemory()
+{
+	points.clear();
+	//indicies.clear();
 }
 
 /////////// --- HEIGHT MAP FUNCTIONS --- ///////////

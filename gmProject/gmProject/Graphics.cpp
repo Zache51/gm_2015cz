@@ -152,6 +152,8 @@ void Graphics::GenerateBuffer(std::vector<MeshObject*> meshes)
 
 		offsetVer += mesh->GetFloatAmount();
 		offsetInd += mesh->GetGLuintAmount();
+
+		mesh->FreeMemory();
 	}
 
 	// Define VAO
@@ -179,6 +181,8 @@ void Graphics::GenerateHeightMapBuffer(HeightMap* heightmap)
 	// Define the size of the buffers	
 	glBufferData(GL_ARRAY_BUFFER, heightmap->GetFloatAmount(), heightmap->GetPointsData(), GL_STATIC_DRAW);
 	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, GLuintAmount, 0, GL_STATIC_DRAW);
+
+	heightmap->FreeMemory();
 
 	// Define VAO
 	glGenVertexArrays(1, &gVertexAttributeheightMap);
