@@ -156,7 +156,7 @@ int main()
 	cam.SetPosition(glm::vec3(4.0f, 2.0f, 10.0f));
 	ge.SetCamera(&cam);
 
-	HeightMap test("terrain.raw", &cam);
+	HeightMap heightmap("terrain.raw", &cam);
 
 	fprintf(stdout, "\n");
 	fprintf(stdout, "------------- Loading Meshes -------------\n");
@@ -216,7 +216,7 @@ int main()
 	//meshes.push_back(&m2);
 	ge.GenerateBuffer(meshes);
 
-	ge.GenerateHeightMapBuffer(&test);
+	ge.GenerateHeightMapBuffer(&heightmap);
 
 	int width = 0, height = 0;
 	fpsCounter fpsC;
@@ -224,7 +224,7 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		std::stringstream ss;
-		ss << fpsC.get() << "   Height map draw count: " << test.GetRenderCount();
+		ss << fpsC.get() << "   Height map draw count: " << heightmap.GetRenderCount();
 
 		glfwSetWindowTitle(window, ss.str().c_str());
 
@@ -293,7 +293,7 @@ int main()
 		ge.Render(&mustang3);
 		ge.Render(&mustang4);
 
-		ge.Render(&test);
+		ge.Render(&heightmap);
 
 		fpsC.tick();
 		Sleep(1000 / 120);
