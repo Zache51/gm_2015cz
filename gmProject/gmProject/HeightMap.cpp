@@ -42,7 +42,7 @@ HeightMap::~HeightMap()
 {
 	//delete g_HeightMap;
 
-	releaseQuadTree(quadTree);
+	//releaseQuadTree(quadTree);
 }
 
 /////////// --- HEIGHT MAP FUNCTIONS --- ///////////
@@ -277,7 +277,7 @@ QuadTree* HeightMap::createQuadTree(int levels, GLfloat startX, GLfloat startY, 
 
 ///////////////////////////View frustum not done//////////////////////////
 
-void HeightMap::checkQuadTree(QuadTree* qt, glm::mat4 camPosIn)
+void HeightMap::checkQuadTree(QuadTree* qt, glm::mat4 viewmatrix)
 {
 	float size = qt->size;
 	glm::vec4 posOffset[] = {
@@ -293,7 +293,7 @@ void HeightMap::checkQuadTree(QuadTree* qt, glm::mat4 camPosIn)
 	for (int o = 0; o < 4 && !inside; o++)
 	{
 
-		glm::vec4 pos = view * (glm::vec4(qt->x, qt->z, qt->y, 1.0f) + posOffset[o]);
+		glm::vec4 pos = viewmatrix * (glm::vec4(qt->x, qt->z, qt->y, 1.0f) + posOffset[o]);
 		float dist;
 		float rad = 25.0f;
 		bool inFrustum = true;
@@ -322,7 +322,7 @@ void HeightMap::checkQuadTree(QuadTree* qt, glm::mat4 camPosIn)
 		glm::vec4 point0 = (glm::vec4(qt->x, qt->z, qt->y, 1.0f) + posOffset[0]);
 		glm::vec4 point3 = (glm::vec4(qt->x, qt->z, qt->y, 1.0f) + posOffset[3]);
 
-		glm::vec4 camPos = camPosIn[3];
+		glm::vec4 camPos = viewmatrix[3];
 		float camX = -camPos[0];
 		float camY = -camPos[2];
 		if (camX < point0.x && camX > point3.x && camY < point0.z && camY > point3.z)
@@ -333,10 +333,10 @@ void HeightMap::checkQuadTree(QuadTree* qt, glm::mat4 camPosIn)
 
 	if (qt->botLeft)
 	{
-		checkQuadTree(qt->botLeft, camPosIn);
-		checkQuadTree(qt->botRight, camPosIn);
-		checkQuadTree(qt->topLeft, camPosIn);
-		checkQuadTree(qt->topRight, camPosIn);
+		checkQuadTree(qt->botLeft, viewmatrix);
+		checkQuadTree(qt->botRight, viewmatrix);
+		checkQuadTree(qt->topLeft, viewmatrix);
+		checkQuadTree(qt->topRight, viewmatrix);
 	}
 	qt->visible = inside;
 }

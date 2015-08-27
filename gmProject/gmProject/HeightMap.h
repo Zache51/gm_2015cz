@@ -69,7 +69,7 @@ private:
 	void renderQuadTree(QuadTree* qt);
 	void releaseQuadTree(QuadTree* qt);
 	QuadTree* createQuadTree(int levels, GLfloat startX, GLfloat startY, GLfloat endX, GLfloat endY);
-	void checkQuadTree(QuadTree* qt, glm::mat4);
+	void checkQuadTree(QuadTree* qt, glm::mat4 viewmatrix);
 	
 
 public:
