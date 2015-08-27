@@ -27,7 +27,10 @@ public:
 	Camera();
 
 	glm::mat4 GetRotationMatrix() const;
+	glm::mat4 GetProjectionMatrix() const;
 	glm::mat4 GetPVMatrix() const;
+
+	glm::vec2 GetScreenSize() const;
 	
 	// One of these is probably redundant
 	void UpdatePosition(glm::vec3 change);

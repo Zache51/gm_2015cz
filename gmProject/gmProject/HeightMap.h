@@ -7,6 +7,8 @@
 #include <errno.h>
 #include <stdio.h>
 
+#include "Camera.hpp"
+
 #define MESH_FOLDER "Meshes/"
 
 struct QuadTree
@@ -58,16 +60,16 @@ private:
 	
 	// Quad tree and frustum stuff
 
-	//glm::vec4 frustumPlanes[6];
+	glm::vec4 frustumPlanes[6];
 
-	//int qLevels;
+	int qLevels;
 	int quadSize;				// Width and height of each QUAD
 
-	//QuadTree* quadTree;
-	//void renderQuadTree(QuadTree* qt);
-	//void releaseQuadTree(QuadTree* qt);
-	//QuadTree* createQuadTree(int levels, GLfloat startX, GLfloat startY, GLfloat endX, GLfloat endY);
-	//void checkQuadTree(QuadTree* qt, glm::mat4);
+	QuadTree* quadTree;
+	void renderQuadTree(QuadTree* qt);
+	void releaseQuadTree(QuadTree* qt);
+	QuadTree* createQuadTree(int levels, GLfloat startX, GLfloat startY, GLfloat endX, GLfloat endY);
+	void checkQuadTree(QuadTree* qt, glm::mat4);
 	
 
 public:
@@ -76,7 +78,7 @@ public:
 
 	bool loadRawFile(std::string filename);
 	int getHeight(int x, int y);
-	//void CreateViewFrustum(glm::mat4 proj, glm::mat4 view, glm::vec2 screenSize);
+	void CreateViewFrustum(Camera* cam);
 	int renderCount;
 
 	void* GetPointsData();

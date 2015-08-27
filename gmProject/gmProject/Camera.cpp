@@ -17,9 +17,19 @@ glm::mat4 Camera::GetRotationMatrix() const
 	return rotationMatrix;
 }
 
+glm::mat4 Camera::GetProjectionMatrix() const
+{
+	return projectionMatrix;
+}
+
 glm::mat4 Camera::GetPVMatrix() const
 {
 	return projectionMatrix * getViewMatrix();
+}
+
+glm::vec2 Camera::GetScreenSize() const
+{
+	return glm::vec2(width, height);
 }
 
 void Camera::UpdatePosition(glm::vec3 change)
