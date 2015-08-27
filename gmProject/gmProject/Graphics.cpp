@@ -154,15 +154,18 @@ void Graphics::GenerateBuffer(std::vector<MeshObject*> meshes)
 		offsetInd += mesh->GetGLuintAmount();
 	}
 
-	
-	// Define vertex data layout	
-	
+	// Define VAO
 	glGenVertexArrays(1, &gVertexAttributeObj);
 	glBindVertexArray(gVertexAttributeObj);
-
+	glBindBuffer(GL_ARRAY_BUFFER, vbObj);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibObj);
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
+	// Define vertex data layout	
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, meshes[0]->GetSizeOfPoint(), BUFFER_OFFSET(0));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, meshes[0]->GetSizeOfPoint(), BUFFER_OFFSET(sizeof(float) * 3));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, meshes[0]->GetSizeOfPoint(), BUFFER_OFFSET(sizeof(float) * 5));
 }
 
 void Graphics::GenerateHeightMapBuffer(HeightMap* heightmap)
@@ -177,15 +180,16 @@ void Graphics::GenerateHeightMapBuffer(HeightMap* heightmap)
 	glBufferData(GL_ARRAY_BUFFER, heightmap->GetFloatAmount(), heightmap->GetPointsData(), GL_STATIC_DRAW);
 	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, GLuintAmount, 0, GL_STATIC_DRAW);
 
-
-
-	// Define vertex data layout	
-
+	// Define VAO
 	glGenVertexArrays(1, &gVertexAttributeheightMap);
 	glBindVertexArray(gVertexAttributeheightMap);
-
+	glBindBuffer(GL_ARRAY_BUFFER, vbHeightMap);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibHeightMap);
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+	// Define vertex data layout	
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6, BUFFER_OFFSET(0));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6, BUFFER_OFFSET(sizeof(float) * 3));
 }
 
 void Graphics::PrepareRender()
@@ -199,12 +203,7 @@ void Graphics::PrepareRender()
 
 void Graphics::Render( MeshHolder* mh )
 {
-	glBindBuffer(GL_ARRAY_BUFFER, vbObj);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibObj);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, mh->GetMesh()->GetSizeOfPoint(), BUFFER_OFFSET(0));
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, mh->GetMesh()->GetSizeOfPoint(), BUFFER_OFFSET(sizeof(float) * 3));
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, mh->GetMesh()->GetSizeOfPoint(), BUFFER_OFFSET(sizeof(float) * 5));
+	glBindVertexArray(gVertexAttributeObj);
 
 	// Uniforms
 	mat4 pvwMatrix = localCamera->GetPVMatrix() * mh->GetWorld();
@@ -220,11 +219,7 @@ void Graphics::Render(HeightMap* hm)
 {
 	glUseProgram(heightmapProgram);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbHeightMap);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibHeightMap);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6, BUFFER_OFFSET(0));
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6, BUFFER_OFFSET(sizeof(float) * 3));
+	glBindVertexArray(gVertexAttributeheightMap);
 
 	// Uniforms
 	mat4 pvwMatrix = localCamera->GetPVMatrix();
