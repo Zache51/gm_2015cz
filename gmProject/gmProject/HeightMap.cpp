@@ -242,43 +242,8 @@ QuadTree* HeightMap::createQuadTree(int levels, GLfloat startX, GLfloat startY, 
 		root->nrIndex = indexHolder.size();
 
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(IndexTriangle)* root->nrIndex, &indexHolder[0], GL_STATIC_DRAW);
-
 	}
 	return root;
-}
-
-void HeightMap::releaseQuadTree(QuadTree* qt)
-{
-	if (qt->botLeft)
-	{
-		releaseQuadTree(qt->botLeft);
-		releaseQuadTree(qt->botRight);
-		releaseQuadTree(qt->topLeft);
-		releaseQuadTree(qt->topRight);
-	}
-	delete qt;
-}
-
-void HeightMap::renderQuadTree(QuadTree* qt)
-{
-
-	if (qt->botLeft)
-	{
-		renderQuadTree(qt->botLeft);
-		renderQuadTree(qt->botRight);
-		renderQuadTree(qt->topLeft);
-		renderQuadTree(qt->topRight);
-	}
-	else
-	{
-		if (qt->visible)
-		{
-			renderCount++;
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, qt->q_IndexBuffer);
-			// draw points 0-3 from the currently bound VAO with current in-use shader
-			glDrawElements(GL_TRIANGLES, 12 * qt->nrIndex, GL_UNSIGNED_INT, (void*)0);
-		}
-	}
 }
 
 void HeightMap::checkQuadTree(QuadTree* qt, glm::mat4 viewmatrix)
@@ -345,9 +310,43 @@ void HeightMap::checkQuadTree(QuadTree* qt, glm::mat4 viewmatrix)
 	qt->visible = inside;
 }
 
+void HeightMap::renderQuadTree(QuadTree* qt)
+{
+
+	if (qt->botLeft)
+	{
+		renderQuadTree(qt->botLeft);
+		renderQuadTree(qt->botRight);
+		renderQuadTree(qt->topLeft);
+		renderQuadTree(qt->topRight);
+	}
+	else
+	{
+		if (qt->visible)
+		{
+			renderCount++;
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, qt->q_IndexBuffer);
+			// draw points 0-3 from the currently bound VAO with current in-use shader
+			glDrawElements(GL_TRIANGLES, 12 * qt->nrIndex, GL_UNSIGNED_INT, (void*)0);
+		}
+	}
+}
+
 void HeightMap::RenderHeightMap(Camera* cam)
 {
 	renderCount = 0;
 	checkQuadTree(quadTree, cam->GetViewMatrix());
 	renderQuadTree(quadTree);
+}
+
+void HeightMap::releaseQuadTree(QuadTree* qt)
+{
+	if (qt->botLeft)
+	{
+		releaseQuadTree(qt->botLeft);
+		releaseQuadTree(qt->botRight);
+		releaseQuadTree(qt->topLeft);
+		releaseQuadTree(qt->topRight);
+	}
+	delete qt;
 }
