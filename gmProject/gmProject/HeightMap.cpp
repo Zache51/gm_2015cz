@@ -28,16 +28,17 @@ HeightMap::HeightMap(std::string filename, const Camera* cam)
 
 	qLevels = 4;
 
-	points = std::vector<Point2>();
-	//indicies = std::vector<GLuint>();
-
-	loadRawFile(MESH_FOLDER + filename);
-
-	numberOfPoints = points.size();
-	//numberOfIndicies = indicies.size();
-
 	createViewFrustum(cam);
+	
+	// Load the points and save them until loaded by GC
+	points = std::vector<Point2>();
+	loadRawFile(MESH_FOLDER + filename);
+	numberOfPoints = points.size();
+
+	// Create the indicies and save them until loaded by GC
+	indicies = std::vector<GLuint>();
 	quadTree = createQuadTree(qLevels, 0.0f, 0.0f, mapWidth, mapHeight);
+	numberOfIndicies = indicies.size();
 }
 
 HeightMap::~HeightMap()
@@ -50,7 +51,7 @@ HeightMap::~HeightMap()
 void HeightMap::FreeMemory()
 {
 	points.clear();
-	//indicies.clear();
+	indicies.clear();
 }
 
 /////////// --- HEIGHT MAP FUNCTIONS --- ///////////
@@ -126,6 +127,15 @@ GLuint HeightMap::GetFloatAmount() const
 	return numberOfPoints;
 }
 
+char32_t* HeightMap::GetIndiciesData()
+{
+	return indicies.data();
+}
+GLuint HeightMap::GetGLuintAmount() const
+{
+	return numberOfIndicies;
+}
+
 ///////////////////////////View frustum/////////////////////////
 
 int HeightMap::GetRenderCount() const
@@ -195,15 +205,7 @@ QuadTree* HeightMap::createQuadTree(int levels, GLfloat startX, GLfloat startY, 
 		root->botLeft = nullptr;
 		root->botRight = nullptr;
 
-		glGenBuffers(1, &root->q_IndexBuffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, root->q_IndexBuffer);
-
-		struct IndexTriangle
-		{
-			GLuint v0, v1, v2;
-		};
-
-		std::vector<IndexTriangle> indexHolder;
+		root->bufferOffset = indicies.size();
 
 		int i_size = static_cast<int>(size);
 		int countSizeX = (i_size * 2) / quadSize;
@@ -229,24 +231,16 @@ QuadTree* HeightMap::createQuadTree(int levels, GLfloat startX, GLfloat startY, 
 			{
 				GLuint vertexIndex = ((_w + xOffset) * gridWidth) + (_h + yOffset);
 
-				IndexTriangle top;
-				top.v0 = vertexIndex;
-				top.v1 = vertexIndex + gridWidth + 1;
-				top.v2 = vertexIndex + 1;
+				indicies.push_back(vertexIndex);
+				indicies.push_back(vertexIndex + gridWidth + 1);
+				indicies.push_back(vertexIndex + 1);
+				indicies.push_back(vertexIndex);
+				indicies.push_back(vertexIndex + gridWidth);
+				indicies.push_back(vertexIndex + gridWidth + 1);
 
-				IndexTriangle bottom;
-				bottom.v0 = top.v0;
-				bottom.v1 = vertexIndex + gridWidth;
-				bottom.v2 = top.v1;
-
-				indexHolder.push_back(top);
-				indexHolder.push_back(bottom);
+				root->nrIndex += 6;
 			}
 		}
-
-		root->nrIndex = indexHolder.size();
-
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(IndexTriangle)* root->nrIndex, &indexHolder[0], GL_STATIC_DRAW);
 	}
 	return root;
 }
@@ -330,9 +324,7 @@ void HeightMap::renderQuadTree(QuadTree* qt)
 		if (qt->visible)
 		{
 			renderCount++;
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, qt->q_IndexBuffer);
-			// draw points 0-3 from the currently bound VAO with current in-use shader
-			glDrawElements(GL_TRIANGLES, 12 * qt->nrIndex, GL_UNSIGNED_INT, (void*)0);
+			glDrawElements(GL_TRIANGLES, 12 * qt->nrIndex, GL_UNSIGNED_INT, (void*)qt->bufferOffset);
 		}
 	}
 }

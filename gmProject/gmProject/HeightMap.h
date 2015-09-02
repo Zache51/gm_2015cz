@@ -16,7 +16,8 @@ struct QuadTree
 	GLfloat x, y, z = 100;	//Center
 	GLfloat size;			//offset
 	GLuint q_IndexBuffer;
-	GLuint nrIndex;
+	GLuint bufferOffset = 0;
+	GLuint nrIndex = 0;
 
 	bool visible = false;
 
@@ -83,6 +84,8 @@ public:
 
 	void* GetPointsData();
 	GLuint GetFloatAmount() const;
+	char32_t* GetIndiciesData();
+	GLuint GetGLuintAmount() const;
 
 	void RenderHeightMap(Camera* cam);
 	int GetRenderCount() const;

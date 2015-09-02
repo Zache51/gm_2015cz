@@ -157,6 +157,7 @@ int main()
 	ge.SetCamera(&cam);
 
 	HeightMap heightmap("terrain.raw", &cam);
+	ge.GenerateHeightMapBuffer(&heightmap);
 
 	fprintf(stdout, "\n");
 	fprintf(stdout, "------------- Loading Meshes -------------\n");
@@ -215,8 +216,6 @@ int main()
 	
 	//meshes.push_back(&m2);
 	ge.GenerateBuffer(meshes);
-
-	ge.GenerateHeightMapBuffer(&heightmap);
 
 	int width = 0, height = 0;
 	fpsCounter fpsC;

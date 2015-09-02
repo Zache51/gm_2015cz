@@ -175,12 +175,12 @@ void Graphics::GenerateHeightMapBuffer(HeightMap* heightmap)
 	//create vertex and index buffer 
 	glGenBuffers(1, &vbHeightMap);
 	glBindBuffer(GL_ARRAY_BUFFER, vbHeightMap);
-	//glGenBuffers(1, &ibHeightMap);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibHeightMap);
+	glGenBuffers(1, &ibHeightMap);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibHeightMap);
 
 	// Define the size of the buffers	
 	glBufferData(GL_ARRAY_BUFFER, heightmap->GetFloatAmount(), heightmap->GetPointsData(), GL_STATIC_DRAW);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, GLuintAmount, 0, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, heightmap->GetGLuintAmount(), &heightmap->GetIndiciesData()[0], GL_STATIC_DRAW);
 
 	heightmap->FreeMemory();
 
@@ -231,6 +231,8 @@ void Graphics::Render(HeightMap* hm)
 
 	// Render the mesh
 	//glDrawArrays(GL_TRIANGLES, 0, hm->GetFloatAmount());
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibHeightMap);
 
 	hm->RenderHeightMap(localCamera);
 }
