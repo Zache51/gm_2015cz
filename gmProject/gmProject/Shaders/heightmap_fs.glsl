@@ -3,15 +3,18 @@ in vec3 color;
 //in vec3 normal;
 in vec3 worldPos;
 
-//out vec4 fragment_color;
+out vec4 fragment_color;
 
-layout (location = 0) out vec3 diffuseOut; 
+//layout (location = 0) out vec3 diffuseOut; 
 //layout (location = 1) out vec3 normalOut; 
-layout (location = 2) out vec3 worldOut; 
+//layout (location = 2) out vec3 worldOut; 
 
 void main ()
 {
-	diffuseOut = color;
+	//fragment_color = vec4(color, 1.0);
+	fragment_color = vec4(1.0, 0.0, 0.0, 1.0);
+	
+	//diffuseOut = color;
 	//normalOut = normalize(normal);
-	worldOut = worldPos;
+	//worldOut = worldPos;
 }

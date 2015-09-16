@@ -25,7 +25,7 @@ void main () {
 
 		for( int i = 0; i < 3; i++ )
 		{
-			gl_Position = PVWMatrix * gl_in[i].gl_Position;
+			gl_Position = gl_in[i].gl_Position;
 			color = colorG[i];
 			worldPos = (vec4(worldPosG[i], 1.0f)).xyz;
 			//worldPos = (model * vec4(worldPosG[i], 1.0f)).xyz;
