@@ -43,9 +43,9 @@ HeightMap::HeightMap(std::string filename, const Camera* cam)
 
 HeightMap::~HeightMap()
 {
-	delete g_HeightMap;
+	//delete g_HeightMap;
 
-	releaseQuadTree(quadTree);
+	//releaseQuadTree(quadTree);
 }
 
 void HeightMap::FreeMemory()
@@ -54,14 +54,18 @@ void HeightMap::FreeMemory()
 	indicies.clear();
 }
 
+// line of doom
+
+// line of doom ends
+
 /////////// --- HEIGHT MAP FUNCTIONS --- ///////////
-bool HeightMap::loadRawFile(std::string fileName)
+bool HeightMap::loadRawFile(std::string filename)
 {
 	bool loadFromFile = false;
 	FILE* file = nullptr;
 
 	// Opens the file in Read/Binary mode.
-	file = fopen(fileName.data(), "rb");
+	file = fopen(filename.data(), "rb");
 
 	// Check if file was found and could open it
 	if (file != nullptr)
@@ -71,7 +75,7 @@ bool HeightMap::loadRawFile(std::string fileName)
 
 		// Check for data error
 		int result = ferror(file);
-		result = errno;
+		//result = errno;
 		if (result) loadFromFile = false;
 		else loadFromFile = true;
 
@@ -83,17 +87,24 @@ bool HeightMap::loadRawFile(std::string fileName)
 	}
 	fclose(file);
 
-	for (int _w = 0; _w < mapWidth; _w += quadSize)
-	{
-		for (int _h = 0; _h < mapHeight; _h += quadSize)
-		{
-			rgbColor = setVertexColor(_w, _h);
-			
-			Point2 temp;
-			temp.ver = glm::vec3(_w, getHeight(_w, _h), _h);
-			temp.col = glm::vec3(rgbColor, rgbColor, rgbColor);
 
-			points.push_back(temp);
+	if (loadFromFile)
+	{
+		for (int _w = 0; _w < mapWidth; _w += quadSize)
+		{
+			for (int _h = 0; _h < mapHeight; _h += quadSize)
+			{
+				rgbColor = setVertexColor(_w, _h);
+
+				Point2 temp;
+
+				int asdf = getHeight(_w, _h);
+
+				temp.ver = glm::vec3(_w, getHeight(_w, _h), _h);
+				temp.col = glm::vec3(rgbColor, rgbColor, rgbColor);
+
+				points.push_back(temp);
+			}
 		}
 	}
 
@@ -187,16 +198,10 @@ QuadTree* HeightMap::createQuadTree(int levels, GLfloat startX, GLfloat startY, 
 	root->q_IndexBuffer = 0;
 	if (levels != 0)
 	{
-
-		QuadTree* topLeft = createQuadTree(levels - 1, x - size, y, x, y - size);
-		QuadTree* topRight = createQuadTree(levels - 1, x, y - size, x + size, y);
-		QuadTree* botLeft = createQuadTree(levels - 1, x - size, y, x, y + size);
-		QuadTree* botRight = createQuadTree(levels - 1, x, y, x + size, y + size);
-
-		root->topLeft = topLeft;
-		root->topRight = topRight;
-		root->botLeft = botLeft;
-		root->botRight = botRight;
+		root->topLeft = createQuadTree(levels - 1, x - size, y, x, y - size);
+		root->topRight = createQuadTree(levels - 1, x, y - size, x + size, y);
+		root->botLeft = createQuadTree(levels - 1, x - size, y, x, y + size);
+		root->botRight = createQuadTree(levels - 1, x, y, x + size, y + size);
 	}
 	else
 	{
@@ -324,7 +329,8 @@ void HeightMap::renderQuadTree(QuadTree* qt)
 		if (qt->visible)
 		{
 			renderCount++;
-			glDrawElements(GL_TRIANGLES, 12 * qt->nrIndex, GL_UNSIGNED_INT, (void*)qt->bufferOffset);
+			//glDrawElements(GL_TRIANGLES, 12 * qt->nrIndex, GL_UNSIGNED_INT, (void*)qt->bufferOffset);
+			glDrawElements(GL_TRIANGLES, qt->nrIndex, GL_UNSIGNED_INT, (void*)qt->bufferOffset);
 		}
 	}
 }

@@ -46,7 +46,7 @@ private:
 	GLfloat mapWidth;				// Width of .raw height map
 	GLfloat mapHeight;				// Height of .raw height map
 	int mapSize;				// Total size of height map
-	
+
 	unsigned char* g_HeightMap;	// Holds the height maps raw data
 
 	int gridWidth;				// Defined width for actual map
@@ -57,8 +57,8 @@ private:
 
 	float ry = 0;
 	glm::mat4 modelMatrix;
-	
-	
+
+
 	// Quad tree and frustum stuff
 	int renderCount;
 	glm::vec4 frustumPlanes[6];
@@ -73,13 +73,15 @@ private:
 	void checkQuadTree(QuadTree* qt, glm::mat4 viewmatrix);
 	void createViewFrustum(const Camera* cam);
 
+
+	bool loadRawFile(std::string filename);
+
 public:
 	HeightMap(std::string filename, const Camera* cam);
 	~HeightMap();
 
 	void FreeMemory();
 
-	bool loadRawFile(std::string filename);
 	int getHeight(int x, int y);
 
 	void* GetPointsData();

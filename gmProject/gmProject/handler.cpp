@@ -156,40 +156,15 @@ int main()
 	cam.SetPosition(glm::vec3(4.0f, 2.0f, 10.0f));
 	ge.SetCamera(&cam);
 
-	HeightMap heightmap("terrain.raw", &cam);
+	HeightMap heightmap = HeightMap("terrain.raw", &cam);
 	ge.GenerateHeightMapBuffer(&heightmap);
 
 	fprintf(stdout, "\n");
 	fprintf(stdout, "------------- Loading Meshes -------------\n");
-	MeshObject tm = MeshObject("Triangle.obj");
-	MeshObject sm = MeshObject("Square.obj");
+	//MeshObject tm = MeshObject("Triangle.obj");
+	//MeshObject sm = MeshObject("Square.obj");
 	MeshObject m = MeshObject("mustang.obj");
 	fprintf(stdout, "------------------------------------------\n");
-	
-	// Square
-	MeshHolder square = MeshHolder(&sm);
-	square.SetRotation(glm::rotate(mat4(1.f), PI/4, vec3(0.f, 0.0f, 1.f)));
-	square.SetTranslation(glm::translate(mat4(1.0f), vec3(5.f, 5.0f, 0.0f)));
-
-	// Square 2
-	MeshHolder square2 = MeshHolder(&sm);
-	square2.SetRotation(glm::rotate(mat4(1.f), 00.f, vec3(0.f, 0.0f, 1.f)));
-	square2.SetTranslation(glm::translate(mat4(1.0f), vec3(5.f, 6.0f, 0.0f)));
-
-	// Triangle
-	MeshHolder triangle1 = MeshHolder(&tm);
-	triangle1.SetRotation(glm::rotate(mat4(1.f), PI, vec3(0.f, 0.0f, 1.f)));
-	triangle1.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 5.0f, 0.0f)));
-
-	// Triangle 2
-	MeshHolder triangle2 = MeshHolder(&tm);
-	triangle2.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	triangle2.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 5.5f, 0.0f)));
-
-	// Triangle 3
-	MeshHolder triangle3 = MeshHolder(&tm);
-	triangle3.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	triangle3.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 6.0f, 0.0f)));
 
 	// P-51 Mustang
 	MeshHolder mustang = MeshHolder(&m);
@@ -210,11 +185,7 @@ int main()
 
 	std::vector<MeshObject*> meshes;
 	meshes.push_back(&m);
-	//meshes.push_back(&tm);
-	//meshes.push_back(&sm);
 	
-	
-	//meshes.push_back(&m2);
 	ge.GenerateBuffer(meshes);
 
 	int width = 0, height = 0;
@@ -223,7 +194,7 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		std::stringstream ss;
-		ss << fpsC.get() << "   Height map draw count: " << heightmap.GetRenderCount();
+		ss << fpsC.get() /*<< "   Height map draw count: " << heightmap.GetRenderCount()*/;
 
 		glfwSetWindowTitle(window, ss.str().c_str());
 
@@ -282,11 +253,6 @@ int main()
 		
 
 		ge.PrepareRender();
-		//ge.Render(&square);
-		//ge.Render(&square2);
-		//ge.Render(&triangle1);
-		//ge.Render(&triangle2);
-		//ge.Render(&triangle3);
 		ge.Render(&mustang);
 		ge.Render(&mustang2);
 		ge.Render(&mustang3);
