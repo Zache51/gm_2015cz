@@ -87,6 +87,9 @@ bool HeightMap::loadRawFile(std::string filename)
 	}
 	fclose(file);
 
+	bool started = false;
+	int minHeight = 0;
+	int maxHeight = 0;
 
 	if (loadFromFile)
 	{
@@ -98,7 +101,28 @@ bool HeightMap::loadRawFile(std::string filename)
 
 				Point2 temp;
 
-				int asdf = getHeight(_w, _h);
+				if (!started)
+				{
+					minHeight = getHeight(_w, _h);
+					maxHeight = getHeight(_w, _h);
+					started = true;
+				}
+				else
+				{
+					int asdf = getHeight(_w, _h);
+
+					if (asdf < minHeight)
+					{
+						minHeight = asdf;
+					}
+					if (asdf > maxHeight)
+					{
+						maxHeight = asdf;
+					}
+				}
+
+				
+
 
 				temp.ver = glm::vec3(_w, getHeight(_w, _h), _h);
 				temp.col = glm::vec3(rgbColor, rgbColor, rgbColor);
@@ -329,8 +353,8 @@ void HeightMap::renderQuadTree(QuadTree* qt)
 		if (qt->visible)
 		{
 			renderCount++;
-			//glDrawElements(GL_TRIANGLES, 12 * qt->nrIndex, GL_UNSIGNED_INT, (void*)qt->bufferOffset);
-			glDrawElements(GL_TRIANGLES, qt->nrIndex, GL_UNSIGNED_INT, (void*)qt->bufferOffset);
+			glDrawElements(GL_TRIANGLES, 12 * qt->nrIndex, GL_UNSIGNED_INT, (void*)qt->bufferOffset);
+			//glDrawElements(GL_TRIANGLES, qt->nrIndex, GL_UNSIGNED_INT, (void*)qt->bufferOffset);
 		}
 	}
 }
