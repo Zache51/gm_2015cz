@@ -156,7 +156,7 @@ int main()
 	cam.SetPosition(glm::vec3(4.0f, 2.0f, 10.0f));
 	ge.SetCamera(&cam);
 
-	HeightMap heightmap = HeightMap("terrain.raw", &cam);
+	HeightMap heightmap = HeightMap("null.raw", &cam);
 	ge.GenerateHeightMapBuffer(&heightmap);
 
 	fprintf(stdout, "\n");
@@ -182,6 +182,10 @@ int main()
 	MeshHolder mustang4 = MeshHolder(&m);
 	mustang4.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
 	mustang4.SetTranslation(glm::translate(mat4(1.0f), vec3(20.0f, 0.0f, 0.0f)));
+
+	MeshHolder mustangHigh = MeshHolder(&m);
+	mustangHigh.SetRotation(glm::rotate(mat4(1.f), 3.14f, vec3(0.f, 0.0f, 1.f)));
+	mustangHigh.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 60.0f, 0.0f)));
 
 	std::vector<MeshObject*> meshes;
 	meshes.push_back(&m);
@@ -257,6 +261,7 @@ int main()
 		ge.Render(&mustang2);
 		ge.Render(&mustang3);
 		ge.Render(&mustang4);
+		ge.Render(&mustangHigh);
 
 		ge.Render(&heightmap);
 

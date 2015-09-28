@@ -180,7 +180,7 @@ void Graphics::GenerateHeightMapBuffer(HeightMap* heightmap)
 
 	// Define the size of the buffers	
 	glBufferData(GL_ARRAY_BUFFER, heightmap->GetFloatAmount(), heightmap->GetPointsData(), GL_STATIC_DRAW);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, heightmap->GetGLuintAmount(), &heightmap->GetIndiciesData()[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, heightmap->GetGLuintAmount(), heightmap->GetIndiciesData(), GL_STATIC_DRAW);
 
 	heightmap->FreeMemory();
 
@@ -230,11 +230,12 @@ void Graphics::Render(HeightMap* hm)
 	glUniformMatrix4fv(pvwMatrixUniformLocation2, 1, GL_FALSE, &(GLfloat)pvwMatrix[0][0]);
 
 	// Render the mesh
-	//glDrawArrays(GL_TRIANGLES, 0, hm->GetFloatAmount());
+	glDrawArrays(GL_TRIANGLES, 0, hm->GetFloatAmount());
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibHeightMap);
 
-	hm->RenderHeightMap(localCamera);
+	// Render the mesh
+	//hm->RenderHeightMap(localCamera);
 }
 
 void Graphics::SetCamera( Camera* c )
