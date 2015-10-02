@@ -1,9 +1,7 @@
 #ifndef MESHOBJECT_HPP
 #define MESHOBJECT_HPP
 
-#include <GL/glew.h>
-#include <glm/glm.hpp>
-#include <vector>
+#include "MeshBase.h"
 
 #define MESH_FOLDER "Meshes/"
 
@@ -17,24 +15,18 @@ struct MtlContainer
 	GLuint TextureID;
 };
 
-class MeshObject
+class MeshObject : public MeshBase
 {
 private:
 
-	struct Point
-	{
-		glm::vec3 ver;
-		glm::vec2 uvs;
-		glm::vec3 vns;
-	};
-
 	GLuint sizeOfPoint;
 
-	std::vector<Point> points;
-	std::vector<GLuint> indicies;
+	
+	
+	// rework
+	std::vector<Point_Obj> points;
 
-	GLuint numberOfPoints;
-	GLuint numberOfIndicies;
+
 
 	MtlContainer mtl;
 
@@ -42,7 +34,7 @@ private:
 	GLuint offsetInd;
 
 	bool loadObj(std::string filename, std::string& mtlFileName, 
-	std::vector<Point>& points, std::vector<GLuint>& indices);
+		std::vector<Point_Obj>& points, std::vector<GLuint>& indices);
 	
 	bool loadMtl(std::string filename, MtlContainer& mtl);
 	
@@ -51,7 +43,7 @@ private:
 public:
 
 	MeshObject(std::string filename);
-	MeshObject(std::vector<Point> points);
+	MeshObject(std::vector<Point_Obj> points);
 	~MeshObject(){}
 
 	void FreeMemory();
@@ -65,10 +57,14 @@ public:
 	GLuint GetNumberOfIndicies() const;
 	GLuint GetOffset() const;
 	GLuint GetOffsetInd() const;
+	
+	// Needs to be reworked
 	void* GetPointsData();
 	GLuint GetFloatAmount() const;
-	char32_t* GetIndiciesData();
 	GLuint GetGLuintAmount() const;
+
+
+
 	MtlContainer GetMtl() const;
 
 	GLuint GetSizeOfPoint() const;

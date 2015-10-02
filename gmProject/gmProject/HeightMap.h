@@ -1,8 +1,6 @@
 #pragma once
 
-#include <GL/glew.h>
-#include <glm/glm.hpp>
-#include <vector>
+#include "MeshBase.h"
 
 #include <errno.h>
 #include <stdio.h>
@@ -28,20 +26,13 @@ struct QuadTree
 
 };
 
-struct Point2
-{
-	glm::vec3 ver;
-	glm::vec3 col;
-};
-
-class HeightMap
+class HeightMap : public MeshBase
 {
 private:
-	std::vector<Point2> points;
-	std::vector<GLuint> indicies;
+	//rework
+	std::vector<Point_HeightMap> points;
 
-	GLuint numberOfPoints;
-	GLuint numberOfIndicies;
+
 
 	GLfloat mapWidth;				// Width of .raw height map
 	GLfloat mapHeight;				// Height of .raw height map
@@ -84,10 +75,13 @@ public:
 
 	int getHeight(int x, int y);
 
+
+	// Needs to be reworked
 	void* GetPointsData();
 	GLuint GetFloatAmount() const;
-	char32_t* GetIndiciesData();
 	GLuint GetGLuintAmount() const;
+
+
 
 	void RenderHeightMap(Camera* cam);
 	int GetRenderCount() const;

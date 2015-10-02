@@ -31,7 +31,7 @@ HeightMap::HeightMap(std::string filename, const Camera* cam)
 	createViewFrustum(cam);
 	
 	// Load the points and save them until loaded by GC
-	points = std::vector<Point2>();
+	points = std::vector<Point_HeightMap>();
 	loadRawFile(MESH_FOLDER + filename);
 	numberOfPoints = points.size();
 
@@ -99,7 +99,7 @@ bool HeightMap::loadRawFile(std::string filename)
 			{
 				rgbColor = setVertexColor(_w, _h);
 
-				Point2 temp;
+				Point_HeightMap temp;
 
 				if (!started)
 				{
@@ -153,22 +153,20 @@ int HeightMap::getHeight(int _x, int _y)
 
 //////////////////////////////////////////////////////////////
 
+// Needs to be reworked
+
 void* HeightMap::GetPointsData()
 {
 	return points.data();
 }
 GLuint HeightMap::GetFloatAmount() const
 {
-	return numberOfPoints;
+	return numberOfPoints * sizeof(Point_HeightMap);
 }
 
-char32_t* HeightMap::GetIndiciesData()
-{
-	return indicies.data();
-}
 GLuint HeightMap::GetGLuintAmount() const
 {
-	return numberOfIndicies;
+	return numberOfIndicies * sizeof(GLuint);
 }
 
 ///////////////////////////View frustum/////////////////////////
