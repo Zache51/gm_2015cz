@@ -35,7 +35,7 @@ private:
 
 
 	GLfloat mapWidth;				// Width of .raw height map
-	GLfloat mapHeight;				// Height of .raw height map
+	GLfloat mapDepth;				// Depth of .raw height map
 	int mapSize;				// Total size of height map
 
 	unsigned char* g_HeightMap;	// Holds the height maps raw data

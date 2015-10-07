@@ -16,19 +16,19 @@ HeightMap::HeightMap(std::string filename, const Camera* cam)
 	modelMatrix = glm::mat4(1.0);
 
 	mapWidth = 1024;
-	mapHeight = 1024;
-	mapSize = mapWidth * mapHeight;
+	mapDepth = 1024;
+	mapSize = mapWidth * mapDepth;
 	quadSize = 2;
 	g_HeightMap = new unsigned char[mapSize];
 
 	gridWidth = mapWidth / quadSize;
-	gridHeight = mapHeight / quadSize;
+	gridHeight = mapDepth / quadSize;
 
 	rgbColor = 1.0f;
 
 	qLevels = 4;
 
-	createViewFrustum(cam);
+	//createViewFrustum(cam);
 	
 	// Load the points and save them until loaded by GC
 	points = std::vector<Point_HeightMap>();
@@ -36,8 +36,8 @@ HeightMap::HeightMap(std::string filename, const Camera* cam)
 	numberOfPoints = points.size();
 
 	// Create the indicies and save them until loaded by GC
-	indicies = std::vector<GLuint>();
-	quadTree = createQuadTree(qLevels, 0.0f, 0.0f, mapWidth, mapHeight);
+	//indicies = std::vector<GLuint>();
+	//quadTree = createQuadTree(qLevels, 0.0f, 0.0f, mapWidth, mapHeight);
 	numberOfIndicies = indicies.size();
 }
 
@@ -87,50 +87,75 @@ bool HeightMap::loadRawFile(std::string filename)
 	}
 	fclose(file);
 
-	bool started = false;
-	int minHeight = 0;
-	int maxHeight = 0;
+	//if (loadFromFile)
+	//{
+	//	for (int _w = 0; _w < mapWidth; _w += quadSize)
+	//	{
+	//		for (int _h = 0; _h < mapHeight; _h += quadSize)
+	//		{
+	//			rgbColor = setVertexColor(_w, _h);
 
+	//			Point_HeightMap temp;
+
+	//			temp.ver = glm::vec3(_w, getHeight(_w, _h), _h);
+	//			temp.col = glm::vec3(rgbColor, rgbColor, rgbColor);
+
+	//			points.push_back(temp);
+	//		}
+	//	}
+	//}
+	//indicies = std::vector<GLuint>();
+	
 	if (loadFromFile)
 	{
-		for (int _w = 0; _w < mapWidth; _w += quadSize)
+		GLuint index = 0;
+		for (int x = 0; x < mapWidth; x++)
 		{
-			for (int _h = 0; _h < mapHeight; _h += quadSize)
+			for (int z = 0; z < mapDepth; z++)
 			{
-				rgbColor = setVertexColor(_w, _h);
-
 				Point_HeightMap temp;
 
-				if (!started)
-				{
-					minHeight = getHeight(_w, _h);
-					maxHeight = getHeight(_w, _h);
-					started = true;
-				}
-				else
-				{
-					int asdf = getHeight(_w, _h);
-
-					if (asdf < minHeight)
-					{
-						minHeight = asdf;
-					}
-					if (asdf > maxHeight)
-					{
-						maxHeight = asdf;
-					}
-				}
-
-				
-
-
-				temp.ver = glm::vec3(_w, getHeight(_w, _h), _h);
-				temp.col = glm::vec3(rgbColor, rgbColor, rgbColor);
+				//temp.ver = glm::vec3(x * 10, getHeight(x, z) / 20, z * 10);
+				temp.ver = glm::vec3(x, getHeight(x, z) / 5, z);
+				temp.col = glm::vec3(1, 1, 0);
 
 				points.push_back(temp);
 			}
 		}
+
+		for (int z = 0; z < mapDepth; z++)
+		{
+			for (int x = 0; x < mapWidth; x++)
+			{
+				int base = x + z * mapWidth;
+
+				indicies.push_back(base + mapWidth);
+				indicies.push_back(base + 1);
+				indicies.push_back(base);
+
+				indicies.push_back(base + mapWidth);
+				indicies.push_back(base + mapWidth + 1);
+				indicies.push_back(base + 1);
+
+				//1 + 0 * 3 = 1;
+				//2 + 0 * 3 = 2;
+				//0 + 1 * 3 = 3;
+			}
+		}
 	}
+	//Point_HeightMap temp;
+	//temp.ver = glm::vec3(0.f, 20.f, 0.f);
+	//temp.col = glm::vec3(255.f, 0.f, 0.f);
+	//points.push_back(temp);
+	//temp.ver = glm::vec3(10.f, 20.f, 0.f);
+	//temp.col = glm::vec3(0.f, 255.f, 0.f);
+	//points.push_back(temp);
+	//temp.ver = glm::vec3(0.f, 20.f, 10.f);
+	//temp.col = glm::vec3(0.f, 0.f, 0.f);
+	//points.push_back(temp);
+	//temp.ver = glm::vec3(10.f, 20.f, 10.f);
+	//temp.col = glm::vec3(255.f, 255.f, 255.f);
+	//points.push_back(temp);
 
 	return loadFromFile;
 }
@@ -138,7 +163,7 @@ int HeightMap::getHeight(int _x, int _y)
 {
 	// Force x and y to cap at (mapSize - 1)
 	int x = _x % (int)mapWidth;
-	int y = _y % (int)mapHeight;
+	int y = _y % (int)mapDepth;
 
 	// Check if empty
 	if (!g_HeightMap)
@@ -148,7 +173,7 @@ int HeightMap::getHeight(int _x, int _y)
 	}
 
 	// Treat the array like a 2D array (.raw format is a single array)
-	return g_HeightMap[(int)(x + (y * mapHeight))];	// Index into our height array and return the height
+	return g_HeightMap[(int)(x + (y * mapDepth))];	// Index into our height array and return the height
 }
 
 //////////////////////////////////////////////////////////////
@@ -351,7 +376,7 @@ void HeightMap::renderQuadTree(QuadTree* qt)
 		if (qt->visible)
 		{
 			renderCount++;
-			glDrawElements(GL_TRIANGLES, 12 * qt->nrIndex, GL_UNSIGNED_INT, (void*)qt->bufferOffset);
+			glDrawElements(GL_LINE_STRIP, 12 * qt->nrIndex, GL_UNSIGNED_INT, (void*)qt->bufferOffset);
 			//glDrawElements(GL_TRIANGLES, qt->nrIndex, GL_UNSIGNED_INT, (void*)qt->bufferOffset);
 		}
 	}
