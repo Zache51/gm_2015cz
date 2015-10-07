@@ -63,7 +63,7 @@ void Graphics::generateShaders()
 	std::vector<GLuint> shaders;
 
 	GLuint vs;
-	GLuint gs;
+	//GLuint gs;
 	GLuint fs;
 	
 	// Create shader steps for obj
@@ -78,8 +78,8 @@ void Graphics::generateShaders()
 	// Create shader steps for height map
 	vs = glCreateShader(GL_VERTEX_SHADER);
 	createShaderStep("heightmap_vs.glsl", vs, shaders);
-	gs = glCreateShader(GL_GEOMETRY_SHADER);
-	createShaderStep("heightmap_gs.glsl", gs, shaders);
+	//gs = glCreateShader(GL_GEOMETRY_SHADER);
+	//createShaderStep("heightmap_gs.glsl", gs, shaders);
 	fs = glCreateShader(GL_FRAGMENT_SHADER);
 	createShaderStep("heightmap_fs.glsl", fs, shaders);
 
@@ -178,7 +178,7 @@ void Graphics::GenerateHeightMapBuffer(HeightMap* heightmap)
 	glGenBuffers(1, &ibHeightMap);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibHeightMap);
 
-	// Define the size of the buffers	
+	//Define the size of the buffers	
 	glBufferData(GL_ARRAY_BUFFER, heightmap->GetFloatAmount(), heightmap->GetPointsData(), GL_STATIC_DRAW);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, heightmap->GetGLuintAmount(), heightmap->GetIndiciesData(), GL_STATIC_DRAW);
 
@@ -192,8 +192,8 @@ void Graphics::GenerateHeightMapBuffer(HeightMap* heightmap)
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	// Define vertex data layout	
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6, BUFFER_OFFSET(0));
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6, BUFFER_OFFSET(sizeof(float) * 3));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Point_HeightMap), BUFFER_OFFSET(0));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Point_HeightMap), BUFFER_OFFSET(sizeof(float) * 3));
 }
 
 void Graphics::PrepareRender()
@@ -221,18 +221,22 @@ void Graphics::Render( MeshHolder* mh )
 
 void Graphics::Render(HeightMap* hm)
 {
+
 	glUseProgram(heightmapProgram);
 
 	glBindVertexArray(gVertexAttributeheightMap);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbHeightMap);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibHeightMap);
 
 	// Uniforms
 	mat4 pvwMatrix = localCamera->GetPVMatrix();
 	glUniformMatrix4fv(pvwMatrixUniformLocation2, 1, GL_FALSE, &(GLfloat)pvwMatrix[0][0]);
 
 	// Render the mesh
-	glDrawArrays(GL_TRIANGLES, 0, hm->GetFloatAmount());
+	glDrawElements(GL_LINE_STRIP, hm->GetNumberOfIndicies(), GL_UNSIGNED_INT, 0);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibHeightMap);
+	
 
 	// Render the mesh
 	//hm->RenderHeightMap(localCamera);
