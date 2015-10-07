@@ -207,7 +207,20 @@ void Graphics::PrepareRender()
 
 void Graphics::Render( MeshHolder* mh )
 {
+	//glBindVertexArray(gVertexAttributeObj);
+
+	// Define VAO
+	//glGenVertexArrays(1, &gVertexAttributeObj);
 	glBindVertexArray(gVertexAttributeObj);
+	glBindBuffer(GL_ARRAY_BUFFER, vbObj);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibObj);
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+	// Define vertex data layout	
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Point_Obj), BUFFER_OFFSET(0));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Point_Obj), BUFFER_OFFSET(sizeof(float) * 3));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Point_Obj), BUFFER_OFFSET(sizeof(float) * 5));
 
 	// Uniforms
 	mat4 pvwMatrix = localCamera->GetPVMatrix() * mh->GetWorld();

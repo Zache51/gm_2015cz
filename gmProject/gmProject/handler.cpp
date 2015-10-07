@@ -158,38 +158,38 @@ int main()
 
 
 
-	//fprintf(stdout, "\n");
-	//fprintf(stdout, "------------- Loading Meshes -------------\n");
-	////MeshObject tm = MeshObject("Triangle.obj");
-	////MeshObject sm = MeshObject("Square.obj");
-	//MeshObject m = MeshObject("mustang.obj");
-	//fprintf(stdout, "------------------------------------------\n");
+	fprintf(stdout, "\n");
+	fprintf(stdout, "------------- Loading Meshes -------------\n");
+	//MeshObject tm = MeshObject("Triangle.obj");
+	//MeshObject sm = MeshObject("Square.obj");
+	MeshObject m = MeshObject("mustang.obj");
+	fprintf(stdout, "------------------------------------------\n");
 
-	//// P-51 Mustang
-	//MeshHolder mustang = MeshHolder(&m);
-	//mustang.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	//mustang.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f)));
+	// P-51 Mustang
+	MeshHolder mustang = MeshHolder(&m);
+	mustang.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	mustang.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f)));
 
-	//MeshHolder mustang2 = MeshHolder(&m);
-	//mustang2.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	//mustang2.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, 20.0f)));
+	MeshHolder mustang2 = MeshHolder(&m);
+	mustang2.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	mustang2.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, 20.0f)));
 
-	//MeshHolder mustang3 = MeshHolder(&m);
-	//mustang3.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	//mustang3.SetTranslation(glm::translate(mat4(1.0f), vec3(20.0f, 0.0f, 20.0f)));
+	MeshHolder mustang3 = MeshHolder(&m);
+	mustang3.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	mustang3.SetTranslation(glm::translate(mat4(1.0f), vec3(20.0f, 0.0f, 20.0f)));
 
-	//MeshHolder mustang4 = MeshHolder(&m);
-	//mustang4.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	//mustang4.SetTranslation(glm::translate(mat4(1.0f), vec3(20.0f, 0.0f, 0.0f)));
+	MeshHolder mustang4 = MeshHolder(&m);
+	mustang4.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	mustang4.SetTranslation(glm::translate(mat4(1.0f), vec3(20.0f, 0.0f, 0.0f)));
 
-	//MeshHolder mustangHigh = MeshHolder(&m);
-	//mustangHigh.SetRotation(glm::rotate(mat4(1.f), 3.14f, vec3(0.f, 0.0f, 1.f)));
-	//mustangHigh.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 60.0f, 0.0f)));
+	MeshHolder mustangHigh = MeshHolder(&m);
+	mustangHigh.SetRotation(glm::rotate(mat4(1.f), 3.14f, vec3(0.f, 0.0f, 1.f)));
+	mustangHigh.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 60.0f, 0.0f)));
 
-	//std::vector<MeshObject*> meshes;
-	//meshes.push_back(&m);
+	std::vector<MeshObject*> meshes;
+	meshes.push_back(&m);
 	
-	//ge.GenerateBuffer(meshes);
+	ge.GenerateBuffer(meshes);
 
 	HeightMap heightmap = HeightMap("terrain.raw", &cam);
 	ge.GenerateHeightMapBuffer(&heightmap);
@@ -256,16 +256,14 @@ int main()
 			cam.UpdateTranslation(strafe*glm::vec3(-0.1f, 0, 0.1)*vec3(5));
 		}
 
-		//cam.walk = heightmap.getHeight(cam.position.x, cam.position.z);
-
 		
 
 		ge.PrepareRender();
-		//ge.Render(&mustang);
-		//ge.Render(&mustang2);
-		//ge.Render(&mustang3);
-		//ge.Render(&mustang4);
-		//ge.Render(&mustangHigh);
+		ge.Render(&mustang);
+		ge.Render(&mustang2);
+		ge.Render(&mustang3);
+		ge.Render(&mustang4);
+		ge.Render(&mustangHigh);
 
 		ge.Render(&heightmap);
 
