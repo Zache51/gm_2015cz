@@ -278,10 +278,10 @@ GLuint MeshObject::GetNumberOfPoint() const
 	return numberOfPoints;
 }
 
-GLuint MeshObject::GetNumberOfIndicies() const
-{
-	return numberOfIndicies;
-}
+//GLuint MeshObject::GetNumberOfIndicies() const
+//{
+//	return numberOfIndicies;
+//}
 
 GLuint MeshObject::GetOffset() const
 {

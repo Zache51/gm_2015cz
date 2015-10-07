@@ -27,3 +27,8 @@ char32_t* MeshBase::GetIndiciesData()
 //{
 //	return numberOfIndicies;
 //}
+
+GLuint MeshBase::GetNumberOfIndicies() const
+{
+	return numberOfIndicies;
+}

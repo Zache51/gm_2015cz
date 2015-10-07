@@ -37,5 +37,7 @@ public:
 	//GLuint GetFloatAmount() const;
 	char32_t* GetIndiciesData();
 	//GLuint GetGLuintAmount() const;
+
+	GLuint GetNumberOfIndicies() const;
 };
 

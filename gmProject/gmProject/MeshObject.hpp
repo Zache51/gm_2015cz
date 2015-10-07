@@ -54,7 +54,7 @@ public:
 	void AddIndicies(GLuint add);
 
 	GLuint GetNumberOfPoint() const;
-	GLuint GetNumberOfIndicies() const;
+	//GLuint GetNumberOfIndicies() const;
 	GLuint GetOffset() const;
 	GLuint GetOffsetInd() const;
 	
