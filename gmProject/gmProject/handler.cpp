@@ -256,7 +256,7 @@ int main()
 			cam.UpdateTranslation(strafe*glm::vec3(-0.1f, 0, 0.1)*vec3(5));
 		}
 
-		cam.walk = heightmap.getHeight(cam.position.x, cam.position.z);
+		//cam.walk = heightmap.getHeight(cam.position.x, cam.position.z);
 
 		
 
