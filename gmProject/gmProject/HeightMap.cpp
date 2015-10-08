@@ -158,10 +158,6 @@ GLuint HeightMap::GetFloatAmount() const
 	return numberOfPoints * sizeof(Point_HeightMap);
 }
 
-GLuint HeightMap::GetGLuintAmount() const
-{
-	return numberOfIndicies * sizeof(GLuint);
-}
 
 ///////////////////////////View frustum/////////////////////////
 

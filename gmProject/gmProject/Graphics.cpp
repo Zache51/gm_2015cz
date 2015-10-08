@@ -134,7 +134,7 @@ void Graphics::GenerateBuffer(std::vector<MeshObject*> meshes)
 	for each (MeshObject* mesh in meshes)
 	{
 		// Set offset for mesh
-		GLuint add = offsetVer / mesh->GetSizeOfPoint();
+		GLuint add = offsetVer / sizeof(Point_Obj);
 		mesh->SetOffset(add);
 		mesh->SetOffsetInd(offsetInd);
 		
@@ -165,9 +165,9 @@ void Graphics::GenerateBuffer(std::vector<MeshObject*> meshes)
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
 	// Define vertex data layout	
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, meshes[0]->GetSizeOfPoint(), BUFFER_OFFSET(0));
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, meshes[0]->GetSizeOfPoint(), BUFFER_OFFSET(sizeof(float) * 3));
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, meshes[0]->GetSizeOfPoint(), BUFFER_OFFSET(sizeof(float) * 5));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Point_Obj), BUFFER_OFFSET(0));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Point_Obj), BUFFER_OFFSET(sizeof(float) * 3));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Point_Obj), BUFFER_OFFSET(sizeof(float) * 5));
 }
 
 void Graphics::GenerateHeightMapBuffer(HeightMap* heightmap)
@@ -237,10 +237,19 @@ void Graphics::Render(HeightMap* hm)
 
 	glUseProgram(heightmapProgram);
 
-	glBindVertexArray(gVertexAttributeheightMap);
+	//glBindVertexArray(gVertexAttributeheightMap);
 
+	glBindVertexArray(gVertexAttributeheightMap);
 	glBindBuffer(GL_ARRAY_BUFFER, vbHeightMap);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibHeightMap);
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	// Define vertex data layout	
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Point_HeightMap), BUFFER_OFFSET(0));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Point_HeightMap), BUFFER_OFFSET(sizeof(float) * 3));
+
+	//glBindBuffer(GL_ARRAY_BUFFER, vbHeightMap);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibHeightMap);
 
 	// Uniforms
 	mat4 pvwMatrix = localCamera->GetPVMatrix();

@@ -19,14 +19,7 @@ class MeshObject : public MeshBase
 {
 private:
 
-	GLuint sizeOfPoint;
-
-	
-	
-	// rework
 	std::vector<Point_Obj> points;
-
-
 
 	MtlContainer mtl;
 
@@ -54,20 +47,13 @@ public:
 	void AddIndicies(GLuint add);
 
 	GLuint GetNumberOfPoint() const;
-	//GLuint GetNumberOfIndicies() const;
 	GLuint GetOffset() const;
 	GLuint GetOffsetInd() const;
 	
-	// Needs to be reworked
 	void* GetPointsData();
 	GLuint GetFloatAmount() const;
-	GLuint GetGLuintAmount() const;
-
-
 
 	MtlContainer GetMtl() const;
-
-	GLuint GetSizeOfPoint() const;
 };
 
 #endif

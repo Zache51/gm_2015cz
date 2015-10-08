@@ -215,8 +215,6 @@ bool MeshObject::loadTexture(std::string filename)
 
 MeshObject::MeshObject(std::string filename)
 {
-	sizeOfPoint = sizeof(Point_Obj);
-
 	std::string mtlFilename = "";
 
 	points = std::vector<Point_Obj>();
@@ -278,11 +276,6 @@ GLuint MeshObject::GetNumberOfPoint() const
 	return numberOfPoints;
 }
 
-//GLuint MeshObject::GetNumberOfIndicies() const
-//{
-//	return numberOfIndicies;
-//}
-
 GLuint MeshObject::GetOffset() const
 {
 	return offset;
@@ -292,9 +285,6 @@ GLuint MeshObject::GetOffsetInd() const
 {
 	return offsetInd;
 }
-
-
-// Needs to be reworked
 
 void* MeshObject::GetPointsData()
 {
@@ -306,23 +296,7 @@ GLuint MeshObject::GetFloatAmount() const
 	return numberOfPoints * sizeof(Point_Obj);
 }
 
-GLuint MeshObject::GetGLuintAmount() const
-{
-	return numberOfIndicies * sizeof(GLuint);
-}
-
-
-
-
-
-
-
 MtlContainer MeshObject::GetMtl() const
 {
 	return mtl;
-}
-
-GLuint MeshObject::GetSizeOfPoint() const
-{
-	return sizeOfPoint;
 }

@@ -29,10 +29,8 @@ struct QuadTree
 class HeightMap : public MeshBase
 {
 private:
-	//rework
+
 	std::vector<Point_HeightMap> points;
-
-
 
 	GLfloat mapWidth;				// Width of .raw height map
 	GLfloat mapDepth;				// Depth of .raw height map
@@ -79,7 +77,6 @@ public:
 	// Needs to be reworked
 	void* GetPointsData();
 	GLuint GetFloatAmount() const;
-	GLuint GetGLuintAmount() const;
 
 
 

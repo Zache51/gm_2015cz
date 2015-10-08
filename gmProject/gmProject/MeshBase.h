@@ -33,10 +33,10 @@ public:
 	MeshBase();
 	~MeshBase();
 
-	//void* GetPointsData();
-	//GLuint GetFloatAmount() const;
+	virtual void* GetPointsData() = 0;
+	virtual GLuint GetFloatAmount() const = 0;
 	char32_t* GetIndiciesData();
-	//GLuint GetGLuintAmount() const;
+	GLuint GetGLuintAmount() const;
 
 	GLuint GetNumberOfIndicies() const;
 };
