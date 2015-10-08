@@ -41,7 +41,7 @@ private:
 	unsigned char* g_HeightMap;	// Holds the height maps raw data
 
 	int gridWidth;				// Defined width for actual map
-	int gridHeight;				// Defined height for actual map
+	int gridDepth;				// Defined depth for actual map
 
 	GLfloat rgbColor;
 	GLfloat setVertexColor(int, int);	// Set color of the map
@@ -73,7 +73,7 @@ public:
 
 	void FreeMemory();
 
-	int getHeight(int x, int y);
+	int getHeight(int x, int z);
 
 
 	// Needs to be reworked

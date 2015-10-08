@@ -22,7 +22,7 @@ HeightMap::HeightMap(std::string filename, const Camera* cam)
 	g_HeightMap = new unsigned char[mapSize];
 
 	gridWidth = mapWidth / quadSize;
-	gridHeight = mapDepth / quadSize;
+	gridDepth = mapDepth / quadSize;
 
 	rgbColor = 1.0f;
 
@@ -54,10 +54,6 @@ void HeightMap::FreeMemory()
 	indicies.clear();
 }
 
-// line of doom
-
-// line of doom ends
-
 /////////// --- HEIGHT MAP FUNCTIONS --- ///////////
 bool HeightMap::loadRawFile(std::string filename)
 {
@@ -86,94 +82,67 @@ bool HeightMap::loadRawFile(std::string filename)
 		loadFromFile = false;
 	}
 	fclose(file);
-
-	//if (loadFromFile)
-	//{
-	//	for (int _w = 0; _w < mapWidth; _w += quadSize)
-	//	{
-	//		for (int _h = 0; _h < mapHeight; _h += quadSize)
-	//		{
-	//			rgbColor = setVertexColor(_w, _h);
-
-	//			Point_HeightMap temp;
-
-	//			temp.ver = glm::vec3(_w, getHeight(_w, _h), _h);
-	//			temp.col = glm::vec3(rgbColor, rgbColor, rgbColor);
-
-	//			points.push_back(temp);
-	//		}
-	//	}
-	//}
-	//indicies = std::vector<GLuint>();
 	
 	if (loadFromFile)
 	{
-		GLuint index = 0;
-		for (int x = 0; x < mapWidth; x++)
+		Point_HeightMap temp;
+		GLfloat loopDepth = mapDepth - 1;
+		GLfloat loopWidth = mapWidth - 1;
+		for (int z = 0; z < loopDepth; z++)
 		{
-			for (int z = 0; z < mapDepth; z++)
+			for (int x = 0; x < loopWidth; x++)
 			{
-				Point_HeightMap temp;
+				GLuint topleft = x + z * mapWidth;
+				GLuint topright = topleft + 1;
+				GLuint bottomleft = topleft + mapWidth;
 
-				//temp.ver = glm::vec3(x * 10, getHeight(x, z) / 20, z * 10);
+				indicies.push_back(bottomleft);
+				indicies.push_back(topright);
+				indicies.push_back(topleft);
+
+				indicies.push_back(bottomleft);
+				indicies.push_back(bottomleft + 1); // bottomright
+				indicies.push_back(topright);
+
+				// Vertices fot whole heightmap exept for right and bottom edges
 				temp.ver = glm::vec3(x, getHeight(x, z) / 5, z);
 				temp.col = glm::vec3(1, 1, 0);
-
 				points.push_back(temp);
 			}
-		}
 
+			// Vertices for right edge
+			temp.ver = glm::vec3(loopWidth, getHeight(loopWidth, z) / 5, z);
+			temp.col = glm::vec3(1, 1, 0);
+			points.push_back(temp);
+		}
 		for (int z = 0; z < mapDepth; z++)
 		{
-			for (int x = 0; x < mapWidth; x++)
-			{
-				int base = x + z * mapWidth;
-
-				indicies.push_back(base + mapWidth);
-				indicies.push_back(base + 1);
-				indicies.push_back(base);
-
-				indicies.push_back(base + mapWidth);
-				indicies.push_back(base + mapWidth + 1);
-				indicies.push_back(base + 1);
-
-				//1 + 0 * 3 = 1;
-				//2 + 0 * 3 = 2;
-				//0 + 1 * 3 = 3;
-			}
+			// Vertices for bottom edge
+			temp.ver = glm::vec3(loopWidth, getHeight(loopWidth, loopDepth) / 5, loopDepth);
+			temp.col = glm::vec3(1, 1, 0);
+			points.push_back(temp);
 		}
+
 	}
-	//Point_HeightMap temp;
-	//temp.ver = glm::vec3(0.f, 20.f, 0.f);
-	//temp.col = glm::vec3(255.f, 0.f, 0.f);
-	//points.push_back(temp);
-	//temp.ver = glm::vec3(10.f, 20.f, 0.f);
-	//temp.col = glm::vec3(0.f, 255.f, 0.f);
-	//points.push_back(temp);
-	//temp.ver = glm::vec3(0.f, 20.f, 10.f);
-	//temp.col = glm::vec3(0.f, 0.f, 0.f);
-	//points.push_back(temp);
-	//temp.ver = glm::vec3(10.f, 20.f, 10.f);
-	//temp.col = glm::vec3(255.f, 255.f, 255.f);
-	//points.push_back(temp);
 
 	return loadFromFile;
 }
-int HeightMap::getHeight(int _x, int _y)
+int HeightMap::getHeight(int x, int z)
 {
-	// Force x and y to cap at (mapSize - 1)
-	int x = _x % (int)mapWidth;
-	int y = _y % (int)mapDepth;
-
 	// Check if empty
 	if (!g_HeightMap)
 	{
-		// TODO: printf to console
+		fprintf(stdout, "----------- Error log Height -------------\n");
+		fprintf(stdout, "g_HeightMap is empty\n");
 		return 0;
 	}
 
+	// Force x and y to cap at (mapSize - 1)
+	int _x = x % (int)mapWidth;
+	int _z = z % (int)mapDepth;
+
 	// Treat the array like a 2D array (.raw format is a single array)
-	return g_HeightMap[(int)(x + (y * mapDepth))];	// Index into our height array and return the height
+	return g_HeightMap[(int)(_x + (_z * mapDepth))];	// Index into our height array and return the height
 }
 
 //////////////////////////////////////////////////////////////
