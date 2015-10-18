@@ -38,9 +38,6 @@ private:
 
 	unsigned char* g_HeightMap;	// Holds the height maps raw data
 
-	int gridWidth;				// Defined width for actual map
-	int gridDepth;				// Defined depth for actual map
-
 	GLfloat rgbColor;
 	GLfloat setVertexColor(int, int);	// Set color of the map
 
@@ -59,8 +56,8 @@ private:
 	void renderQuadTree(QuadTree* qt);
 	void releaseQuadTree(QuadTree* qt);
 	QuadTree* createQuadTree(int levels, GLfloat startX, GLfloat startY, GLfloat endX, GLfloat endY);
-	void checkQuadTree(QuadTree* qt, glm::mat4 viewmatrix);
-	void createViewFrustum(const Camera* cam);
+	void checkQuadTree(QuadTree* qt, Camera* cam);
+	
 
 
 	bool loadRawFile(std::string filename);
@@ -78,7 +75,7 @@ public:
 	void* GetPointsData();
 	GLuint GetFloatAmount() const;
 
-
+	void createViewFrustum(const Camera* cam);
 
 	void RenderHeightMap(Camera* cam);
 	int GetRenderCount() const;

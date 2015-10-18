@@ -153,7 +153,7 @@ int main()
 	
 
 	Camera cam = Camera();
-	cam.SetPosition(glm::vec3(4.0f, 2.0f, 10.0f));
+	cam.SetPosition(glm::vec3(4.0f, 0.0f, 10.0f));
 	ge.SetCamera(&cam);
 
 
@@ -191,16 +191,15 @@ int main()
 	
 	ge.GenerateBuffer(meshes);
 
-	HeightMap heightmap = HeightMap("terrain.raw", &cam);
-	ge.GenerateHeightMapBuffer(&heightmap);
-
 	int width = 0, height = 0;
 	fpsCounter fpsC;
+
+	float rx = 0, ry = 0, rz = 0;
 	////////////////////////////////////////////////////////////
 	while (!glfwWindowShouldClose(window))
 	{
 		std::stringstream ss;
-		ss << fpsC.get() /*<< "   Height map draw count: " << heightmap.GetRenderCount()*/;
+		ss << fpsC.get();
 
 		glfwSetWindowTitle(window, ss.str().c_str());
 
@@ -221,13 +220,13 @@ int main()
 		double xpos, ypos;
 		glfwGetCursorPos(window, &xpos, &ypos);
 
-		if (xpos != cam.rx && ypos != cam.ry)
+		if (xpos != rx && ypos != ry)
 		{
-			cam.ry += (float)(xpos - cam.ry) ;
-			cam.rx += (float)(ypos - cam.rx) ;
+			ry += (float)(xpos - ry) ;
+			rx += (float)(ypos - rx) ;
 
-			glm::quat quatx = glm::angleAxis(cam.rx / 150.0f, glm::vec3(1, 0, 0));
-			glm::quat quaty = glm::angleAxis(cam.ry / 150.0f, glm::vec3(0, 1, 0));
+			glm::quat quatx = glm::angleAxis(rx / 150.0f, glm::vec3(1, 0, 0));
+			glm::quat quaty = glm::angleAxis(ry / 150.0f, glm::vec3(0, 1, 0));
 
 			mat4 rotation = mat4(glm::mat3_cast(glm::cross(quatx, quaty)));
 
@@ -241,22 +240,20 @@ int main()
 
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		{
-			cam.UpdateTranslation(forward*glm::vec3(0.1f, 0, -0.1)*vec3(5));
+			cam.UpdateTranslation(forward*glm::vec3(0.1f, 0, -0.1)*vec3(45));
 		}
 		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		{
-			cam.UpdateTranslation(forward*glm::vec3(-0.1f, 0, 0.1)*vec3(5));
+			cam.UpdateTranslation(forward*glm::vec3(-0.1f, 0, 0.1)*vec3(45));
 		}
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		{
-			cam.UpdateTranslation(strafe*glm::vec3(0.1f, 0, -0.1f)*vec3(5));
+			cam.UpdateTranslation(strafe*glm::vec3(0.1f, 0, -0.1f)*vec3(45));
 		}
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 		{
-			cam.UpdateTranslation(strafe*glm::vec3(-0.1f, 0, 0.1)*vec3(5));
+			cam.UpdateTranslation(strafe*glm::vec3(-0.1f, 0, 0.1)*vec3(45));
 		}
-
-		
 
 		ge.PrepareRender();
 		ge.Render(&mustang);
@@ -264,8 +261,6 @@ int main()
 		ge.Render(&mustang3);
 		ge.Render(&mustang4);
 		ge.Render(&mustangHigh);
-
-		ge.Render(&heightmap);
 
 		fpsC.tick();
 		Sleep(1000 / 120);

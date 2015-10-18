@@ -18,6 +18,14 @@ struct Point_Obj : public Point
 struct Point_HeightMap : public Point
 {
 	glm::vec3 col;
+
+	Point_HeightMap(){};
+
+	Point_HeightMap(glm::vec3 ver, glm::vec3 col)
+	{
+		this->ver = ver;
+		this->col = col;
+	};
 };
 
 class MeshBase
