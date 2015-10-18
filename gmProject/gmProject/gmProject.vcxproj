@@ -20,6 +20,7 @@
     <ClCompile Include="MeshBase.cpp" />
     <ClCompile Include="MeshHolder.cpp" />
     <ClCompile Include="MeshObject.cpp" />
+    <ClCompile Include="Physics.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.hpp" />
@@ -30,6 +31,7 @@
     <ClInclude Include="MeshBase.h" />
     <ClInclude Include="MeshHolder.hpp" />
     <ClInclude Include="MeshObject.hpp" />
+    <ClInclude Include="Physics.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3A837370-3DAC-4885-858A-44D15A364E3F}</ProjectGuid>
