@@ -20,7 +20,10 @@ public:
 	virtual ~MeshHolder(){};
 
 	void SetRotation(mat4 rotation);
-	void SetTranslation(mat4 translation);
+	
+	void SetPosition(vec3 position);
+	void UpdatePosition(vec3 change);
+	vec3 GetPosition() const;
 
 	mat4 GetWorld() const;
 	MeshObject* GetMesh() const;

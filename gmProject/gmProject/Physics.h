@@ -20,6 +20,6 @@ public:
 	Physics();
 	~Physics();
 
-	void move(MeshHolder* mesh, fpsCounter* fpsC, vec3& pos);
+	void move(MeshHolder* mesh, fpsCounter* fpsC);
 };
 

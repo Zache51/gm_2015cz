@@ -183,8 +183,7 @@ int main()
 
 	MeshHolder mustangHigh = MeshHolder(&m);
 	mustangHigh.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	vec3 pos = vec3(0.0f, 60.0f, 0.0f);
-	mustangHigh.SetTranslation(glm::translate(mat4(1.0f), pos));
+	mustangHigh.SetPosition(vec3(30.0f, 60.0f, 0.0f));
 
 	std::vector<MeshObject*> meshes;
 	meshes.push_back(&m);
@@ -255,7 +254,7 @@ int main()
 			cam.UpdateTranslation(strafe*glm::vec3(-0.1f, 0, 0.1)*vec3(45));
 		}
 
-		ph.move(&mustangHigh, &fpsC, pos);
+		ph.move(&mustangHigh, &fpsC);
 		
 		ge.PrepareRender();
 		//ge.Render(&mustang);
@@ -275,7 +274,7 @@ int main()
 	glfwDestroyWindow(window);
 	glfwTerminate();
 
-	system("pause");// Remove when main loop is working or save it to read the console's output before exit.
+	//system("pause");// Remove when main loop is working or save it to read the console's output before exit.
 	return 0;
 }
 
