@@ -377,7 +377,7 @@ void HeightMap::checkQuadTree(QuadTree* qt, Camera* cam)
 		glm::vec4 point0 = (glm::vec4(qt->x, qt->z, qt->y, 1.0f) + posOffset[0]);
 		glm::vec4 point3 = (glm::vec4(qt->x, qt->z, qt->y, 1.0f) + posOffset[3]);
 
-		glm::vec4 camPos = cam->translationMatrix[3];
+		glm::vec4 camPos = glm::vec4(cam->GetPosition(), 1.0f);
 		float camX = -camPos[0];
 		float camY = -camPos[2];
 		if (camX < point0.x && camX > point3.x && camY < point0.z && camY > point3.z)

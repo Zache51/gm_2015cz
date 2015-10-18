@@ -7,9 +7,8 @@ glm::mat4 Camera::GetViewMatrix() const
 
 Camera::Camera()
 {
-	position = glm::vec3(0.0f, 0.0f, 0.0f);	
 	rotationMatrix = glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f));
-	translationMatrix = glm::lookAt(position, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+	translationMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 }
 
 glm::mat4 Camera::GetRotationMatrix() const
@@ -32,22 +31,21 @@ glm::vec2 Camera::GetScreenSize() const
 	return glm::vec2(width, height);
 }
 
-void Camera::UpdatePosition(glm::vec3 change)
-{
-	position += change;
-	translationMatrix = glm::lookAt(position, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-}
-
-void Camera::UpdateTranslation(glm::vec3 change)
-{
-	translationMatrix = glm::translate(translationMatrix, change);
-}
-
-void Camera::SetPosition(glm::vec3 position)
-{
-	this->position = position;
-	translationMatrix = glm::lookAt(position, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-}
+//void Camera::SetPosition(vec3 position)
+//{
+//	translationMatrix = glm::translate(mat4(1.0f), position);
+//}
+//
+//void Camera::UpdatePosition(vec3 change)
+//{
+//	vec3 newPos = vec3(translationMatrix[3]) + change;
+//	translationMatrix[3] = vec4(newPos, 1.0f);
+//}
+//
+//vec3 Camera::GetPosition() const
+//{
+//	return vec3(translationMatrix[3]);
+//}
 
 void Camera::SetScreenSize(float height, float width)
 {

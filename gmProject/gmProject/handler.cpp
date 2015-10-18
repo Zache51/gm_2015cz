@@ -239,19 +239,19 @@ int main()
 
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		{
-			cam.UpdateTranslation(forward*glm::vec3(0.1f, 0, -0.1)*vec3(45));
+			cam.UpdatePosition(forward*glm::vec3(0.1f, 0, -0.1)*vec3(45));
 		}
 		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		{
-			cam.UpdateTranslation(forward*glm::vec3(-0.1f, 0, 0.1)*vec3(45));
+			cam.UpdatePosition(forward*glm::vec3(-0.1f, 0, 0.1)*vec3(45));
 		}
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		{
-			cam.UpdateTranslation(strafe*glm::vec3(0.1f, 0, -0.1f)*vec3(45));
+			cam.UpdatePosition(strafe*glm::vec3(0.1f, 0, -0.1f)*vec3(45));
 		}
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 		{
-			cam.UpdateTranslation(strafe*glm::vec3(-0.1f, 0, 0.1)*vec3(45));
+			cam.UpdatePosition(strafe*glm::vec3(-0.1f, 0, 0.1)*vec3(45));
 		}
 
 		ph.move(&mustangHigh, &fpsC);
