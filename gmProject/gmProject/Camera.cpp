@@ -42,8 +42,3 @@ void Camera::SetRotationMatrix(glm::mat4 rotation)
 {
 	rotationMatrix = rotation;
 }
-
-void Camera::SetTranslationMatrix(glm::mat4 translation)
-{
-	translationMatrix = translation;
-}

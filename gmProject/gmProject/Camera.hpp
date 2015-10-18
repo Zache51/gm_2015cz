@@ -26,7 +26,6 @@ public:
 
 	void SetScreenSize(float height, float width);
 	void SetRotationMatrix(glm::mat4 rotation);
-	void SetTranslationMatrix(glm::mat4 translation);
 };
 
 #endif
