@@ -12,17 +12,12 @@ class MeshHolder : public Movable
 private:
 	MeshObject* mesh;
 	mat4 rotationMatrix = glm::rotate(mat4(1.f), 45.f, vec3(0.f, 0.0f, 1.f));
-	//mat4 translationMatrix = glm::translate(mat4(1.0f), vec3(0.5f, 0.0f, 0.0f));
 
 public:
 	MeshHolder(MeshObject* mesh);
 	virtual ~MeshHolder(){};
 
 	void SetRotation(mat4 rotation);
-	
-	//void SetPosition(vec3 position);
-	//void UpdatePosition(vec3 change);
-	//vec3 GetPosition() const;
 
 	mat4 GetWorld() const;
 	MeshObject* GetMesh() const;

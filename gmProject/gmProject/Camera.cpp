@@ -31,22 +31,6 @@ glm::vec2 Camera::GetScreenSize() const
 	return glm::vec2(width, height);
 }
 
-//void Camera::SetPosition(vec3 position)
-//{
-//	translationMatrix = glm::translate(mat4(1.0f), position);
-//}
-//
-//void Camera::UpdatePosition(vec3 change)
-//{
-//	vec3 newPos = vec3(translationMatrix[3]) + change;
-//	translationMatrix[3] = vec4(newPos, 1.0f);
-//}
-//
-//vec3 Camera::GetPosition() const
-//{
-//	return vec3(translationMatrix[3]);
-//}
-
 void Camera::SetScreenSize(float height, float width)
 {
 	this->height = height;

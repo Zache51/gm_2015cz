@@ -13,7 +13,6 @@ private:
 
 	glm::mat4 projectionMatrix;
 	glm::mat4 rotationMatrix;
-	//glm::mat4 translationMatrix;
 
 public:
 	Camera();
@@ -24,10 +23,6 @@ public:
 	glm::mat4 GetPVMatrix() const;
 
 	glm::vec2 GetScreenSize() const;
-	
-	//void SetPosition(vec3 position);
-	//void UpdatePosition(vec3 change);
-	//vec3 GetPosition() const;
 
 	void SetScreenSize(float height, float width);
 	void SetRotationMatrix(glm::mat4 rotation);
