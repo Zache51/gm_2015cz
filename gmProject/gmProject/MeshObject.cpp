@@ -6,7 +6,7 @@
 /******************************* Private *******************************/
 
 bool MeshObject::loadObj(std::string filename, std::string& mtlFileName,
-	std::vector<Point>& points, std::vector<GLuint>& indices)
+	std::vector<Point_Obj>& points, std::vector<GLuint>& indices)
 {
 	std::vector < glm::vec3 > vertices;
 	std::vector < glm::vec2 > uvs;
@@ -82,7 +82,7 @@ bool MeshObject::loadObj(std::string filename, std::string& mtlFileName,
 			// Put the v/vt/vn into the right order and push into vector<objBuffer> 
 			for (size_t j = 0; j < 3; j++)
 			{
-				Point temp;
+				Point_Obj temp;
 
 				// Copying vertices
 				temp.ver.x = vertices[faceL.v[j]].x;
@@ -215,11 +215,9 @@ bool MeshObject::loadTexture(std::string filename)
 
 MeshObject::MeshObject(std::string filename)
 {
-	sizeOfPoint = sizeof(Point);
-
 	std::string mtlFilename = "";
 
-	points = std::vector<Point>();
+	points = std::vector<Point_Obj>();
 	indicies = std::vector<GLuint>();
 
 	loadObj(MESH_FOLDER + filename, mtlFilename, points, indicies);
@@ -240,7 +238,7 @@ MeshObject::MeshObject(std::string filename)
 	numberOfIndicies = indicies.size();
 }
 
-MeshObject::MeshObject(std::vector<Point> points)
+MeshObject::MeshObject(std::vector<Point_Obj> points)
 {
 	this->points = points;
 	std::vector<GLuint> indicies = std::vector<GLuint>();
@@ -278,11 +276,6 @@ GLuint MeshObject::GetNumberOfPoint() const
 	return numberOfPoints;
 }
 
-GLuint MeshObject::GetNumberOfIndicies() const
-{
-	return numberOfIndicies;
-}
-
 GLuint MeshObject::GetOffset() const
 {
 	return offset;
@@ -300,25 +293,10 @@ void* MeshObject::GetPointsData()
 
 GLuint MeshObject::GetFloatAmount() const
 {
-	return numberOfPoints * sizeof(Point);
-}
-
-char32_t* MeshObject::GetIndiciesData() 
-{
-	return indicies.data();
-}
-
-GLuint MeshObject::GetGLuintAmount() const
-{
-	return numberOfIndicies * sizeof(GLuint);
+	return numberOfPoints * sizeof(Point_Obj);
 }
 
 MtlContainer MeshObject::GetMtl() const
 {
 	return mtl;
-}
-
-GLuint MeshObject::GetSizeOfPoint() const
-{
-	return sizeOfPoint;
 }

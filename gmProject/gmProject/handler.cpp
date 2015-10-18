@@ -14,7 +14,6 @@
 
 static void error_callback(int error, const char* description);
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-float gravity(float height, const float mass);
 
 #ifdef _DEBUG
 extern "C"
@@ -154,11 +153,10 @@ int main()
 	
 
 	Camera cam = Camera();
-	cam.SetPosition(glm::vec3(4.0f, 2.0f, 10.0f));
+	cam.SetPosition(glm::vec3(4.0f, 0.0f, 10.0f));
 	ge.SetCamera(&cam);
 
-	HeightMap heightmap = HeightMap("null.raw", &cam);
-	ge.GenerateHeightMapBuffer(&heightmap);
+
 
 	fprintf(stdout, "\n");
 	fprintf(stdout, "------------- Loading Meshes -------------\n");
@@ -203,11 +201,13 @@ int main()
 
 	int width = 0, height = 0;
 	fpsCounter fpsC;
+
+	float rx = 0, ry = 0, rz = 0;
 	////////////////////////////////////////////////////////////
 	while (!glfwWindowShouldClose(window))
 	{
 		std::stringstream ss;
-		ss << fpsC.get() /*<< "   Height map draw count: " << heightmap.GetRenderCount()*/;
+		ss << fpsC.get();
 
 		glfwSetWindowTitle(window, ss.str().c_str());
 
@@ -228,13 +228,13 @@ int main()
 		double xpos, ypos;
 		glfwGetCursorPos(window, &xpos, &ypos);
 
-		if (xpos != cam.rx && ypos != cam.ry)
+		if (xpos != rx && ypos != ry)
 		{
-			cam.ry += (float)(xpos - cam.ry) ;
-			cam.rx += (float)(ypos - cam.rx) ;
+			ry += (float)(xpos - ry) ;
+			rx += (float)(ypos - rx) ;
 
-			glm::quat quatx = glm::angleAxis(cam.rx / 150.0f, glm::vec3(1, 0, 0));
-			glm::quat quaty = glm::angleAxis(cam.ry / 150.0f, glm::vec3(0, 1, 0));
+			glm::quat quatx = glm::angleAxis(rx / 150.0f, glm::vec3(1, 0, 0));
+			glm::quat quaty = glm::angleAxis(ry / 150.0f, glm::vec3(0, 1, 0));
 
 			mat4 rotation = mat4(glm::mat3_cast(glm::cross(quatx, quaty)));
 
@@ -249,19 +249,19 @@ int main()
 
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		{
-			cam.UpdateTranslation(forward*glm::vec3(0.1f, 0, -0.1));
+			cam.UpdateTranslation(forward*glm::vec3(0.1f, 0, -0.1)*vec3(45));
 		}
 		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		{
-			cam.UpdateTranslation(forward*glm::vec3(-0.1f, 0, 0.1));
+			cam.UpdateTranslation(forward*glm::vec3(-0.1f, 0, 0.1)*vec3(45));
 		}
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		{
-			cam.UpdateTranslation(strafe*glm::vec3(0.1f, 0, -0.1f));
+			cam.UpdateTranslation(strafe*glm::vec3(0.1f, 0, -0.1f)*vec3(45));
 		}
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 		{
-			cam.UpdateTranslation(strafe*glm::vec3(-0.1f, 0, 0.1));
+			cam.UpdateTranslation(strafe*glm::vec3(-0.1f, 0, 0.1)*vec3(45));
 		}
 		//const float mass = 25.0f;
 		//const float g = 9.82f;
@@ -280,16 +280,13 @@ int main()
 		}
 		mustangHigh.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, yb, 0.0f)));
 		
-
 		ge.PrepareRender();
 		//ge.Render(&mustang);
 		//ge.Render(&mustang2);
 		//ge.Render(&mustang3);
 		//ge.Render(&mustang4);
 		ge.Render(&mustangHigh);
-
-		//ge.Render(&heightmap);
-
+		
 		fpsC.tick();
 		Sleep(1000 / 120);
 
@@ -303,14 +300,6 @@ int main()
 
 	system("pause");// Remove when main loop is working or save it to read the console's output before exit.
 	return 0;
-}
-float gravity(float h, const float m)
-{
-	// Constant gravitational force
-	float g = 9.82f;
-	float Fg = g * m;
-
-	return Fg;
 }
 
 static void error_callback(int err, const char* d)

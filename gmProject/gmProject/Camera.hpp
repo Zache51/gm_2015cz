@@ -16,11 +16,11 @@ private:
 
 	glm::mat4 projectionMatrix;
 	glm::mat4 rotationMatrix;
-	glm::mat4 translationMatrix;
+	
 
 public:
 	// temporary public
-	float rx, ry, rz;
+	glm::mat4 translationMatrix;
 
 	Camera();
 

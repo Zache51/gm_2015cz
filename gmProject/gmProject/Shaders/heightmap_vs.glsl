@@ -2,11 +2,11 @@
 layout(location = 0) in vec3 vertex_position;
 layout(location = 1) in vec3 vertex_color;
 
-out vec3 colorG;
+out vec3 color;
 
 uniform mat4 PVWMatrix;
 
 void main () {
-	colorG = vertex_color;
+	color = vertex_color;
 	gl_Position = PVWMatrix * vec4 (vertex_position, 1.0);
 }

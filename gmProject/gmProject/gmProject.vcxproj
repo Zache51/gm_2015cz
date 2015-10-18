@@ -16,6 +16,8 @@
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="handler.cpp" />
     <ClCompile Include="HeightMap.cpp" />
+    <ClCompile Include="Line.cpp" />
+    <ClCompile Include="MeshBase.cpp" />
     <ClCompile Include="MeshHolder.cpp" />
     <ClCompile Include="MeshObject.cpp" />
   </ItemGroup>
@@ -24,6 +26,8 @@
     <ClInclude Include="FPSCounter.hpp" />
     <ClInclude Include="Graphics.hpp" />
     <ClInclude Include="HeightMap.h" />
+    <ClInclude Include="Line.h" />
+    <ClInclude Include="MeshBase.h" />
     <ClInclude Include="MeshHolder.hpp" />
     <ClInclude Include="MeshObject.hpp" />
   </ItemGroup>

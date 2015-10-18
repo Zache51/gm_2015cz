@@ -1,8 +1,6 @@
 #pragma once
 
-#include <GL/glew.h>
-#include <glm/glm.hpp>
-#include <vector>
+#include "MeshBase.h"
 
 #include <errno.h>
 #include <stdio.h>
@@ -28,29 +26,17 @@ struct QuadTree
 
 };
 
-struct Point2
-{
-	glm::vec3 ver;
-	glm::vec3 col;
-};
-
-class HeightMap
+class HeightMap : public MeshBase
 {
 private:
-	std::vector<Point2> points;
-	std::vector<GLuint> indicies;
 
-	GLuint numberOfPoints;
-	GLuint numberOfIndicies;
+	std::vector<Point_HeightMap> points;
 
 	GLfloat mapWidth;				// Width of .raw height map
-	GLfloat mapHeight;				// Height of .raw height map
+	GLfloat mapDepth;				// Depth of .raw height map
 	int mapSize;				// Total size of height map
 
 	unsigned char* g_HeightMap;	// Holds the height maps raw data
-
-	int gridWidth;				// Defined width for actual map
-	int gridHeight;				// Defined height for actual map
 
 	GLfloat rgbColor;
 	GLfloat setVertexColor(int, int);	// Set color of the map
@@ -70,8 +56,8 @@ private:
 	void renderQuadTree(QuadTree* qt);
 	void releaseQuadTree(QuadTree* qt);
 	QuadTree* createQuadTree(int levels, GLfloat startX, GLfloat startY, GLfloat endX, GLfloat endY);
-	void checkQuadTree(QuadTree* qt, glm::mat4 viewmatrix);
-	void createViewFrustum(const Camera* cam);
+	void checkQuadTree(QuadTree* qt, Camera* cam);
+	
 
 
 	bool loadRawFile(std::string filename);
@@ -82,12 +68,14 @@ public:
 
 	void FreeMemory();
 
-	int getHeight(int x, int y);
+	int getHeight(int x, int z);
 
+
+	// Needs to be reworked
 	void* GetPointsData();
 	GLuint GetFloatAmount() const;
-	char32_t* GetIndiciesData();
-	GLuint GetGLuintAmount() const;
+
+	void createViewFrustum(const Camera* cam);
 
 	void RenderHeightMap(Camera* cam);
 	int GetRenderCount() const;
