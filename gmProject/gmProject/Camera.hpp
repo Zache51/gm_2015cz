@@ -26,6 +26,10 @@ public:
 
 	void SetScreenSize(float height, float width);
 	void SetRotationMatrix(glm::mat4 rotation);
+
+	void SetX(float x);
+	void SetY(float y);
+	void SetZ(float z);
 };
 
 #endif

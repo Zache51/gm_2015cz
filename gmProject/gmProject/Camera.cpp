@@ -42,3 +42,18 @@ void Camera::SetRotationMatrix(glm::mat4 rotation)
 {
 	rotationMatrix = rotation;
 }
+
+void Camera::SetX(float x)
+{
+	translationMatrix[3][0] = x;
+}
+
+void Camera::SetY(float y)
+{
+	translationMatrix[3][1] = y;
+}
+
+void Camera::SetZ(float z)
+{
+	translationMatrix[3][2] = z;
+}
