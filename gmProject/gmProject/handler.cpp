@@ -184,15 +184,15 @@ int main()
 
 	MeshHolder mustangHigh = MeshHolder(&m);
 	mustangHigh.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	float yb = 60.0f;
+	vec3 pos = vec3(0.0f, 60.0f, 0.0f);
 	float delta_t;
 	float delta_v = 0.0f;
 	float delta_v0 = delta_v;
-	float delta_s = 0.0f;
-	float delta_s0 = delta_s;
+	vec3 delta_s = vec3(0.0f, 0.0f, 0.0f);
+	vec3 delta_s0 = delta_s;
 	const float mass = 25.0f;
 	const float g = 9.82f;
-	mustangHigh.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, yb, 0.0f)));
+	mustangHigh.SetTranslation(glm::translate(mat4(1.0f), pos));
 
 	std::vector<MeshObject*> meshes;
 	meshes.push_back(&m);
@@ -267,18 +267,20 @@ int main()
 		//const float g = 9.82f;
 		//float delta_v = 0.0f;
 		//float delta_v0 = delta_v;
+		//vec3 delta_s = vec3(0.0f, 0.0f, 0.0f);
+		//vec3 delta_s0 = delta_s;
 		delta_t = fpsC.deltaTime();
-		if (yb > 0 && delta_t > 0)
+		if (pos.y > 0 && delta_t > 0)
 		{
 			delta_v = delta_v0 + g * delta_t;
-			delta_s = delta_s0 + delta_v * delta_t;
+			delta_s.y = delta_s0.y + delta_v * delta_t;
 
-			yb -= delta_s;
+			pos -= delta_s;
 
 			delta_v0 = delta_v;
 			delta_s0 = delta_s;
 		}
-		mustangHigh.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, yb, 0.0f)));
+		mustangHigh.SetTranslation(glm::translate(mat4(1.0f), pos));
 		
 		ge.PrepareRender();
 		//ge.Render(&mustang);

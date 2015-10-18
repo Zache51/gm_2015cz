@@ -19,7 +19,7 @@ std::string fpsCounter::get() const
 	stringstream ss;
 	ss << "FPS: " << m_fps;
 	
-	return ss.str();;
+	return ss.str();
 }
 
 void fpsCounter::tick()
