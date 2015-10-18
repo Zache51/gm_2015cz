@@ -5,7 +5,7 @@ using std::stringstream;
 fpsCounter::fpsCounter()
 {
 	t = time(0);
-	localtime_s(&now, &t);
+	localtime_s(&previous, &t);
 }
 
 fpsCounter::~fpsCounter()
@@ -28,16 +28,21 @@ void fpsCounter::tick()
 
 	// one second elapsed? (= 1000 milliseconds)
 	t = time(0);
-	localtime_s(&curr, &t);
-	if (curr.tm_sec - now.tm_sec > 1)
+	localtime_s(&current, &t);
+	if (current.tm_sec - previous.tm_sec > 1)
 	{
-
 		// save the current counter value to m_fps
 		m_fps = m_fpscount;
 
 		// reset the counter and the interval
 		m_fpscount = 0;
-		localtime_s(&now, &t);
+		localtime_s(&previous, &t);
 
+		dTime = 1 / (float)m_fps; // Seconds per tick
 	}
+}
+
+float fpsCounter::deltaTime()
+{
+	return dTime;
 }

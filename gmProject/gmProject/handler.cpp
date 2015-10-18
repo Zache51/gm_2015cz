@@ -14,6 +14,7 @@
 
 static void error_callback(int error, const char* description);
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+float gravity(float height, const float mass);
 
 #ifdef _DEBUG
 extern "C"
@@ -167,25 +168,33 @@ int main()
 	fprintf(stdout, "------------------------------------------\n");
 
 	// P-51 Mustang
-	MeshHolder mustang = MeshHolder(&m);
-	mustang.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	mustang.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f)));
+	//MeshHolder mustang = MeshHolder(&m);
+	//mustang.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	//mustang.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f)));
 
-	MeshHolder mustang2 = MeshHolder(&m);
-	mustang2.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	mustang2.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, 20.0f)));
+	//MeshHolder mustang2 = MeshHolder(&m);
+	//mustang2.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	//mustang2.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, 20.0f)));
 
-	MeshHolder mustang3 = MeshHolder(&m);
-	mustang3.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	mustang3.SetTranslation(glm::translate(mat4(1.0f), vec3(20.0f, 0.0f, 20.0f)));
+	//MeshHolder mustang3 = MeshHolder(&m);
+	//mustang3.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	//mustang3.SetTranslation(glm::translate(mat4(1.0f), vec3(20.0f, 0.0f, 20.0f)));
 
-	MeshHolder mustang4 = MeshHolder(&m);
-	mustang4.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	mustang4.SetTranslation(glm::translate(mat4(1.0f), vec3(20.0f, 0.0f, 0.0f)));
+	//MeshHolder mustang4 = MeshHolder(&m);
+	//mustang4.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	//mustang4.SetTranslation(glm::translate(mat4(1.0f), vec3(20.0f, 0.0f, 0.0f)));
 
 	MeshHolder mustangHigh = MeshHolder(&m);
-	mustangHigh.SetRotation(glm::rotate(mat4(1.f), 3.14f, vec3(0.f, 0.0f, 1.f)));
-	mustangHigh.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 60.0f, 0.0f)));
+	mustangHigh.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	float yb = 60.0f;
+	float delta_t;
+	float delta_v = 0.0f;
+	float delta_v0 = delta_v;
+	float delta_s = 0.0f;
+	float delta_s0 = delta_s;
+	const float mass = 25.0f;
+	const float g = 9.82f;
+	mustangHigh.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, yb, 0.0f)));
 
 	std::vector<MeshObject*> meshes;
 	meshes.push_back(&m);
@@ -230,6 +239,7 @@ int main()
 			mat4 rotation = mat4(glm::mat3_cast(glm::cross(quatx, quaty)));
 
 			cam.SetRotationMatrix(rotation);
+			//mustangHigh.SetRotation(rotation);
 		}
 
 		// Moved the camera with keyboard (WIP)
@@ -253,17 +263,32 @@ int main()
 		{
 			cam.UpdateTranslation(strafe*glm::vec3(-0.1f, 0, 0.1));
 		}
+		//const float mass = 25.0f;
+		//const float g = 9.82f;
+		//float delta_v = 0.0f;
+		//float delta_v0 = delta_v;
+		delta_t = fpsC.deltaTime();
+		if (yb > 0 && delta_t > 0)
+		{
+			delta_v = delta_v0 + g * delta_t;
+			delta_s = delta_s0 + delta_v * delta_t;
 
+			yb -= delta_s;
+
+			delta_v0 = delta_v;
+			delta_s0 = delta_s;
+		}
+		mustangHigh.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, yb, 0.0f)));
 		
 
 		ge.PrepareRender();
-		ge.Render(&mustang);
-		ge.Render(&mustang2);
-		ge.Render(&mustang3);
-		ge.Render(&mustang4);
+		//ge.Render(&mustang);
+		//ge.Render(&mustang2);
+		//ge.Render(&mustang3);
+		//ge.Render(&mustang4);
 		ge.Render(&mustangHigh);
 
-		ge.Render(&heightmap);
+		//ge.Render(&heightmap);
 
 		fpsC.tick();
 		Sleep(1000 / 120);
@@ -276,8 +301,16 @@ int main()
 	glfwDestroyWindow(window);
 	glfwTerminate();
 
-	//system("pause");// Remove when main loop is working or save it to read the console's output before exit.
+	system("pause");// Remove when main loop is working or save it to read the console's output before exit.
 	return 0;
+}
+float gravity(float h, const float m)
+{
+	// Constant gravitational force
+	float g = 9.82f;
+	float Fg = g * m;
+
+	return Fg;
 }
 
 static void error_callback(int err, const char* d)

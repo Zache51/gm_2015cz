@@ -14,6 +14,7 @@ public:
 	// get fps and tick function
 	std::string get() const;
 	void tick();
+	float deltaTime(); 
 
 private:
 
@@ -22,10 +23,10 @@ private:
 
 	// time for when to update fps
 	time_t t;
-	tm now;
-	tm curr;
+	tm current;
+	tm previous;
 
-
+	float dTime;
 };
 
 #endif
