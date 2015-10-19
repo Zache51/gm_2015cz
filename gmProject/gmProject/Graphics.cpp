@@ -196,6 +196,30 @@ void Graphics::GenerateHeightMapBuffer(HeightMap* heightmap)
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Point_HeightMap), BUFFER_OFFSET(sizeof(float) * 3));
 }
 
+void Graphics::GenerateLineBuffer()
+{
+	//create vertex and index buffer 
+	glGenBuffers(1, &vbLine);
+	glBindBuffer(GL_ARRAY_BUFFER, vbLine);
+	glGenBuffers(1, &ibLine);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibLine);
+
+	//Define the size of the buffers	
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Point_HeightMap) * 5000, NULL, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * 5000, NULL, GL_DYNAMIC_DRAW);
+
+	// Define VAO
+	glGenVertexArrays(1, &gVertexAttributeLine);
+	glBindVertexArray(gVertexAttributeLine);
+	glBindBuffer(GL_ARRAY_BUFFER, vbLine);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibHeightMap);
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	// Define vertex data layout	
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Point_HeightMap), BUFFER_OFFSET(0));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Point_HeightMap), BUFFER_OFFSET(sizeof(float) * 3));
+}
+
 void Graphics::PrepareRender()
 {
 	glClearColor(0, 0, 0.08f, 1);
@@ -262,6 +286,38 @@ void Graphics::Render(HeightMap* hm)
 
 	// Render the mesh
 	//hm->RenderHeightMap(localCamera);
+}
+
+void Graphics::Render(Line* l)
+{
+	// To prevent out of bounds error
+	if (l->GetNumberOfIndicies() > 5000)
+	{
+		l->ClearVector();
+	}
+
+	// Yes, the Line class uses the same shaders as the HeightMap class
+	glUseProgram(heightmapProgram);
+
+	glBindVertexArray(gVertexAttributeLine);
+	glBindBuffer(GL_ARRAY_BUFFER, vbLine);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibLine);
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	// Define vertex data layout	
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Point_HeightMap), BUFFER_OFFSET(0));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Point_HeightMap), BUFFER_OFFSET(sizeof(float) * 3));
+
+	////Define the size of the buffers	
+	glBufferSubData(GL_ARRAY_BUFFER, 0, l->GetFloatAmount(), l->GetPointsData());
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, l->GetGLuintAmount(), l->GetIndiciesData());
+
+	// Uniforms
+	mat4 pvwMatrix = localCamera->GetPVMatrix();
+	glUniformMatrix4fv(0, 1, GL_FALSE, &(GLfloat)pvwMatrix[0][0]);
+
+	// Render the mesh
+	glDrawElements(GL_LINES, l->GetNumberOfIndicies(), GL_UNSIGNED_INT, 0);
 }
 
 void Graphics::SetCamera( Camera* c )

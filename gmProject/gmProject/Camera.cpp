@@ -8,7 +8,7 @@ glm::mat4 Camera::GetViewMatrix() const
 Camera::Camera()
 {
 	rotationMatrix = glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f));
-	translationMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+	this->SetPosition(vec3(0.0f, 0.0f, 0.0f));
 }
 
 glm::mat4 Camera::GetRotationMatrix() const

@@ -154,7 +154,7 @@ int main()
 	
 
 	Camera cam = Camera();
-	cam.SetPosition(glm::vec3(4.0f, 0.0f, 10.0f));
+	cam.SetPosition(glm::vec3(0.0f, 0.0f, 20.0f));
 	ge.SetCamera(&cam);
 
 
@@ -165,35 +165,46 @@ int main()
 	fprintf(stdout, "------------------------------------------\n");
 
 	// P-51 Mustang
-	//MeshHolder mustang = MeshHolder(&m);
-	//mustang.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	//mustang.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f)));
+	MeshHolder mustang = MeshHolder(&m);
+	mustang.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	mustang.SetPosition(vec3(0.0f, 0.0f, 0.0f));
 
-	//MeshHolder mustang2 = MeshHolder(&m);
-	//mustang2.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	//mustang2.SetTranslation(glm::translate(mat4(1.0f), vec3(0.0f, 0.0f, 20.0f)));
+	MeshHolder mustang2 = MeshHolder(&m);
+	mustang2.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	mustang2.SetPosition(vec3(0.0f, 0.0f, 20.0f));
 
-	//MeshHolder mustang3 = MeshHolder(&m);
-	//mustang3.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	//mustang3.SetTranslation(glm::translate(mat4(1.0f), vec3(20.0f, 0.0f, 20.0f)));
+	MeshHolder mustang3 = MeshHolder(&m);
+	mustang3.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	mustang3.SetPosition(vec3(20.0f, 0.0f, 20.0f));
 
-	//MeshHolder mustang4 = MeshHolder(&m);
-	//mustang4.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	//mustang4.SetTranslation(glm::translate(mat4(1.0f), vec3(20.0f, 0.0f, 0.0f)));
+	MeshHolder mustang4 = MeshHolder(&m);
+	mustang4.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	mustang4.SetPosition(vec3(20.0f, 0.0f, 0.0f));
 
 	MeshHolder mustangHigh = MeshHolder(&m);
 	mustangHigh.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	mustangHigh.SetPosition(vec3(30.0f, 60.0f, 0.0f));
+	mustangHigh.SetPosition(vec3(60.0f, 60.0f, 0.0f));
 
 	std::vector<MeshObject*> meshes;
 	meshes.push_back(&m);
 	
 	ge.GenerateBuffer(meshes);
+	ge.GenerateLineBuffer();
+
+	Line EndOfLine = Line();
+
+	EndOfLine.AddPoint(vec3(0.0f, 0.0f, 0.0f));
+	EndOfLine.AddPoint(vec3(0.0f, 0.0f, 20.0f));
+	EndOfLine.AddPoint(vec3(20.0f, 0.0f, 20.0f));
+	EndOfLine.AddPoint(vec3(20.0f, 0.0f, 0.0f));
+	EndOfLine.AddPoint(vec3(60.0f, 0.0f, 20.0f));
+	EndOfLine.AddPoint(vec3(60.0f, 0.0f, 0.0f));
 
 	int width = 0, height = 0;
 	fpsCounter fpsC;
 
 	float rx = 0, ry = 0, rz = 0;
+	float cameraSpeed = 5;
 	////////////////////////////////////////////////////////////
 	while (!glfwWindowShouldClose(window))
 	{
@@ -239,30 +250,36 @@ int main()
 
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		{
-			cam.UpdatePosition(forward*glm::vec3(0.1f, 0, -0.1)*vec3(45));
+			cam.UpdatePosition(forward*glm::vec3(0.1f, 0, -0.1)*vec3(cameraSpeed));
 		}
 		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		{
-			cam.UpdatePosition(forward*glm::vec3(-0.1f, 0, 0.1)*vec3(45));
+			cam.UpdatePosition(forward*glm::vec3(-0.1f, 0, 0.1)*vec3(cameraSpeed));
 		}
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		{
-			cam.UpdatePosition(strafe*glm::vec3(0.1f, 0, -0.1f)*vec3(45));
+			cam.UpdatePosition(strafe*glm::vec3(0.1f, 0, -0.1f)*vec3(cameraSpeed));
 		}
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 		{
-			cam.UpdatePosition(strafe*glm::vec3(-0.1f, 0, 0.1)*vec3(45));
+			cam.UpdatePosition(strafe*glm::vec3(-0.1f, 0, 0.1)*vec3(cameraSpeed));
+		}
+		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+		{
+			EndOfLine.AddPoint(-cam.GetPosition());
 		}
 
 		ph.move(&mustangHigh, &fpsC);
 		
 		ge.PrepareRender();
-		//ge.Render(&mustang);
-		//ge.Render(&mustang2);
-		//ge.Render(&mustang3);
-		//ge.Render(&mustang4);
+		ge.Render(&mustang);
+		ge.Render(&mustang2);
+		ge.Render(&mustang3);
+		ge.Render(&mustang4);
 		ge.Render(&mustangHigh);
-		
+
+		ge.Render(&EndOfLine);
+
 		fpsC.tick();
 		Sleep(1000 / 120);
 

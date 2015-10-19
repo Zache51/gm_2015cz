@@ -8,6 +8,7 @@
 #include "HeightMap.h"
 #include "MeshHolder.hpp"
 #include "MeshObject.hpp"
+#include "Line.h"
 #include <glm/gtc/quaternion.hpp>
 
 // temp
@@ -31,6 +32,10 @@ private:
 	GLuint vbHeightMap = 0;
 	GLuint ibHeightMap = 0;
 	GLuint gVertexAttributeheightMap = 0;
+
+	GLuint vbLine;
+	GLuint ibLine;
+	GLuint gVertexAttributeLine;
 	
 	GLuint objProgram = 0;
 	GLuint heightmapProgram = 0;
@@ -49,10 +54,12 @@ public:
 
 	void GenerateBuffer(std::vector<MeshObject*> meshes);
 	void GenerateHeightMapBuffer(HeightMap* heightmap);
+	void GenerateLineBuffer();
 
 	void PrepareRender();
 	void Render(MeshHolder* mh);
 	void Render(HeightMap* hm);
+	void Render(Line* l);
 
 	void SetCamera( Camera* c );
 };
