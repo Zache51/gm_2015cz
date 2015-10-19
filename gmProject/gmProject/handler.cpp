@@ -269,7 +269,10 @@ int main()
 			EndOfLine.AddPoint(-cam.GetPosition());
 		}
 
-		ph.move(&mustangHigh, &fpsC);
+		if (fpsC.deltaTime() > 0)
+		{
+			ph.move(&mustangHigh, &fpsC);
+		}
 		
 		ge.PrepareRender();
 		ge.Render(&mustang);
@@ -291,7 +294,7 @@ int main()
 	glfwDestroyWindow(window);
 	glfwTerminate();
 
-	//system("pause");// Remove when main loop is working or save it to read the console's output before exit.
+	system("pause");// Remove when main loop is working or save it to read the console's output before exit.
 	return 0;
 }
 

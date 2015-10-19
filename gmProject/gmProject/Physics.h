@@ -6,15 +6,29 @@
 class Physics
 {
 private:
-	float delta_t;
-	float delta_v = 0.0f;
-	float delta_v0 = delta_v;
-	vec3 delta_s = vec3(0.0f, 0.0f, 0.0f);
-	vec3 delta_s0 = delta_s;
-	const float mass = 25.0f;
-	const float g = 9.82f;
+	struct Cannon
+	{
+		float alpha; // Y-axis angle
+		float gamma; // X & Z angle
 
-	vec3 freeFall() const;
+		float muzzle_v; // Muzzle velocity
+	};
+
+	float delta_t;
+	vec3 delta_v = vec3(0.0f);
+	vec3 delta_v0 = delta_v;
+	vec3 delta_s = vec3(0.0f);
+	vec3 delta_s0 = delta_s;
+
+	const float mass = 50.0f;
+	const float g = 9.82f;
+	const float FORCE = 1500;
+
+	float acc() const;
+	float vel() const;
+
+	vec3 freeFall();
+	vec3 qwer();
 
 public:
 	Physics();
