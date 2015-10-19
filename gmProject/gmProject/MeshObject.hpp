@@ -32,7 +32,7 @@ private:
 	bool loadTexture(std::string filename);
 
 public:
-
+	MeshObject(){};
 	MeshObject(std::string filename, float scale);
 	~MeshObject(){}
 
