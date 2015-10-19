@@ -9,7 +9,7 @@ using namespace glm;
 class Camera : public Movable
 {
 private:
-	float width, height;
+	//float width, height;
 
 	glm::mat4 projectionMatrix;
 	glm::mat4 rotationMatrix;
@@ -22,7 +22,7 @@ public:
 	glm::mat4 GetViewMatrix() const;
 	glm::mat4 GetPVMatrix() const;
 
-	glm::vec2 GetScreenSize() const;
+	//glm::vec2 GetScreenSize() const;
 
 	void SetScreenSize(float height, float width);
 	void SetRotationMatrix(glm::mat4 rotation);

@@ -203,6 +203,11 @@ int main()
 		RotateCamera(&cam, window);
 		MoveCamera(&cam, window);
 		
+		if (fpsC.deltaTime() > 0)
+		{
+			ph.move(&mustangHigh, &fpsC);
+		}
+
 		ge.PrepareRender();
 		ge.Render(&mustang);
 		ge.Render(&mustang2);

@@ -26,15 +26,15 @@ glm::mat4 Camera::GetPVMatrix() const
 	return projectionMatrix * GetViewMatrix();
 }
 
-glm::vec2 Camera::GetScreenSize() const
-{
-	return glm::vec2(width, height);
-}
+//glm::vec2 Camera::GetScreenSize() const
+//{
+//	return glm::vec2(width, height);
+//}
 
 void Camera::SetScreenSize(float height, float width)
 {
-	this->height = height;
-	this->width = width;
+	//this->height = height;
+	//this->width = width;
 	projectionMatrix = glm::perspective(3.14f * 0.45f, width / height, 0.5f, 500.0f);
 }
 
