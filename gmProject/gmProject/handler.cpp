@@ -162,6 +162,7 @@ int main()
 	fprintf(stdout, "\n");
 	fprintf(stdout, "------------- Loading Meshes -------------\n");
 	MeshObject m = MeshObject("mustang.obj");
+	MeshObject s_mesh = MeshObject("Square.obj");
 	fprintf(stdout, "------------------------------------------\n");
 
 	// P-51 Mustang
@@ -185,8 +186,13 @@ int main()
 	mustangHigh.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
 	mustangHigh.SetPosition(vec3(60.0f, 60.0f, 0.0f));
 
+	MeshHolder ground = MeshHolder(&s_mesh);
+	ground.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	ground.SetPosition(vec3(0.0f, -1.5f, 0.0f));
+
 	std::vector<MeshObject*> meshes;
 	meshes.push_back(&m);
+	meshes.push_back(&s_mesh);
 	
 	ge.GenerateBuffer(meshes);
 	ge.GenerateLineBuffer();
@@ -280,6 +286,8 @@ int main()
 		ge.Render(&mustang3);
 		ge.Render(&mustang4);
 		ge.Render(&mustangHigh);
+
+		ge.Render(&ground);
 
 		ge.Render(&EndOfLine);
 
