@@ -13,6 +13,7 @@ public:
 	~Line();
 
 	void AddPoint(glm::vec3 position);
+	glm::vec3 GetLastPoint() const;
 	void ClearVector();
 
 	void* GetPointsData();

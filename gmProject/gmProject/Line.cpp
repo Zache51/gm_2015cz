@@ -26,6 +26,11 @@ void Line::AddPoint(glm::vec3 position)
 	numberOfIndicies++;
 }
 
+glm::vec3 Line::GetLastPoint() const
+{
+	return points.back().ver;
+}
+
 void Line::ClearVector()
 {
 	points.clear();
