@@ -5,7 +5,7 @@
 
 /******************************* Private *******************************/
 
-bool MeshObject::loadObj(std::string filename, std::string& mtlFileName,
+bool MeshObject::loadObj(std::string filename, float scale, std::string& mtlFileName,
 	std::vector<Point_Obj>& points, std::vector<GLuint>& indices)
 {
 	std::vector < glm::vec3 > vertices;
@@ -42,7 +42,7 @@ bool MeshObject::loadObj(std::string filename, std::string& mtlFileName,
 
 			glm::vec3 vertex;
 			fscanf_s(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
-			vertices.push_back(vertex);
+			vertices.push_back(vertex*glm::vec3(scale));
 		}
 		else if (strcmp(lineHeader, "vt") == 0)
 		{
@@ -213,14 +213,14 @@ bool MeshObject::loadTexture(std::string filename)
 
 
 
-MeshObject::MeshObject(std::string filename)
+MeshObject::MeshObject(std::string filename, float scale)
 {
 	std::string mtlFilename = "";
 
 	points = std::vector<Point_Obj>();
 	indicies = std::vector<GLuint>();
 
-	loadObj(MESH_FOLDER + filename, mtlFilename, points, indicies);
+	loadObj(MESH_FOLDER + filename, scale, mtlFilename, points, indicies);
 	if (mtlFilename != "")
 	{
 		fprintf(stdout, "Mtl data found\n");
@@ -233,15 +233,6 @@ MeshObject::MeshObject(std::string filename)
 	}
 
 	fprintf(stdout, "\n");
-
-	numberOfPoints = points.size();
-	numberOfIndicies = indicies.size();
-}
-
-MeshObject::MeshObject(std::vector<Point_Obj> points)
-{
-	this->points = points;
-	std::vector<GLuint> indicies = std::vector<GLuint>();
 
 	numberOfPoints = points.size();
 	numberOfIndicies = indicies.size();

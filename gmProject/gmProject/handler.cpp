@@ -161,8 +161,8 @@ int main()
 
 	fprintf(stdout, "\n");
 	fprintf(stdout, "------------- Loading Meshes -------------\n");
-	MeshObject m = MeshObject("mustang.obj");
-	MeshObject s_mesh = MeshObject("Square.obj");
+	MeshObject m = MeshObject("mustang.obj", 1);
+	MeshObject s_mesh = MeshObject("Square.obj", 6);
 	fprintf(stdout, "------------------------------------------\n");
 
 	// P-51 Mustang
@@ -188,7 +188,7 @@ int main()
 
 	MeshHolder ground = MeshHolder(&s_mesh);
 	ground.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	ground.SetPosition(vec3(0.0f, -1.5f, 0.0f));
+	ground.SetPosition(vec3(10.0f, -1.5f, 10.0f));
 
 	std::vector<MeshObject*> meshes;
 	meshes.push_back(&m);
@@ -198,13 +198,6 @@ int main()
 	ge.GenerateLineBuffer();
 
 	Line EndOfLine = Line();
-
-	EndOfLine.AddPoint(vec3(0.0f, 0.0f, 0.0f));
-	EndOfLine.AddPoint(vec3(0.0f, 0.0f, 20.0f));
-	EndOfLine.AddPoint(vec3(20.0f, 0.0f, 20.0f));
-	EndOfLine.AddPoint(vec3(20.0f, 0.0f, 0.0f));
-	EndOfLine.AddPoint(vec3(60.0f, 0.0f, 20.0f));
-	EndOfLine.AddPoint(vec3(60.0f, 0.0f, 0.0f));
 
 	int width = 0, height = 0;
 	fpsCounter fpsC;
