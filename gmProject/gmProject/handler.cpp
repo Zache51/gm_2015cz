@@ -91,6 +91,7 @@ Line EndOfLine = Line();
 void InitMeshes(Graphics* ge);
 void MoveCamera(Camera* cam, GLFWwindow* window);
 void RotateCamera(Camera* cam, GLFWwindow* window);
+void UpdateProjection(Camera* cam, GLFWwindow* window);
 
 int main()
 {
@@ -177,7 +178,6 @@ int main()
 	cam.SetPosition(-glm::vec3(0.0f, 2.0f, 20.0f));
 	ge.SetCamera(&cam);
 
-	int width = 0, height = 0;
 	fpsCounter fpsC;
 
 	////////////////////////////////////////////////////////////
@@ -188,18 +188,7 @@ int main()
 
 		glfwSetWindowTitle(window, ss.str().c_str());
 
-		int newWidth, newHeight;
-		glfwGetFramebufferSize(window, &newWidth, &newHeight);
-
-		if (width != newWidth || height != newHeight)
-		{
-			width = newWidth;
-			height = newHeight;
-			glViewport(0, 0, width, height);
-
-			cam.SetScreenSize((float)width, (float)height);
-		}
-
+		UpdateProjection(&cam, window);
 		RotateCamera(&cam, window);
 		MoveCamera(&cam, window);
 		
@@ -233,7 +222,6 @@ int main()
 	//system("pause");// Remove when main loop is working or save it to read the console's output before exit.
 	return 0;
 }
-
 
 
 
@@ -330,7 +318,21 @@ void RotateCamera(Camera* cam, GLFWwindow* window)
 	}
 }
 
+int width = 0, height = 0;
+void UpdateProjection(Camera* cam, GLFWwindow* window)
+{
+	int newWidth, newHeight;
+	glfwGetFramebufferSize(window, &newWidth, &newHeight);
 
+	if (width != newWidth || height != newHeight)
+	{
+		width = newWidth;
+		height = newHeight;
+		glViewport(0, 0, width, height);
+
+		cam->SetScreenSize((float)width, (float)height);
+	}
+}
 
 
 
