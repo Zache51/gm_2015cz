@@ -88,10 +88,14 @@ MeshHolder mustangHigh;
 MeshHolder ground;
 Line EndOfLine = Line();
 
+// Cameras
+std::vector<Camera> cameras;
+
 void InitMeshes(Graphics* ge);
+void InitCameras();
 void MoveCamera(Camera* cam, GLFWwindow* window);
 void RotateCamera(Camera* cam, GLFWwindow* window);
-void UpdateProjection(Camera* cam, GLFWwindow* window);
+void UpdateProjections(GLFWwindow* window);
 
 int main()
 {
@@ -174,9 +178,11 @@ int main()
 
 	InitMeshes(&ge);
 
-	Camera cam = Camera();
-	cam.SetPosition(-glm::vec3(0.0f, 2.0f, 20.0f));
-	ge.SetCamera(&cam);
+	InitCameras();
+
+	int cameraIndex = 1;
+	ge.SetCamera(&cameras[cameraIndex]);
+
 
 	fpsCounter fpsC;
 
@@ -188,9 +194,21 @@ int main()
 
 		glfwSetWindowTitle(window, ss.str().c_str());
 
-		UpdateProjection(&cam, window);
-		RotateCamera(&cam, window);
-		MoveCamera(&cam, window);
+		if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS)
+		{
+			cameraIndex = 0;
+			ge.SetCamera(&cameras[cameraIndex]);
+		}
+		if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
+		{
+			cameraIndex = 1;
+			ge.SetCamera(&cameras[cameraIndex]);
+		}
+
+		UpdateProjections(window);
+		RotateCamera(&cameras[cameraIndex], window);
+		MoveCamera(&cameras[cameraIndex], window);
+		
 		
 		if (fpsC.deltaTime() > 0)
 		{
@@ -224,6 +242,17 @@ int main()
 }
 
 
+
+void InitCameras()
+{
+	Camera cam = Camera();
+	cam.SetPosition(-glm::vec3(0.0f, 2.0f, 20.0f));
+	cameras.push_back(cam);
+
+	Camera fixedCam = Camera();
+	fixedCam.SetPosition(-glm::vec3(0.0f, 2.0f, 20.0f));
+	cameras.push_back(fixedCam);
+}
 
 void InitMeshes(Graphics* ge)
 {
@@ -319,7 +348,7 @@ void RotateCamera(Camera* cam, GLFWwindow* window)
 }
 
 int width = 0, height = 0;
-void UpdateProjection(Camera* cam, GLFWwindow* window)
+void UpdateProjections(GLFWwindow* window)
 {
 	int newWidth, newHeight;
 	glfwGetFramebufferSize(window, &newWidth, &newHeight);
@@ -330,7 +359,10 @@ void UpdateProjection(Camera* cam, GLFWwindow* window)
 		height = newHeight;
 		glViewport(0, 0, width, height);
 
-		cam->SetScreenSize((float)width, (float)height);
+		for (int i = 0; i < cameras.size(); i++)
+		{
+			cameras.at(i).SetScreenSize((float)width, (float)height);
+		}
 	}
 }
 
