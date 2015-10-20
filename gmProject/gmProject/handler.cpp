@@ -100,7 +100,7 @@ void MoveCamera(Camera* cam, GLFWwindow* window);
 void RotateCamera(Camera* cam, GLFWwindow* window);
 void UpdateProjections(GLFWwindow* window);
 
-void Collision(vec3* point, MeshHolder* plane);
+void Collision(Line* line, MeshHolder* plane);
 
 int main()
 {
@@ -220,8 +220,8 @@ int main()
 			ph.move(&EndOfLine, &fpsC);
 		}
 
-		Collision(&EndOfLine.GetLastPoint(), &target);
-		Collision(&EndOfLine.GetLastPoint(), &target2);
+		Collision(&EndOfLine, &target);
+		Collision(&EndOfLine, &target2);
 
 		ge.PrepareRender();
 		ge.Render(&mustang);
@@ -390,18 +390,20 @@ void UpdateProjections(GLFWwindow* window)
 	}
 }
 
-vec3 posBefore = vec3(-100);
-void Collision(vec3* point, MeshHolder* plane)
+void Collision(Line* line, MeshHolder* plane)
 {
 	vec3 planePos = plane->GetPosition();
 
+	vec3 lp = line->GetLastPoint();
+	vec3 slp = line->GetSecondLastPoint();
+
 	bool collide = false;
 
-	if (posBefore.z < planePos.z)
+	if (slp.z < planePos.z)
 	{
-		if (posBefore.x > planePos.x - 10 && posBefore.x < planePos.x + 10)
+		if (slp.x > planePos.x - 10 && slp.x < planePos.x + 10)
 		{
-			if (posBefore.y > planePos.y - 10 && posBefore.y < planePos.y + 10)
+			if (slp.y > planePos.y - 10 && slp.y < planePos.y + 10)
 			{
 				collide = true;
 			}
@@ -410,20 +412,17 @@ void Collision(vec3* point, MeshHolder* plane)
 
 	if (collide)
 	{
-		if (point->z > planePos.z)
+		if (lp.z > planePos.z)
 		{
-			if (point->x > planePos.x - 10 && point->x < planePos.x + 10)
+			if (lp.x > planePos.x - 10 && lp.x < planePos.x + 10)
 			{
-				if (point->y > planePos.y - 10 && point->y < planePos.y + 10)
+				if (lp.y > planePos.y - 10 && lp.y < planePos.y + 10)
 				{
 					plane->ChangeTexture(0);
 				}
 			}
 		}
 	}
-
-
-	posBefore = *point;
 }
 
 

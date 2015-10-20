@@ -14,6 +14,7 @@ public:
 
 	void AddPoint(glm::vec3 position);
 	glm::vec3 GetLastPoint() const;
+	glm::vec3 GetSecondLastPoint() const;
 	void ClearVector();
 
 	void* GetPointsData();

@@ -31,6 +31,12 @@ glm::vec3 Line::GetLastPoint() const
 	return points.back().ver;
 }
 
+glm::vec3 Line::GetSecondLastPoint() const
+{
+	if (numberOfPoints > 1) return points[numberOfPoints-2].ver;
+	else return glm::vec3(-100);
+}
+
 void Line::ClearVector()
 {
 	points.clear();
