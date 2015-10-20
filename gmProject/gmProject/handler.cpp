@@ -78,6 +78,7 @@ extern "C"
 // Meshes
 MeshObject m;
 MeshObject s_mesh;
+MeshObject target_mesh;
 
 // World objects
 MeshHolder mustang;
@@ -86,16 +87,20 @@ MeshHolder mustang3;
 MeshHolder mustang4;
 MeshHolder mustangHigh;
 MeshHolder ground;
+MeshHolder target;
+MeshHolder target2;
 Line EndOfLine = Line();
 
 // Cameras
 std::vector<Camera> cameras;
 
-void InitMeshes(Graphics* ge);
 void InitCameras();
+void InitMeshes(Graphics* ge);
 void MoveCamera(Camera* cam, GLFWwindow* window);
 void RotateCamera(Camera* cam, GLFWwindow* window);
 void UpdateProjections(GLFWwindow* window);
+
+void Collision(vec3* point, MeshHolder* plane);
 
 int main()
 {
@@ -215,6 +220,9 @@ int main()
 			ph.move(&EndOfLine, &fpsC);
 		}
 
+		Collision(&EndOfLine.GetLastPoint(), &target);
+		Collision(&EndOfLine.GetLastPoint(), &target2);
+
 		ge.PrepareRender();
 		ge.Render(&mustang);
 		ge.Render(&mustang2);
@@ -223,6 +231,8 @@ int main()
 		ge.Render(&mustangHigh);
 
 		ge.Render(&ground);
+		ge.Render(&target);
+		ge.Render(&target2);
 
 		ge.Render(&EndOfLine);
 
@@ -250,7 +260,7 @@ void InitCameras()
 	cameras.push_back(cam);
 
 	Camera fixedCam = Camera();
-	fixedCam.SetPosition(-glm::vec3(0.0f, 2.0f, 20.0f));
+	fixedCam.SetPosition(-glm::vec3(0.0f, 80.0f, 20.0f));
 	cameras.push_back(fixedCam);
 }
 
@@ -260,6 +270,7 @@ void InitMeshes(Graphics* ge)
 	fprintf(stdout, "------------- Loading Meshes -------------\n");
 	m = MeshObject("mustang.obj", 1);
 	s_mesh = MeshObject("Square.obj", 7);
+	target_mesh = MeshObject("Square_wall.obj", 1);
 	fprintf(stdout, "------------------------------------------\n");
 
 	// P-51 Mustang
@@ -287,9 +298,20 @@ void InitMeshes(Graphics* ge)
 	ground.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
 	ground.SetPosition(vec3(10.0f, -1.5f, 10.0f));
 
+	target = MeshHolder(&target_mesh);
+	target.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	target.SetPosition(vec3(60.0f, 60.f, 100.0f));
+	target.ChangeTexture(1);
+
+	target2 = MeshHolder(&target_mesh);
+	target2.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	target2.SetPosition(vec3(60.0f, 40.f, 100.0f));
+	target2.ChangeTexture(1);
+
 	std::vector<MeshObject*> meshes;
 	meshes.push_back(&m);
 	meshes.push_back(&s_mesh);
+	meshes.push_back(&target_mesh);
 
 	EndOfLine.AddPoint(vec3(60.0f, 60.0f, 0.0f));
 
@@ -366,6 +388,42 @@ void UpdateProjections(GLFWwindow* window)
 			cameras.at(i).SetScreenSize((float)width, (float)height);
 		}
 	}
+}
+
+vec3 posBefore = vec3(-100);
+void Collision(vec3* point, MeshHolder* plane)
+{
+	vec3 planePos = plane->GetPosition();
+
+	bool collide = false;
+
+	if (posBefore.z < planePos.z)
+	{
+		if (posBefore.x > planePos.x - 10 && posBefore.x < planePos.x + 10)
+		{
+			if (posBefore.y > planePos.y - 10 && posBefore.y < planePos.y + 10)
+			{
+				collide = true;
+			}
+		}
+	}
+
+	if (collide)
+	{
+		if (point->z > planePos.z)
+		{
+			if (point->x > planePos.x - 10 && point->x < planePos.x + 10)
+			{
+				if (point->y > planePos.y - 10 && point->y < planePos.y + 10)
+				{
+					plane->ChangeTexture(0);
+				}
+			}
+		}
+	}
+
+
+	posBefore = *point;
 }
 
 
