@@ -11,6 +11,13 @@ private:
 	const float toRad = 3.141592f / 180.0f;
 	const float g = 9.82f;
 
+	// Drag force on sphere
+	const float dC = 0.47f; // Drag coefficient - Sphere
+	float radius = 0.12f;
+	float area = 3.141592f * radius * radius; // Cross-section
+	float volume = (4 * 3.141592f * radius*radius*radius) / 3;
+	float density = 7800; // Iron
+	float mass = volume * density;
 	// Cannonball
 	float vel; // Total velocity
 	float alpha; // Angle in radians
@@ -19,11 +26,12 @@ private:
 	float degreeRotate;
 	float resistance;
 	vec3 dVelocity;
-	vec3 dVelocity0;
+	vec3 lastDVelocity;
 	vec3 dAccel;
-	vec3 dAccel0;
 
 	void reset();
+
+	vec3 lastDAccel;
 	
 public:
 	Physics();

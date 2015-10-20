@@ -3,16 +3,14 @@
 
 Physics::Physics()
 {
-	
-
 	degreeAngle = 5.0f;
 	alpha = degreeAngle * toRad;
 
 	degreeRotate = 90.0f;
 	gamma = degreeRotate * toRad;
 
-	resistance = -0.1f;
 	reset();
+	resistance = (-dC * 0.5f * density * area) / mass;
 }
 Physics::~Physics(){}
 
@@ -35,16 +33,17 @@ void Physics::move(Line* line, fpsCounter* fpsC)
 	vec3 asdf = vec3(line->GetLastPoint());
 	if (asdf.y > 0)
 	{
-		dVelocity = dVelocity0 + dAccel0 * delta_t;
+		dVelocity = lastDVelocity + lastDAccel * delta_t;
 
 		vel = glm::sqrt(dVelocity.x * dVelocity.x + dVelocity.y * dVelocity.y);
 		alpha = glm::atan(dVelocity.y / dVelocity.x);
 
-		dAccel0.x = resistance * vel * vel * glm::cos(alpha) * cos(gamma);
-		dAccel0.y = resistance * vel * vel * glm::sin(alpha) - g;
-		dAccel0.z = resistance * vel * vel * glm::cos(alpha) * sin(gamma);
+		dAccel.x = resistance * vel * vel * glm::cos(alpha) * cos(gamma);
+		dAccel.y = resistance * vel * vel * glm::sin(alpha) - g;
+		dAccel.z = resistance * vel * vel * glm::cos(alpha) * sin(gamma);
 
-		dVelocity0 = dVelocity;
+		lastDAccel = dAccel;
+		lastDVelocity = dVelocity;
 
 		asdf += dVelocity;
 
@@ -83,8 +82,8 @@ void Physics::reset()
 {
 	vel = 6.0f;
 
-	dVelocity = vec3(vel * cos(alpha) * cos(gamma), vel * sin(alpha), vel * cos(alpha) * sin(gamma));
-	dVelocity0 = dVelocity;
+	dVelocity = vec3(vel * cos(alpha) * cos(gamma), vel * sin(alpha), vel * sin(gamma));
+	lastDVelocity = dVelocity;
 	dAccel = vec3(0.0f, -g, 0.0f);
-	dAccel0 = dAccel;
+	lastDAccel = dAccel;
 }
