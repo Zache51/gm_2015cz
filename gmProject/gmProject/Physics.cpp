@@ -3,13 +3,14 @@
 
 Physics::Physics()
 {
-	can = Cannon();
-	can.alpha = 45.0f * degree;
-	can.gamma = 0.0f * degree;
-
+	vel = 40.0f;
+	alpha = 85.0f * toRad;
+	resistance = -0.1f;
+	dVelocity = vec3(vel * cos(alpha), vel * sin(alpha), 0.0f);
+	dVelocity0 = dVelocity;
+	dAccel = vec3(0.0f, -g, 0.0f);
+	dAccel0 = dAccel;
 }
-
-
 Physics::~Physics(){}
 
 void Physics::move(MeshHolder* mesh, fpsCounter* fpsC)
@@ -18,8 +19,8 @@ void Physics::move(MeshHolder* mesh, fpsCounter* fpsC)
 	if (mesh->GetPosition().y > 0)
 	{
 		vec3 asdf;
-		asdf += xComp();
-		asdf += yComp();
+		//asdf += xComp();
+		//asdf += yComp();
 		//printf("%f ", asdf.y);
 		printf(" %f ", asdf.z);
 		mesh->UpdatePosition(asdf);
@@ -31,41 +32,19 @@ void Physics::move(Line* line, fpsCounter* fpsC)
 	vec3 asdf = vec3(line->GetLastPoint());
 	if (asdf.y > 0)
 	{
-		asdf += xComp();
-		asdf += yComp();
-		//printf("%f ", asdf.y);
-		//printf(" %f ", atime);
+		dVelocity = dVelocity0 + dAccel0 * delta_t;
+
+		vel = glm::sqrt(dVelocity.x * dVelocity.x + dVelocity.y * dVelocity.y);
+		alpha = glm::atan(dVelocity.y / dVelocity.x);
+
+		dAccel.x = resistance * vel * vel * glm::cos(alpha);
+		dAccel.y = resistance * vel * vel * glm::sin(alpha) - g;
+
+		dAccel0 = dAccel;
+		dVelocity0 = dVelocity;
+
+		asdf += dVelocity;
+
 		line->AddPoint(asdf);
-		atime += delta_t;
 	}
-}
-
-vec3 Physics::xComp()
-{
-	delta_s.x = vel();
-
-	return delta_s;
-}
-vec3 Physics::yComp()
-{
-	cosY = glm::cos(can.alpha);
-
-	delta_v.y = delta_v0.y - g * delta_t;
-	delta_s.y = delta_s0.y + delta_v.y * delta_t;
-
-	delta_v0.y = delta_v.y;
-	delta_s0.y = delta_s.y;
-
-	return delta_s;
-}
-
-float Physics::acc() const
-{
-	// N2: F = m * a
-	return (FORCE / mass);
-}
-float Physics::vel() const
-{
-	// dv = a * dt
-	return (acc() * delta_t);
 }
