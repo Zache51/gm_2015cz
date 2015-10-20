@@ -29,7 +29,7 @@ private:
 	float vel() const;
 
 	vec3 freeFall();
-	vec3 qwer();
+	vec3 xComp();
 
 public:
 	Physics();

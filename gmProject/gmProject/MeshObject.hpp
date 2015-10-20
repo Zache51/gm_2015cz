@@ -26,17 +26,14 @@ private:
 	GLuint offset;
 	GLuint offsetInd;
 
-	bool loadObj(std::string filename, std::string& mtlFileName, 
-		std::vector<Point_Obj>& points, std::vector<GLuint>& indices);
-	
+	bool loadObj(std::string filename, float scale, std::string& mtlFileName, 
+		std::vector<Point_Obj>& points, std::vector<GLuint>& indices);	
 	bool loadMtl(std::string filename, MtlContainer& mtl);
-	
 	bool loadTexture(std::string filename);
 
 public:
-
-	MeshObject(std::string filename);
-	MeshObject(std::vector<Point_Obj> points);
+	MeshObject(){};
+	MeshObject(std::string filename, float scale);
 	~MeshObject(){}
 
 	void FreeMemory();

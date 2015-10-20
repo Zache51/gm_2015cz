@@ -14,6 +14,7 @@ private:
 	mat4 rotationMatrix = glm::rotate(mat4(1.f), 45.f, vec3(0.f, 0.0f, 1.f));
 
 public:
+	MeshHolder(){};
 	MeshHolder(MeshObject* mesh);
 	virtual ~MeshHolder(){};
 

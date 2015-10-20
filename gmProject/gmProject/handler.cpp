@@ -75,6 +75,28 @@ extern "C"
 }
 #endif
 
+// Meshes
+MeshObject m;
+MeshObject s_mesh;
+
+// World objects
+MeshHolder mustang;
+MeshHolder mustang2;
+MeshHolder mustang3;
+MeshHolder mustang4;
+MeshHolder mustangHigh;
+MeshHolder ground;
+Line EndOfLine = Line();
+
+// Cameras
+std::vector<Camera> cameras;
+
+void InitMeshes(Graphics* ge);
+void InitCameras();
+void MoveCamera(Camera* cam, GLFWwindow* window);
+void RotateCamera(Camera* cam, GLFWwindow* window);
+void UpdateProjections(GLFWwindow* window);
+
 int main()
 {
 	GLFWwindow* window = nullptr;
@@ -149,65 +171,20 @@ int main()
 	glfwSwapInterval(1);
 
 	////////////////////////////////////////////////////////////
+
+	// Engine classes
 	Graphics ge = Graphics();
 	Physics ph = Physics();
+
+	InitMeshes(&ge);
+
+	InitCameras();
+
+	int cameraIndex = 1;
+	ge.SetCamera(&cameras[cameraIndex]);
 	
-
-	Camera cam = Camera();
-	cam.SetPosition(glm::vec3(0.0f, 0.0f, 20.0f));
-	ge.SetCamera(&cam);
-
-
-
-	fprintf(stdout, "\n");
-	fprintf(stdout, "------------- Loading Meshes -------------\n");
-	MeshObject m = MeshObject("mustang.obj");
-	fprintf(stdout, "------------------------------------------\n");
-
-	// P-51 Mustang
-	MeshHolder mustang = MeshHolder(&m);
-	mustang.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	mustang.SetPosition(vec3(0.0f, 0.0f, 0.0f));
-
-	MeshHolder mustang2 = MeshHolder(&m);
-	mustang2.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	mustang2.SetPosition(vec3(0.0f, 0.0f, 20.0f));
-
-	MeshHolder mustang3 = MeshHolder(&m);
-	mustang3.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	mustang3.SetPosition(vec3(20.0f, 0.0f, 20.0f));
-
-	MeshHolder mustang4 = MeshHolder(&m);
-	mustang4.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	mustang4.SetPosition(vec3(20.0f, 0.0f, 0.0f));
-
-	MeshHolder mustangHigh = MeshHolder(&m);
-	mustangHigh.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	mustangHigh.SetPosition(vec3(60.0f, 60.0f, 0.0f));
-
-	std::vector<MeshObject*> meshes;
-	meshes.push_back(&m);
-	
-	ge.GenerateBuffer(meshes);
-	ge.GenerateLineBuffer();
-
-	Line EndOfLine = Line();
-	Line EndOfAsdf = Line();
-
-	//EndOfLine.AddPoint(vec3(0.0f, 0.0f, 0.0f));
-	//EndOfLine.AddPoint(vec3(0.0f, 0.0f, 20.0f));
-	//EndOfLine.AddPoint(vec3(20.0f, 0.0f, 20.0f));
-	//EndOfLine.AddPoint(vec3(20.0f, 0.0f, 0.0f));
-	//EndOfLine.AddPoint(vec3(60.0f, 0.0f, 20.0f));
-	//EndOfLine.AddPoint(vec3(60.0f, 0.0f, 0.0f));
-	EndOfLine.AddPoint(vec3(60.0f, 60.0f, 0.0f));
-	EndOfAsdf.AddPoint(vec3(60.0f, 60.0f, 30.0f));
-
-	int width = 0, height = 0;
 	fpsCounter fpsC;
 
-	float rx = 0, ry = 0, rz = 0;
-	float cameraSpeed = 5;
 	////////////////////////////////////////////////////////////
 	while (!glfwWindowShouldClose(window))
 	{
@@ -216,74 +193,36 @@ int main()
 
 		glfwSetWindowTitle(window, ss.str().c_str());
 
-		int newWidth, newHeight;
-		glfwGetFramebufferSize(window, &newWidth, &newHeight);
-
-		if (width != newWidth || height != newHeight)
+		if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS)
 		{
-			width = newWidth;
-			height = newHeight;
-			glViewport(0, 0, width, height);
-
-			cam.SetScreenSize((float)width, (float)height);
+			cameraIndex = 0;
+			ge.SetCamera(&cameras[cameraIndex]);
+		}
+		if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
+		{
+			cameraIndex = 1;
+			ge.SetCamera(&cameras[cameraIndex]);
 		}
 
-
-		// Rotates the camera with the mouse (WIP)
-		double xpos, ypos;
-		glfwGetCursorPos(window, &xpos, &ypos);
-
-		if (xpos != rx && ypos != ry)
-		{
-			ry += (float)(xpos - ry) ;
-			rx += (float)(ypos - rx) ;
-
-			glm::quat quatx = glm::angleAxis(rx / 150.0f, glm::vec3(1, 0, 0));
-			glm::quat quaty = glm::angleAxis(ry / 150.0f, glm::vec3(0, 1, 0));
-
-			mat4 rotation = mat4(glm::mat3_cast(glm::cross(quatx, quaty)));
-
-			cam.SetRotationMatrix(rotation);
-		}
-
-		// Moved the camera with keyboard (WIP)
-		glm::vec3 up = mat3(cam.GetRotationMatrix()) * glm::vec3(0.0, 1.0, 0.0);
-		glm::vec3 forward = mat3(cam.GetRotationMatrix()) * glm::vec3(0.0, 0.0, -1.0);
-		glm::vec3 strafe = glm::cross(up, forward);
-
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		{
-			cam.UpdatePosition(forward*glm::vec3(0.1f, 0, -0.1)*vec3(cameraSpeed));
-		}
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		{
-			cam.UpdatePosition(forward*glm::vec3(-0.1f, 0, 0.1)*vec3(cameraSpeed));
-		}
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		{
-			cam.UpdatePosition(strafe*glm::vec3(0.1f, 0, -0.1f)*vec3(cameraSpeed));
-		}
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		{
-			cam.UpdatePosition(strafe*glm::vec3(-0.1f, 0, 0.1)*vec3(cameraSpeed));
-		}
-		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-		{
-			EndOfLine.AddPoint(-cam.GetPosition());
-		}
-
+		UpdateProjections(window);
+		RotateCamera(&cameras[cameraIndex], window);
+		MoveCamera(&cameras[cameraIndex], window);
+		
+		
 		if (fpsC.deltaTime() > 0)
 		{
 			//ph.move(&mustangHigh, &fpsC);
 			ph.move(&EndOfLine, &fpsC);
 		}
-		
+
 		ge.PrepareRender();
 		ge.Render(&mustang);
 		ge.Render(&mustang2);
 		ge.Render(&mustang3);
 		ge.Render(&mustang4);
 		ge.Render(&mustangHigh);
+
+		ge.Render(&ground);
 
 		ge.Render(&EndOfLine);
 
@@ -298,9 +237,138 @@ int main()
 	glfwDestroyWindow(window);
 	glfwTerminate();
 
-	system("pause");// Remove when main loop is working or save it to read the console's output before exit.
+	//system("pause");// Remove when main loop is working or save it to read the console's output before exit.
 	return 0;
 }
+
+
+
+void InitCameras()
+{
+	Camera cam = Camera();
+	cam.SetPosition(-glm::vec3(0.0f, 2.0f, 20.0f));
+	cameras.push_back(cam);
+
+	Camera fixedCam = Camera();
+	fixedCam.SetPosition(-glm::vec3(0.0f, 2.0f, 20.0f));
+	cameras.push_back(fixedCam);
+}
+
+void InitMeshes(Graphics* ge)
+{
+	fprintf(stdout, "\n");
+	fprintf(stdout, "------------- Loading Meshes -------------\n");
+	m = MeshObject("mustang.obj", 1);
+	s_mesh = MeshObject("Square.obj", 7);
+	fprintf(stdout, "------------------------------------------\n");
+
+	// P-51 Mustang
+	mustang = MeshHolder(&m);
+	mustang.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	mustang.SetPosition(vec3(0.0f, 0.0f, 0.0f));
+
+	mustang2 = MeshHolder(&m);
+	mustang2.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	mustang2.SetPosition(vec3(0.0f, 0.0f, 20.0f));
+
+	mustang3 = MeshHolder(&m);
+	mustang3.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	mustang3.SetPosition(vec3(20.0f, 0.0f, 20.0f));
+
+	mustang4 = MeshHolder(&m);
+	mustang4.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	mustang4.SetPosition(vec3(20.0f, 0.0f, 0.0f));
+
+	mustangHigh = MeshHolder(&m);
+	mustangHigh.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	mustangHigh.SetPosition(vec3(60.0f, 60.0f, 0.0f));
+
+	ground = MeshHolder(&s_mesh);
+	ground.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	ground.SetPosition(vec3(10.0f, -1.5f, 10.0f));
+
+	std::vector<MeshObject*> meshes;
+	meshes.push_back(&m);
+	meshes.push_back(&s_mesh);
+
+	EndOfLine.AddPoint(vec3(60.0f, 60.0f, 0.0f));
+
+	ge->GenerateBuffer(meshes);
+	ge->GenerateLineBuffer();
+}
+
+void MoveCamera(Camera* cam, GLFWwindow* window)
+{
+	float cameraSpeed = 5;
+
+	// Moved the camera with keyboard (WIP)
+	glm::vec3 up = mat3(cam->GetRotationMatrix()) * glm::vec3(0.0, 1.0, 0.0);
+	glm::vec3 forward = mat3(cam->GetRotationMatrix()) * glm::vec3(0.0, 0.0, -1.0);
+	glm::vec3 strafe = glm::cross(up, forward);
+
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	{
+		cam->UpdatePosition(forward*glm::vec3(0.1f, 0, -0.1)*vec3(cameraSpeed));
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+	{
+		cam->UpdatePosition(forward*glm::vec3(-0.1f, 0, 0.1)*vec3(cameraSpeed));
+	}
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	{
+		cam->UpdatePosition(strafe*glm::vec3(0.1f, 0, -0.1f)*vec3(cameraSpeed));
+	}
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	{
+		cam->UpdatePosition(strafe*glm::vec3(-0.1f, 0, 0.1)*vec3(cameraSpeed));
+	}
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+	{
+		EndOfLine.AddPoint(-cam->GetPosition());
+	}
+}
+
+float rx = 0, ry = 0, rz = 0;
+void RotateCamera(Camera* cam, GLFWwindow* window)
+{
+	// Rotates the camera with the mouse (WIP)
+	double xpos, ypos;
+	glfwGetCursorPos(window, &xpos, &ypos);
+
+	if (xpos != rx && ypos != ry)
+	{
+		ry += (float)(xpos - ry);
+		rx += (float)(ypos - rx);
+
+		glm::quat quatx = glm::angleAxis(rx / 150.0f, glm::vec3(1, 0, 0));
+		glm::quat quaty = glm::angleAxis(ry / 150.0f, glm::vec3(0, 1, 0));
+
+		mat4 rotation = mat4(glm::mat3_cast(glm::cross(quatx, quaty)));
+
+		cam->SetRotationMatrix(rotation);
+	}
+}
+
+int width = 0, height = 0;
+void UpdateProjections(GLFWwindow* window)
+{
+	int newWidth, newHeight;
+	glfwGetFramebufferSize(window, &newWidth, &newHeight);
+
+	if (width != newWidth || height != newHeight)
+	{
+		width = newWidth;
+		height = newHeight;
+		glViewport(0, 0, width, height);
+
+		for (int i = 0; i < cameras.size(); i++)
+		{
+			cameras.at(i).SetScreenSize((float)width, (float)height);
+		}
+	}
+}
+
+
 
 static void error_callback(int err, const char* d)
 {

@@ -75,7 +75,7 @@ public:
 	void* GetPointsData();
 	GLuint GetFloatAmount() const;
 
-	void createViewFrustum(const Camera* cam);
+	void createViewFrustum(const Camera* cam, vec2 screenSize);
 
 	void RenderHeightMap(Camera* cam);
 	int GetRenderCount() const;

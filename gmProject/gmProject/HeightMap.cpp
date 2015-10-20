@@ -219,9 +219,9 @@ int HeightMap::GetRenderCount() const
 	return renderCount;
 }
 
-void HeightMap::createViewFrustum(const Camera* cam)
+void HeightMap::createViewFrustum(const Camera* cam, vec2 screenSize)
 {
-	glm::vec2 tileScale = cam->GetScreenSize() * (1.0f / cam->GetScreenSize());
+	glm::vec2 tileScale = screenSize * (1.0f / screenSize);
 	glm::vec2 tileBias = tileScale - glm::vec2(1.0f, 1.0f);
 
 	glm::mat4 proj = cam->GetProjectionMatrix();
