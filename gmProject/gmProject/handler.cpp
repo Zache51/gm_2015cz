@@ -93,6 +93,7 @@ Line EndOfLine = Line();
 
 // Cameras
 std::vector<Camera> cameras;
+int cameraIndex;
 
 void InitCameras();
 void InitMeshes(Graphics* ge);
@@ -101,6 +102,8 @@ void RotateCamera(Camera* cam, GLFWwindow* window);
 void UpdateProjections(GLFWwindow* window);
 
 void Collision(Line* line, MeshHolder* plane);
+
+void KeyEvents(GLFWwindow* window, Graphics* ge, Physics* ph);
 
 int main()
 {
@@ -184,8 +187,6 @@ int main()
 	InitMeshes(&ge);
 
 	InitCameras();
-
-	int cameraIndex = 1;
 	ge.SetCamera(&cameras[cameraIndex]);
 	
 	fpsCounter fpsC;
@@ -198,16 +199,7 @@ int main()
 
 		glfwSetWindowTitle(window, ss.str().c_str());
 
-		if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS)
-		{
-			cameraIndex = 0;
-			ge.SetCamera(&cameras[cameraIndex]);
-		}
-		if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
-		{
-			cameraIndex = 1;
-			ge.SetCamera(&cameras[cameraIndex]);
-		}
+		KeyEvents(window, &ge, &ph);
 
 		UpdateProjections(window);
 		RotateCamera(&cameras[cameraIndex], window);
@@ -262,6 +254,8 @@ void InitCameras()
 	Camera fixedCam = Camera();
 	fixedCam.SetPosition(-glm::vec3(0.0f, 80.0f, 20.0f));
 	cameras.push_back(fixedCam);
+
+	cameraIndex = 1;
 }
 
 void InitMeshes(Graphics* ge)
@@ -425,7 +419,57 @@ void Collision(Line* line, MeshHolder* plane)
 	}
 }
 
+void KeyEvents(GLFWwindow* window, Graphics* ge, Physics* ph)
+{
+	if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS)
+	{
+		cameraIndex = 0;
+		ge->SetCamera(&cameras[cameraIndex]);
+	}
+	if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
+	{
+		cameraIndex = 1;
+		ge->SetCamera(&cameras[cameraIndex]);
+	}
 
+	float degree = 2.5 / 8;
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+	{
+		ph->angleCannon(-degree);
+		EndOfLine.ClearVector();
+		EndOfLine.AddPoint(vec3(60.0f, 60.0f, 0.0f));
+
+		target.ChangeTexture(1);
+		target2.ChangeTexture(1);
+	}
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+	{
+		ph->angleCannon(degree);
+		EndOfLine.ClearVector();
+		EndOfLine.AddPoint(vec3(60.0f, 60.0f, 0.0f));
+
+		target.ChangeTexture(1);
+		target2.ChangeTexture(1);
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+	{
+		ph->rotateCannon(-degree);
+		EndOfLine.ClearVector();
+		EndOfLine.AddPoint(vec3(60.0f, 60.0f, 0.0f));
+
+		target.ChangeTexture(1);
+		target2.ChangeTexture(1);
+	}
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+	{
+		ph->rotateCannon(degree);
+		EndOfLine.ClearVector();
+		EndOfLine.AddPoint(vec3(60.0f, 60.0f, 0.0f));
+
+		target.ChangeTexture(1);
+		target2.ChangeTexture(1);
+	}
+}
 
 static void error_callback(int err, const char* d)
 {

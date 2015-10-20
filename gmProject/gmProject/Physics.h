@@ -14,11 +14,16 @@ private:
 	// Cannonball
 	float vel; // Total velocity
 	float alpha; // Angle in radians
+	float gamma;
+	float degreeAngle;
+	float degreeRotate;
 	float resistance;
 	vec3 dVelocity;
 	vec3 dVelocity0;
 	vec3 dAccel;
 	vec3 dAccel0;
+
+	void reset();
 	
 public:
 	Physics();
@@ -26,5 +31,8 @@ public:
 
 	void move(MeshHolder* mesh, fpsCounter* fpsC);
 	void move(Line* line, fpsCounter* fpsC);
+
+	void angleCannon(float change);
+	void rotateCannon(float change);
 };
 
