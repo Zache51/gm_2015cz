@@ -3,16 +3,14 @@
 
 Physics::Physics()
 {
-	Cannon can = Cannon();
-	can.alpha = 45.0f;
-	can.gamma = 0.0f;
+	can = Cannon();
+	can.alpha = 45.0f * degree;
+	can.gamma = 0.0f * degree;
 
 }
 
 
-Physics::~Physics()
-{
-}
+Physics::~Physics(){}
 
 void Physics::move(MeshHolder* mesh, fpsCounter* fpsC)
 {
@@ -21,7 +19,7 @@ void Physics::move(MeshHolder* mesh, fpsCounter* fpsC)
 	{
 		vec3 asdf;
 		asdf += xComp();
-		asdf += freeFall();
+		asdf += yComp();
 		//printf("%f ", asdf.y);
 		printf(" %f ", asdf.z);
 		mesh->UpdatePosition(asdf);
@@ -33,17 +31,25 @@ void Physics::move(Line* line, fpsCounter* fpsC)
 	vec3 asdf = vec3(line->GetLastPoint());
 	if (asdf.y > 0)
 	{
-		atime += delta_t;
 		asdf += xComp();
-		asdf += freeFall();
+		asdf += yComp();
 		//printf("%f ", asdf.y);
 		//printf(" %f ", atime);
 		line->AddPoint(asdf);
+		atime += delta_t;
 	}
 }
 
-vec3 Physics::freeFall()
+vec3 Physics::xComp()
 {
+	delta_s.x = vel();
+
+	return delta_s;
+}
+vec3 Physics::yComp()
+{
+	cosY = glm::cos(can.alpha);
+
 	delta_v.y = delta_v0.y - g * delta_t;
 	delta_s.y = delta_s0.y + delta_v.y * delta_t;
 
@@ -52,23 +58,14 @@ vec3 Physics::freeFall()
 
 	return delta_s;
 }
-vec3 Physics::xComp()
-{
-	//delta_v.z = delta_v0.z + (FORCE / mass) * delta_t;
-	//delta_s.z = delta_s0.z + delta_v.z * delta_t;
-
-	//delta_v0.z = delta_v.z;
-	//delta_s0.z = delta_s.z;
-	delta_s.z = vel();
-
-	return delta_s;
-}
 
 float Physics::acc() const
 {
+	// N2: F = m * a
 	return (FORCE / mass);
 }
 float Physics::vel() const
 {
+	// dv = a * dt
 	return (acc() * delta_t);
 }
