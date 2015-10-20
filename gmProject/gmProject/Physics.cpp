@@ -20,12 +20,26 @@ void Physics::move(MeshHolder* mesh, fpsCounter* fpsC)
 	if (mesh->GetPosition().y > 0)
 	{
 		vec3 asdf;
-		asdf += qwer();
+		asdf += xComp();
 		asdf += freeFall();
 		//printf("%f ", asdf.y);
 		printf(" %f ", asdf.z);
 		mesh->UpdatePosition(asdf);
 	}	
+}
+void Physics::move(Line* line, fpsCounter* fpsC)
+{
+	delta_t = fpsC->deltaTime();
+	vec3 asdf = vec3(line->GetLastPoint());
+	if (asdf.y > 0)
+	{
+		atime += delta_t;
+		asdf += xComp();
+		asdf += freeFall();
+		//printf("%f ", asdf.y);
+		//printf(" %f ", atime);
+		line->AddPoint(asdf);
+	}
 }
 
 vec3 Physics::freeFall()
@@ -38,7 +52,7 @@ vec3 Physics::freeFall()
 
 	return delta_s;
 }
-vec3 Physics::qwer()
+vec3 Physics::xComp()
 {
 	//delta_v.z = delta_v0.z + (FORCE / mass) * delta_t;
 	//delta_s.z = delta_s0.z + delta_v.z * delta_t;

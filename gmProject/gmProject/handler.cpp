@@ -192,13 +192,16 @@ int main()
 	ge.GenerateLineBuffer();
 
 	Line EndOfLine = Line();
+	Line EndOfAsdf = Line();
 
-	EndOfLine.AddPoint(vec3(0.0f, 0.0f, 0.0f));
-	EndOfLine.AddPoint(vec3(0.0f, 0.0f, 20.0f));
-	EndOfLine.AddPoint(vec3(20.0f, 0.0f, 20.0f));
-	EndOfLine.AddPoint(vec3(20.0f, 0.0f, 0.0f));
-	EndOfLine.AddPoint(vec3(60.0f, 0.0f, 20.0f));
-	EndOfLine.AddPoint(vec3(60.0f, 0.0f, 0.0f));
+	//EndOfLine.AddPoint(vec3(0.0f, 0.0f, 0.0f));
+	//EndOfLine.AddPoint(vec3(0.0f, 0.0f, 20.0f));
+	//EndOfLine.AddPoint(vec3(20.0f, 0.0f, 20.0f));
+	//EndOfLine.AddPoint(vec3(20.0f, 0.0f, 0.0f));
+	//EndOfLine.AddPoint(vec3(60.0f, 0.0f, 20.0f));
+	//EndOfLine.AddPoint(vec3(60.0f, 0.0f, 0.0f));
+	EndOfLine.AddPoint(vec3(60.0f, 60.0f, 0.0f));
+	EndOfAsdf.AddPoint(vec3(60.0f, 60.0f, 30.0f));
 
 	int width = 0, height = 0;
 	fpsCounter fpsC;
@@ -271,7 +274,8 @@ int main()
 
 		if (fpsC.deltaTime() > 0)
 		{
-			ph.move(&mustangHigh, &fpsC);
+			//ph.move(&mustangHigh, &fpsC);
+			ph.move(&EndOfLine, &fpsC);
 		}
 		
 		ge.PrepareRender();
