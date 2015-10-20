@@ -11,25 +11,9 @@ struct MtlContainer
 	glm::vec3 Ka;
 	glm::vec3 Kd;
 	glm::vec3 Ks;
-	GLint map_I = -1;
 	
 	std::vector<std::string> filenames;
 	std::vector<GLuint> textureIDs;
-
-	GLuint GetCurrentTexture() const
-	{
-		GLuint asfd = textureIDs[map_I];
-		return textureIDs[map_I];
-	};
-	void ChangeTexture(GLint textureIndex)
-	{
-		int size = textureIDs.size();
-		if (textureIndex >= size)
-		{
-			textureIndex = size - 1;
-		}
-		map_I = textureIndex;
-	}
 };
 
 class MeshObject : public MeshBase

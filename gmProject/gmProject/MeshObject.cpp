@@ -146,10 +146,6 @@ bool MeshObject::loadMtl(std::string filename, MtlContainer& mtl)
 		{
 			fscanf_s(file, "%f %f %f\n", &mtl.Ks[0], &mtl.Ks[1], &mtl.Ks[2]);
 		}
-		else if (strcmp(lineHeader, "map_I") == 0)
-		{
-			fscanf_s(file, "%d", &mtl.map_I);
-		}
 		else if (strcmp(lineHeader, "map_Kd") == 0)
 		{
 			char fileName[100];
@@ -162,12 +158,6 @@ bool MeshObject::loadMtl(std::string filename, MtlContainer& mtl)
 		/*******************************************************************************/
 		// illum (ignore)
 		/*******************************************************************************/
-
-		// Not using zache format
-		if (mtl.map_I == -1)
-		{
-			mtl.map_I = 0;
-		}
 	}
 
 	fclose(file);
