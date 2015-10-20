@@ -11,8 +11,25 @@ struct MtlContainer
 	glm::vec3 Ka;
 	glm::vec3 Kd;
 	glm::vec3 Ks;
-	std::string filename;
-	GLuint TextureID;
+	GLint map_I = -1;
+	
+	std::vector<std::string> filenames;
+	std::vector<GLuint> textureIDs;
+
+	GLuint GetCurrentTexture() const
+	{
+		GLuint asfd = textureIDs[map_I];
+		return textureIDs[map_I];
+	};
+	void ChangeTexture(GLint textureIndex)
+	{
+		int size = textureIDs.size();
+		if (textureIndex >= size)
+		{
+			textureIndex = size - 1;
+		}
+		map_I = textureIndex;
+	}
 };
 
 class MeshObject : public MeshBase
@@ -21,17 +38,17 @@ private:
 
 	std::vector<Point_Obj> points;
 
-	MtlContainer mtl;
-
 	GLuint offset;
 	GLuint offsetInd;
 
 	bool loadObj(std::string filename, float scale, std::string& mtlFileName, 
 		std::vector<Point_Obj>& points, std::vector<GLuint>& indices);	
 	bool loadMtl(std::string filename, MtlContainer& mtl);
-	bool loadTexture(std::string filename);
+	bool loadTexture(MtlContainer& mtl);
 
 public:
+	MtlContainer mtl;
+
 	MeshObject(){};
 	MeshObject(std::string filename, float scale);
 	~MeshObject(){}
@@ -49,8 +66,6 @@ public:
 	
 	void* GetPointsData();
 	GLuint GetFloatAmount() const;
-
-	MtlContainer GetMtl() const;
 };
 
 #endif

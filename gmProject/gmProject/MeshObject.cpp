@@ -146,11 +146,15 @@ bool MeshObject::loadMtl(std::string filename, MtlContainer& mtl)
 		{
 			fscanf_s(file, "%f %f %f\n", &mtl.Ks[0], &mtl.Ks[1], &mtl.Ks[2]);
 		}
+		else if (strcmp(lineHeader, "map_I") == 0)
+		{
+			fscanf_s(file, "%d", &mtl.map_I);
+		}
 		else if (strcmp(lineHeader, "map_Kd") == 0)
 		{
 			char fileName[100];
 			fscanf_s(file, "%s", fileName, sizeof(fileName));
-			mtl.filename = std::string(fileName);
+			mtl.filenames.push_back(MESH_FOLDER + std::string(fileName));
 		}
 		/*******************************************************************************/
 		// d (ignore)
@@ -158,6 +162,12 @@ bool MeshObject::loadMtl(std::string filename, MtlContainer& mtl)
 		/*******************************************************************************/
 		// illum (ignore)
 		/*******************************************************************************/
+
+		// Not using zache format
+		if (mtl.map_I == -1)
+		{
+			mtl.map_I = 0;
+		}
 	}
 
 	fclose(file);
@@ -168,42 +178,49 @@ bool MeshObject::loadMtl(std::string filename, MtlContainer& mtl)
 	return true;
 }
 
-bool MeshObject::loadTexture(std::string filename)
+bool MeshObject::loadTexture(MtlContainer& mtl)
 {
 	GLint wi;
 	GLint he;
 	GLint nrOfBytes;
 	
-	std::string out = "Reading data from " + filename + "\n";
-	fprintf(stdout, out.data());
-	
-	unsigned char* image = stbi_load(filename.data(), &wi, &he, &nrOfBytes, 3);
+	int nrOfTextures = mtl.filenames.size();
 
-	if (image == nullptr)
+	for (int i = 0; i < nrOfTextures; i++)
 	{
-		std::string toPrint = "Failed to load image " + filename;
-		fprintf(stdout, toPrint.data());
-		return false;
+		std::string out = "Reading data from " + mtl.filenames[i] + "\n";
+		fprintf(stdout, out.data());
+
+		unsigned char* image = stbi_load(mtl.filenames[i].data(), &wi, &he, &nrOfBytes, 3);
+
+		if (image == nullptr)
+		{
+			std::string toPrint = "Failed to load image " + mtl.filenames[i];
+			fprintf(stdout, toPrint.data());
+			return false;
+		}
+
+		GLuint textureID;
+		glGenTextures(1, &textureID);
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		mtl.textureIDs.push_back(textureID);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+		if (nrOfBytes == 3)
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wi, he, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+			fprintf(stdout, "Texture read\n");
+		}
+		else
+		{
+			fprintf(stdout, "Unexpected number of bytes in texture");
+			return false;
+		}
+
+		stbi_image_free(image);
 	}
-
-	glGenTextures(1, &mtl.TextureID);
-	glBindTexture(GL_TEXTURE_2D, mtl.TextureID);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	if (nrOfBytes == 3)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wi, he, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-		fprintf(stdout, "Texture read\n");
-	}
-	else
-	{
-		fprintf(stdout, "Unexpected number of bytes in texture");
-		return false;
-	}
-
-	stbi_image_free(image);
 
 	return true;
 }
@@ -225,10 +242,10 @@ MeshObject::MeshObject(std::string filename, float scale)
 	{
 		fprintf(stdout, "Mtl data found\n");
 		loadMtl(MESH_FOLDER + mtlFilename, mtl);
-		if (mtl.filename != "")
+		if (!mtl.filenames.empty())
 		{
 			fprintf(stdout, "Texture found\n");
-			loadTexture(MESH_FOLDER + mtl.filename);
+			loadTexture(mtl);
 		}
 	}
 
@@ -287,7 +304,4 @@ GLuint MeshObject::GetFloatAmount() const
 	return numberOfPoints * sizeof(Point_Obj);
 }
 
-MtlContainer MeshObject::GetMtl() const
-{
-	return mtl;
-}
+

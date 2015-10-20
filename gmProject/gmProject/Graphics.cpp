@@ -249,7 +249,7 @@ void Graphics::Render( MeshHolder* mh )
 	// Uniforms
 	mat4 pvwMatrix = localCamera->GetPVMatrix() * mh->GetWorld();
 	glUniformMatrix4fv(pvwMatrixUniformLocation, 1, GL_FALSE, &(GLfloat)pvwMatrix[0][0]);
-	glBindTexture(GL_TEXTURE_2D, mh->GetMesh()->GetMtl().TextureID);
+	glBindTexture(GL_TEXTURE_2D, mh->GetMesh()->mtl.GetCurrentTexture());
 
 	// Render the mesh
 	//glDrawArrays(GL_TRIANGLES, mh->mesh->GetOffset(), mh->mesh->GetPoints().size());
