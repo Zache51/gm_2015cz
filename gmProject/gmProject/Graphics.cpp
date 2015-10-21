@@ -196,7 +196,7 @@ void Graphics::GenerateHeightMapBuffer(HeightMap* heightmap)
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Point_HeightMap), BUFFER_OFFSET(sizeof(float) * 3));
 }
 
-void Graphics::GenerateLineBuffer()
+void Graphics::GenerateLineBuffer(std::vector<Line*> lines)
 {
 	//create vertex and index buffer 
 	glGenBuffers(1, &vbLine);
@@ -204,9 +204,13 @@ void Graphics::GenerateLineBuffer()
 	glGenBuffers(1, &ibLine);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibLine);
 
+	int maxAmount = 5000;
+	//int numberOfLines = lines.size();
+	int numberOfLines = 1;
+
 	//Define the size of the buffers	
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Point_HeightMap) * 5000, NULL, GL_DYNAMIC_DRAW);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * 5000, NULL, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Point_HeightMap) * maxAmount * numberOfLines, NULL, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * maxAmount * numberOfLines, NULL, GL_DYNAMIC_DRAW);
 
 	// Define VAO
 	glGenVertexArrays(1, &gVertexAttributeLine);

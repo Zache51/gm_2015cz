@@ -12,6 +12,17 @@ Line::Line()
 	numberOfIndicies = 0;
 }
 
+Line::Line(glm::vec3 color)
+{
+	this->color = color;
+
+	points = std::vector<Point_HeightMap>();
+	numberOfPoints = 0;
+
+	indicies = std::vector<GLuint>();
+	numberOfIndicies = 0;
+}
+
 Line::~Line(){}
 
 void Line::AddPoint(glm::vec3 position)
@@ -46,6 +57,10 @@ void Line::ClearVector()
 	numberOfIndicies = 0;
 }
 
+void Line::ChangeColor(glm::vec3 color)
+{
+	this->color = color;
+}
 
 void* Line::GetPointsData()
 {

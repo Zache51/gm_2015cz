@@ -10,12 +10,15 @@ private:
 
 public:
 	Line();
+	Line(glm::vec3 color);
 	~Line();
 
 	void AddPoint(glm::vec3 position);
 	glm::vec3 GetLastPoint() const;
 	glm::vec3 GetSecondLastPoint() const;
 	void ClearVector();
+
+	void ChangeColor(glm::vec3 color);
 
 	void* GetPointsData();
 	GLuint GetFloatAmount() const;

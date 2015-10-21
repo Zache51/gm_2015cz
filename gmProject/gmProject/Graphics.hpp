@@ -54,7 +54,7 @@ public:
 
 	void GenerateBuffer(std::vector<MeshObject*> meshes);
 	void GenerateHeightMapBuffer(HeightMap* heightmap);
-	void GenerateLineBuffer();
+	void GenerateLineBuffer(std::vector<Line*> lines);
 
 	void PrepareRender();
 	void Render(MeshHolder* mh);

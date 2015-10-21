@@ -89,7 +89,7 @@ MeshHolder mustangHigh;
 MeshHolder ground;
 MeshHolder target;
 MeshHolder target2;
-Line EndOfLine = Line();
+Line EndOfLine = Line(glm::vec3(1,0,0));
 
 // Cameras
 std::vector<Camera> cameras;
@@ -307,10 +307,14 @@ void InitMeshes(Graphics* ge)
 	meshes.push_back(&s_mesh);
 	meshes.push_back(&target_mesh);
 
+	ge->GenerateBuffer(meshes);
+
 	EndOfLine.AddPoint(vec3(60.0f, 60.0f, 0.0f));
 
-	ge->GenerateBuffer(meshes);
-	ge->GenerateLineBuffer();
+	std::vector<Line*> lines;
+	lines.push_back(&EndOfLine);
+
+	ge->GenerateLineBuffer(lines);
 }
 
 void MoveCamera(Camera* cam, GLFWwindow* window)
