@@ -190,7 +190,7 @@ int main()
 	ge.SetCamera(&cameras[cameraIndex]);
 	
 	fpsCounter fpsC;
-
+	int tickCounter = 400;
 	////////////////////////////////////////////////////////////
 	while (!glfwWindowShouldClose(window))
 	{
@@ -204,12 +204,15 @@ int main()
 		UpdateProjections(window);
 		RotateCamera(&cameras[cameraIndex], window);
 		MoveCamera(&cameras[cameraIndex], window);
-		
-		
-		if (fpsC.deltaTime() > 0)
+
+		if (fpsC.deltaTime() > 0 && tickCounter < 1)
 		{
 			//ph.move(&mustangHigh, &fpsC);
 			ph.move(&EndOfLine, &fpsC);
+		}
+		else
+		{
+			tickCounter--;
 		}
 
 		Collision(&EndOfLine, &target);
@@ -238,8 +241,6 @@ int main()
 	
 	glfwDestroyWindow(window);
 	glfwTerminate();
-
-	//system("pause");// Remove when main loop is working or save it to read the console's output before exit.
 	return 0;
 }
 
