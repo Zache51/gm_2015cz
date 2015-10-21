@@ -15,10 +15,10 @@ float pytagoras(float a, float b)
 
 Physics::Physics()
 {
-	degreeAngle = 75.0f;
+	degreeAngle = 100.0f;
 	alpha = degreeAngle * toRad;
 
-	degreeRotate = 0.0f;
+	degreeRotate = 90.0f;
 	gamma = degreeRotate * toRad;
 
 	reset();
@@ -68,22 +68,18 @@ void Physics::move(Line* line, fpsCounter* fpsC)
 
 		float xz = pytagoras(dVelocity.x, dVelocity.z);
 
+		if (degreeAngle > 90)
+		{
+			xz = -xz;
+		}
+
 		vel = pytagoras(xz, dVelocity.y);
 
-		float aa = dVelocity.y / xz;
-		float bb = glm::atan(aa);
-		float cc = alpha - bb;
-
-		alpha = glm::atan(dVelocity.y / xz);
+		alpha = glm::acos(xz / vel);
 
 		dAccel.x = resistance * square(vel) * glm::cos(alpha) * cos(gamma);
 		dAccel.y = resistance * square(vel) * glm::sin(alpha) - g;
 		dAccel.z = resistance * square(vel) * glm::cos(alpha) * sin(gamma);
-		
-		float a = square(vel);
-		float b = glm::cos(alpha);
-		float c = sin(gamma);
-
 
 		lastDAccel = dAccel;
 		lastDVelocity = dVelocity;
@@ -104,11 +100,6 @@ void Physics::move(Line* line, fpsCounter* fpsC)
 void Physics::angleCannon(float change)
 {
 	degreeAngle += change;
-
-	if (degreeAngle > 90)
-	{
-		degreeAngle = 90;
-	}
 
 	if (degreeAngle > 360)
 	{
