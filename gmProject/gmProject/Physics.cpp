@@ -1,12 +1,24 @@
 #include "Physics.h"
 
+float square(float value)
+{
+	float s = value*value;
+	return s;
+}
+
+float pytagoras(float a, float b)
+{
+	float c2 = square(a) + square(b);
+	float c = glm::sqrt(c2);
+	return c;
+}
 
 Physics::Physics()
 {
-	degreeAngle = 5.0f;
+	degreeAngle = 75.0f;
 	alpha = degreeAngle * toRad;
 
-	degreeRotate = 90.0f;
+	degreeRotate = 0.0f;
 	gamma = degreeRotate * toRad;
 
 	reset();
@@ -19,12 +31,31 @@ void Physics::move(MeshHolder* mesh, fpsCounter* fpsC)
 	delta_t = fpsC->deltaTime();
 	if (mesh->GetPosition().y > 0)
 	{
-		vec3 asdf;
-		//asdf += xComp();
-		//asdf += yComp();
-		//printf("%f ", asdf.y);
-		printf(" %f ", asdf.z);
-		mesh->UpdatePosition(asdf);
+		dVelocity = lastDVelocity + lastDAccel * delta_t;
+
+		float xz = pytagoras(dVelocity.x, dVelocity.z);
+
+		vel = pytagoras(xz, dVelocity.y);
+
+		float aa = dVelocity.y / xz;
+		float bb = glm::atan(aa);
+		float cc = alpha - bb;
+
+		alpha = glm::atan(dVelocity.y / xz);
+
+		dAccel.x = resistance * square(vel) * glm::cos(alpha) * cos(gamma);
+		dAccel.y = resistance * square(vel) * glm::sin(alpha) - g;
+		dAccel.z = resistance * square(vel) * glm::cos(alpha) * sin(gamma);
+
+		float a = square(vel);
+		float b = glm::cos(alpha);
+		float c = sin(gamma);
+
+
+		lastDAccel = dAccel;
+		lastDVelocity = dVelocity;
+
+		mesh->UpdatePosition(dVelocity);
 	}	
 }
 void Physics::move(Line* line, fpsCounter* fpsC)
@@ -35,12 +66,24 @@ void Physics::move(Line* line, fpsCounter* fpsC)
 	{
 		dVelocity = lastDVelocity + lastDAccel * delta_t;
 
-		vel = glm::sqrt(dVelocity.x * dVelocity.x + dVelocity.y * dVelocity.y);
-		alpha = glm::atan(dVelocity.y / dVelocity.x);
+		float xz = pytagoras(dVelocity.x, dVelocity.z);
 
-		dAccel.x = resistance * vel * vel * glm::cos(alpha) * cos(gamma);
-		dAccel.y = resistance * vel * vel * glm::sin(alpha) - g;
-		dAccel.z = resistance * vel * vel * glm::cos(alpha) * sin(gamma);
+		vel = pytagoras(xz, dVelocity.y);
+
+		float aa = dVelocity.y / xz;
+		float bb = glm::atan(aa);
+		float cc = alpha - bb;
+
+		alpha = glm::atan(dVelocity.y / xz);
+
+		dAccel.x = resistance * square(vel) * glm::cos(alpha) * cos(gamma);
+		dAccel.y = resistance * square(vel) * glm::sin(alpha) - g;
+		dAccel.z = resistance * square(vel) * glm::cos(alpha) * sin(gamma);
+		
+		float a = square(vel);
+		float b = glm::cos(alpha);
+		float c = sin(gamma);
+
 
 		lastDAccel = dAccel;
 		lastDVelocity = dVelocity;
@@ -62,6 +105,21 @@ void Physics::angleCannon(float change)
 {
 	degreeAngle += change;
 
+	if (degreeAngle > 90)
+	{
+		degreeAngle = 90;
+	}
+
+	if (degreeAngle > 360)
+	{
+		degreeAngle -= 360;
+	}
+	else if (degreeAngle < -360)
+	{
+		degreeAngle += 360;
+	}
+
+
 	alpha = degreeAngle * toRad;
 
 	reset();
@@ -70,6 +128,15 @@ void Physics::angleCannon(float change)
 void Physics::rotateCannon(float change)
 {
 	degreeRotate += change;
+
+	if (degreeRotate > 360)
+	{
+		degreeRotate -= 360;
+	}
+	else if (degreeRotate < -360)
+	{
+		degreeRotate += 360;
+	}
 
 	gamma = degreeRotate * toRad;
 
@@ -80,9 +147,9 @@ void Physics::rotateCannon(float change)
 
 void Physics::reset()
 {
-	vel = 6.0f;
+	vel = 3.0f;
 
-	dVelocity = vec3(vel * cos(alpha) * cos(gamma), vel * sin(alpha), vel * sin(gamma));
+	dVelocity = vec3(vel * cos(alpha) * cos(gamma), vel * sin(alpha), vel * cos(alpha) *sin(gamma));
 	lastDVelocity = dVelocity;
 	dAccel = vec3(0.0f, -g, 0.0f);
 	lastDAccel = dAccel;
