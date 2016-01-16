@@ -1,4 +1,5 @@
 #include "Graphics.hpp"
+#include "Grid.h"
 #include "Physics.h"
 
 #undef APIENTRY
@@ -76,19 +77,10 @@ extern "C"
 #endif
 
 // Meshes
-MeshObject m;
 MeshObject s_mesh;
-MeshObject target_mesh;
 
 // World objects
-MeshHolder mustang;
-MeshHolder mustang2;
-MeshHolder mustang3;
-MeshHolder mustang4;
-MeshHolder mustangHigh;
-MeshHolder ground;
-MeshHolder target;
-MeshHolder target2;
+Grid* grid;
 Line EndOfLine = Line(glm::vec3(1,0,0));
 
 // Cameras
@@ -186,6 +178,9 @@ int main()
 
 	InitMeshes(&ge);
 
+	std::vector<MeshHolder*> gridquads = grid->GetMeshHolders();
+	int gridSize = gridquads.size();
+
 	InitCameras();
 	ge.SetCamera(&cameras[cameraIndex]);
 	
@@ -215,21 +210,15 @@ int main()
 			tickCounter--;
 		}
 
-		Collision(&EndOfLine, &target);
-		Collision(&EndOfLine, &target2);
-
 		ge.PrepareRender();
-		ge.Render(&mustang);
-		ge.Render(&mustang2);
-		ge.Render(&mustang3);
-		ge.Render(&mustang4);
-		ge.Render(&mustangHigh);
 
-		ge.Render(&ground);
-		ge.Render(&target);
-		ge.Render(&target2);
+		for (int i = 0; i < gridSize; i++)
+		{
+			ge.Render(gridquads[i]);
+		}
+		
 
-		ge.Render(&EndOfLine);
+		//ge.Render(&EndOfLine);
 
 		fpsC.tick();
 		Sleep(1000 / 120);
@@ -239,6 +228,8 @@ int main()
 	}
 	////////////////////////////////////////////////////////////
 	
+	delete grid;
+
 	glfwDestroyWindow(window);
 	glfwTerminate();
 	return 0;
@@ -261,52 +252,19 @@ void InitCameras()
 
 void InitMeshes(Graphics* ge)
 {
+	float scale = 1;
+
 	fprintf(stdout, "\n");
 	fprintf(stdout, "------------- Loading Meshes -------------\n");
-	m = MeshObject("mustang.obj", 1);
-	s_mesh = MeshObject("Square.obj", 7);
-	target_mesh = MeshObject("Square_wall.obj", 1);
+	s_mesh = MeshObject("Square.obj", scale);
 	fprintf(stdout, "------------------------------------------\n");
 
-	// P-51 Mustang
-	mustang = MeshHolder(&m);
-	mustang.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	mustang.SetPosition(vec3(0.0f, 0.0f, 0.0f));
-
-	mustang2 = MeshHolder(&m);
-	mustang2.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	mustang2.SetPosition(vec3(0.0f, 0.0f, 20.0f));
-
-	mustang3 = MeshHolder(&m);
-	mustang3.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	mustang3.SetPosition(vec3(20.0f, 0.0f, 20.0f));
-
-	mustang4 = MeshHolder(&m);
-	mustang4.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	mustang4.SetPosition(vec3(20.0f, 0.0f, 0.0f));
-
-	mustangHigh = MeshHolder(&m);
-	mustangHigh.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	mustangHigh.SetPosition(vec3(60.0f, 60.0f, 0.0f));
-
-	ground = MeshHolder(&s_mesh);
-	ground.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	ground.SetPosition(vec3(10.0f, -1.5f, 10.0f));
-
-	target = MeshHolder(&target_mesh);
-	target.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	target.SetPosition(vec3(60.0f, 60.f, 100.0f));
-	target.ChangeTexture(1);
-
-	target2 = MeshHolder(&target_mesh);
-	target2.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
-	target2.SetPosition(vec3(60.0f, 40.f, 100.0f));
-	target2.ChangeTexture(1);
+	MeshHolder base = MeshHolder(&s_mesh);
+	base.SetRotation(glm::rotate(mat4(1.f), 0.f, vec3(0.f, 0.0f, 1.f)));
+	grid = new Grid(30, 30, &s_mesh, &base);
 
 	std::vector<MeshObject*> meshes;
-	meshes.push_back(&m);
 	meshes.push_back(&s_mesh);
-	meshes.push_back(&target_mesh);
 
 	ge->GenerateBuffer(meshes);
 
@@ -443,36 +401,24 @@ void KeyEvents(GLFWwindow* window, Graphics* ge, Physics* ph)
 		ph->angleCannon(-degree);
 		EndOfLine.ClearVector();
 		EndOfLine.AddPoint(vec3(60.0f, 60.0f, 0.0f));
-
-		target.ChangeTexture(1);
-		target2.ChangeTexture(1);
 	}
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 	{
 		ph->angleCannon(degree);
 		EndOfLine.ClearVector();
 		EndOfLine.AddPoint(vec3(60.0f, 60.0f, 0.0f));
-
-		target.ChangeTexture(1);
-		target2.ChangeTexture(1);
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 	{
 		ph->rotateCannon(-degree);
 		EndOfLine.ClearVector();
 		EndOfLine.AddPoint(vec3(60.0f, 60.0f, 0.0f));
-
-		target.ChangeTexture(1);
-		target2.ChangeTexture(1);
 	}
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
 		ph->rotateCannon(degree);
 		EndOfLine.ClearVector();
 		EndOfLine.AddPoint(vec3(60.0f, 60.0f, 0.0f));
-
-		target.ChangeTexture(1);
-		target2.ChangeTexture(1);
 	}
 }
 

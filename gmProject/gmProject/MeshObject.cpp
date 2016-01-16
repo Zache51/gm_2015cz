@@ -5,8 +5,7 @@
 
 /******************************* Private *******************************/
 
-bool MeshObject::loadObj(std::string filename, float scale, std::string& mtlFileName,
-	std::vector<Point_Obj>& points, std::vector<GLuint>& indices)
+bool MeshObject::loadObj(std::string filename, std::string& mtlFileName)
 {
 	std::vector < glm::vec3 > vertices;
 	std::vector < glm::vec2 > uvs;
@@ -101,7 +100,7 @@ bool MeshObject::loadObj(std::string filename, float scale, std::string& mtlFile
 				points.push_back(temp);
 
 				// push indexes into index buffer :-)
-				indices.push_back(index++);
+				indicies.push_back(index++);
 			}
 		}
 	}
@@ -218,16 +217,21 @@ bool MeshObject::loadTexture(MtlContainer& mtl)
 /***********************************************************************/
 /******************************* Public ********************************/
 
-
+MeshObject::MeshObject()
+{
+	scale = 0;
+}
 
 MeshObject::MeshObject(std::string filename, float scale)
 {
+	this->scale = scale;
+
 	std::string mtlFilename = "";
 
 	points = std::vector<Point_Obj>();
 	indicies = std::vector<GLuint>();
 
-	loadObj(MESH_FOLDER + filename, scale, mtlFilename, points, indicies);
+	loadObj(MESH_FOLDER + filename, mtlFilename);
 	if (mtlFilename != "")
 	{
 		fprintf(stdout, "Mtl data found\n");
@@ -267,6 +271,11 @@ void MeshObject::AddIndicies(GLuint add)
 	{
 		indicies[i] += add;
 	}
+}
+
+int MeshObject::GetScale() const
+{
+	return scale;
 }
 
 GLuint MeshObject::GetNumberOfPoint() const

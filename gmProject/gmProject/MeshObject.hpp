@@ -20,20 +20,20 @@ class MeshObject : public MeshBase
 {
 private:
 
+	float scale;
 	std::vector<Point_Obj> points;
 
 	GLuint offset;
 	GLuint offsetInd;
 
-	bool loadObj(std::string filename, float scale, std::string& mtlFileName, 
-		std::vector<Point_Obj>& points, std::vector<GLuint>& indices);	
+	bool loadObj(std::string filename, std::string& mtlFileName);	
 	bool loadMtl(std::string filename, MtlContainer& mtl);
 	bool loadTexture(MtlContainer& mtl);
 
 public:
 	MtlContainer mtl;
 
-	MeshObject(){};
+	MeshObject();
 	MeshObject(std::string filename, float scale);
 	~MeshObject(){}
 
@@ -43,6 +43,8 @@ public:
 	void SetOffsetInd(GLuint offset);
 
 	void AddIndicies(GLuint add);
+
+	int GetScale() const;
 
 	GLuint GetNumberOfPoint() const;
 	GLuint GetOffset() const;

@@ -20,6 +20,7 @@ public:
 	virtual ~MeshHolder(){};
 
 	void SetRotation(mat4 rotation);
+	mat4 GetRotation() const;
 
 	mat4 GetWorld() const;
 	MeshObject* GetMesh() const;
